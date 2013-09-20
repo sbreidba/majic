@@ -181,6 +181,7 @@
             <version>${googletest.version}</version>
             <classifier>sources</classifier>
             <type>tar.bz2</type>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
