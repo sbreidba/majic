@@ -18,7 +18,7 @@
 
     <properties>
         <ext.dir>${project.build.directory}/exports</ext.dir>
-        <cache.dir>${extractDir}/cache</cache.dir>
+        <cache.dir>${ext.dir}/cache</cache.dir>
     </properties>
 
     <build>
@@ -36,18 +36,18 @@
                         <configuration>
                             <target>
                                 <dependencyfilesets types="tar.bz2" />
-                                <mkdir dir="${extract.dir}" />
+                                <mkdir dir="${ext.dir}" />
                                 <mkdir dir="${cache.dir}" />
                                 
-                                <apply executable="tar" dir="${extractDir}">
+                                <apply executable="tar" dir="${ext.dir}">
                                     <arg value="-xvf" />
                                     <fileset refid="maven.project.dependencies"/>
-                                    <mapper type="regexp" from="^.*/(.*)" to="${cacheDir}/\1" />
+                                    <mapper type="regexp" from="^.*/(.*)" to="${cache.dir}/\1" />
                                 </apply>
 
                                 <touch verbose="false">
                                     <fileset refid="maven.project.dependencies"/>
-                                    <mapper type="regexp" from="^.*/(.*)" to="${cacheDir}/\1" />
+                                    <mapper type="regexp" from="^.*/(.*)" to="${cache.dir}/\1" />
                                 </touch>
                             </target>
                         </configuration>
