@@ -116,13 +116,13 @@
                                     <executable>cmake</executable>
                                     <workingDirectory>${project.build.directory}</workingDirectory>
                                     <arguments>
-                                        <argument>-DPACKAGE_VERSION=${project.version}</argument>
                                         <argument>-DPACKAGE_PATH=${package.prefix.directory}</argument>
                                         <argument>-DINSTALL_PATH=${package.install.directory}</argument>
+                                        <argument>-DCPACK_GENERATOR=${package.file.generator}</argument>
                                         <argument>-DCPACK_PACKAGE_FILE_NAME=${package.file.name}</argument>
                                         <argument>-DCPACK_PACKAGE_NAME=${project.artifactId}</argument>
                                         <argument>-DCPACK_PACKAGE_VENDOR=${project.organization.name}</argument>
-                                        <argument>-DCPACK_GENERATOR=${package.file.generator}</argument>
+                                        <argument>-DCPACK_PACKAGE_VERSION=${project.version}</argument>
                                         <argument>${basedir}</argument>
                                     </arguments>
                                 </configuration>
