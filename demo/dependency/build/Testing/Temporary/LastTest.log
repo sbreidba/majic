@@ -1,0 +1,31 @@
+Start testing: Sep 23 16:12 EDT
+----------------------------------------------------------
+1/1 Testing: maintest
+1/1 Test: maintest
+Command: "/mnt/hgfs/Devel/clavin/dependency/build/test/artidepTest"
+Directory: /mnt/hgfs/Devel/clavin/dependency/build/test
+"maintest" start time: Sep 23 16:12 EDT
+Output:
+----------------------------------------------------------
+Running main() from gtest_main.cc
+[==========] Running 2 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 2 tests from add2_test
+[ RUN      ] add2_test.with2
+[       OK ] add2_test.with2 (0 ms)
+[ RUN      ] add2_test.with4
+[       OK ] add2_test.with4 (0 ms)
+[----------] 2 tests from add2_test (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 2 tests from 1 test case ran. (0 ms total)
+[  PASSED  ] 2 tests.
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"maintest" end time: Sep 23 16:12 EDT
+"maintest" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Sep 23 16:12 EDT

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <dependencyfilesets types="tar.bz2"/>
+  <mkdir dir="/mnt/hgfs/Devel/clavin/main/build/exports"/>
+  <mkdir dir="/mnt/hgfs/Devel/clavin/main/build/exports/cache"/>
+  <apply dir="/mnt/hgfs/Devel/clavin/main/build/exports" executable="tar">
+    <arg value="-xvf"/>
+    <fileset refid="maven.project.dependencies"/>
+    <mapper to="/mnt/hgfs/Devel/clavin/main/build/exports/cache/\1" from="^.*/(.*)" type="regexp"/>
+  </apply>
+  <touch verbose="false">
+    <fileset refid="maven.project.dependencies"/>
+    <mapper to="/mnt/hgfs/Devel/clavin/main/build/exports/cache/\1" from="^.*/(.*)" type="regexp"/>
+  </touch>
+</target>
+</project>

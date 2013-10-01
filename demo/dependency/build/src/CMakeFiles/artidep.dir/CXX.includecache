@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/artidep.h
+
+/mnt/hgfs/Devel/clavin/dependency/src/artidep.cpp
+artidep.h
+/mnt/hgfs/Devel/clavin/dependency/src/artidep.h
+

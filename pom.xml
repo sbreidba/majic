@@ -1,0 +1,343 @@
+<project 
+    xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.sri.vt.test</groupId>
+    <artifactId>vt-cmake-maven</artifactId>
+    <version>0.0.2-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>CMake/Maven parent pom</name>
+
+    <organization>
+        <name>SRI International</name>
+        <url>http://www.sri.com</url>
+    </organization>
+
+    <properties>
+        <!-- allow maven default build directory to be overridden
+             note that ${project.build.directory} (not this parameter)
+             can (should) still be referenced everywhere -->
+        <alt.build.directory>build</alt.build.directory>
+
+        <!-- the CMake INSTALL_PATH -->
+        <package.install.directory>${project.build.directory}/exports</package.install.directory>
+
+        <!-- becomes the cmake prefix path - all dependencies are unpacked here -->
+        <package.prefix.directory>${project.build.directory}/pkg</package.prefix.directory>
+
+        <!-- used to determine if a package has been processed or not -->
+        <package.touch.directory>${project.build.directory}/cache</package.touch.directory>
+
+        <!-- classifier must be defined by OS profile -->
+        <package.file.classifier>undefined-classifier</package.file.classifier>
+
+        <!-- the top-level directory in the output tarball -->
+        <package.root.directory>${project.artifactId}-${project.version}</package.root.directory>
+
+        <package.file.extension>tar.bz2</package.file.extension>
+        <package.file.generator>TBZ2</package.file.generator>
+
+        <package.unpack.command>cmake</package.unpack.command>
+        <package.unpack.arguments>-E tar xvjf</package.unpack.arguments>
+
+        <package.file.name>${project.name}-${project.version}</package.file.name>
+        <package.file.path>${project.build.directory}/${package.file.name}.${package.file.extension}</package.file.path>
+        <package.file.classifier>${os.classifier}</package.file.classifier>
+
+        <!-- allow child projects to skip dependency extraction phase.
+             this is especially useful for projects with no dependencies -
+             there appears to be a bug within the and dependencyFilesets
+             task such that if there are no deps, it will get *all* dependencies
+             that just happen to be installed to the local repository -->
+        <skip.dependency.extraction>false</skip.dependency.extraction>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>OS-Unix</id>
+            <activation>
+                <os>
+                    <family>Unix</family>
+                </os>
+            </activation>
+            <properties>
+                <os.classifier>linux</os.classifier>
+                <build.command>make</build.command>
+                <build.arguments>-j5</build.arguments>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>OS-Windows</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <properties>
+                <os.classifier>linux</os.classifier>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>aggregator-present</id>
+            <activation>
+                <file>
+                    <exists>${basedir}/../pom.xml</exists>
+                </file>
+            </activation>
+            <properties>
+                <package.prefix.directory>${project.build.directory}/../pkg</package.prefix.directory>
+                <package.touch.directory>${project.build.directory}/../cache</package.touch.directory>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>cmake-configure</id>
+            <activation>
+                <file>
+                    <exists>${basedir}/CMakeLists.txt</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>cmake-configure-build</id>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>cmake</executable>
+                                    <workingDirectory>${project.build.directory}</workingDirectory>
+                                    <arguments>
+                                        <argument>-DPACKAGE_VERSION=${project.version}</argument>
+                                        <argument>-DPACKAGE_PATH=${package.prefix.directory}</argument>
+                                        <argument>-DINSTALL_PATH=${package.install.directory}</argument>
+                                        <argument>-DCPACK_PACKAGE_FILE_NAME=${package.file.name}</argument>
+                                        <argument>-DCPACK_PACKAGE_NAME=${project.artifactId}</argument>
+                                        <argument>-DCPACK_PACKAGE_VENDOR=${project.organization.name}</argument>
+                                        <argument>-DCPACK_GENERATOR=${package.file.generator}</argument>
+                                        <argument>${basedir}</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>cmake-build</id>
+            <activation>
+                <file>
+                    <exists>${basedir}/CMakeLists.txt</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>cmake-build</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <workingDirectory>${project.build.directory}</workingDirectory>
+                                    <executable>${build.command}</executable>
+                                    <commandlineArgs>${build.arguments}</commandlineArgs>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>unpack-packages</id>
+            <activation>
+                <file>
+                    <exists>${basedir}/CMakeLists.txt</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+
+                        <executions>
+                            <execution>
+                                <id>ant-unpack-packages</id>
+                                <phase>validate</phase>
+                                <configuration>
+                                    <skip>${skip.dependency.extraction}</skip>
+                                    <target>
+                                        <!-- Set up a fileset. -->
+                                        <dependencyfilesets types="${package.file.extension}"/>
+                                        <restrict id="filtered.dependencies">
+                                            <fileset refid="maven.project.dependencies"/>
+                                            <rsel:name 
+                                                name="*.${package.file.extension}" 
+                                                xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors"/>
+                                        </restrict>
+
+                                        <mkdir dir="${package.prefix.directory}"/>
+                                        <mkdir dir="${package.touch.directory}"/>
+
+                                        <apply executable="${package.unpack.command}" dir="${package.touch.directory}">
+                                            <arg line="${package.unpack.arguments}"/>
+                                            <restrict refid="filtered.dependencies"/>
+                                            <mapper type="regexp" from="^.*/(.*)" to="${package.touch.directory}/\1" />
+                                        </apply>
+
+                                        <move todir="${package.prefix.directory}" includeEmptyDirs="yes" verbose="true">
+                                            <fileset dir="${package.touch.directory}" >
+                                                <include name="**/*"/>
+                                            </fileset>
+                                            <cutdirsmapper dirs="1"/>
+                                        </move>
+
+                                        <touch verbose="false">
+                                            <restrict refid="filtered.dependencies"/>
+                                            <mapper type="regexp" from="^.*/(.*)" to="${package.touch.directory}/\1" />
+                                        </touch>
+                                    </target>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>cmake-cpack</id>
+            <activation>
+                <file>
+                    <exists>${basedir}/CMakeLists.txt</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>cmake-package</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>cpack</executable>
+                                    <workingDirectory>${project.build.directory}</workingDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>maven-install</id>
+            <activation>
+                <file>
+                    <exists>${basedir}/CMakeLists.txt</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-install-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>install-tar</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>install-file</goal>
+                                </goals>
+                                <configuration>
+                                    <pomFile>pom.xml</pomFile>
+                                    <packaging>${package.file.extension}</packaging>
+                                    <classifier>${package.file.classifier}</classifier>
+                                    <file>${package.file.path}</file>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+        <!-- TODO: change this to be parallel to the project directory e.g. project-work -->
+        <directory>${alt.build.directory}</directory>
+
+        <!--        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack-source-dependencies</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${exports.directory}</outputDirectory>
+                            <includeTypes>zip</includeTypes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>-->
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.7</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>1.2.1</version>
+                </plugin>
+                <!--
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven.dependency.plugin</artifactId>
+                    <version>2.8</version>
+                </plugin>
+                -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.5</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>
