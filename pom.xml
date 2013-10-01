@@ -202,7 +202,7 @@
                                             <mapper type="regexp" from="^.*/(.*)" to="${package.touch.directory}/\1" />
                                         </apply>
 
-                                        <move todir="${package.prefix.directory}" includeEmptyDirs="yes" verbose="true">
+                                        <move todir="${package.prefix.directory}" includeEmptyDirs="yes" verbose="false">
                                             <fileset dir="${package.touch.directory}" >
                                                 <include name="**/*"/>
                                             </fileset>
