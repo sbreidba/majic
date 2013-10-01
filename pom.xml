@@ -88,8 +88,8 @@
                 </file>
             </activation>
             <properties>
-                <package.prefix.directory>${project.build.directory}/../pkg</package.prefix.directory>
-                <package.touch.directory>${project.build.directory}/../cache</package.touch.directory>
+                <package.prefix.directory>${basedir}/../build/pkg</package.prefix.directory>
+                <package.touch.directory>${basedir}/../build/cache</package.touch.directory>
             </properties>
         </profile>
 
