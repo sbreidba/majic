@@ -41,7 +41,7 @@
         <package.unpack.command>cmake</package.unpack.command>
         <package.unpack.arguments>-E tar xvjf</package.unpack.arguments>
 
-        <package.file.name>${project.name}-${project.version}</package.file.name>
+        <package.file.name>${project.artifactId}-${project.version}</package.file.name>
         <package.file.path>${project.build.directory}/${package.file.name}.${package.file.extension}</package.file.path>
         <package.file.classifier>${os.classifier}</package.file.classifier>
 
@@ -185,12 +185,14 @@
                                     <skip>${skip.dependency.extraction}</skip>
                                     <target>
                                         <!-- Set up a fileset. -->
-                                        <dependencyfilesets types="${package.file.extension}"/>
+                                        <dependencyfilesets scopes="compile" types="${package.file.extension}"/>
+
                                         <restrict id="filtered.dependencies">
                                             <fileset refid="maven.project.dependencies"/>
-                                            <rsel:name 
+                                            <!--<rsel:name 
                                                 name="*.${package.file.extension}" 
                                                 xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors"/>
+                                            -->
                                         </restrict>
 
                                         <mkdir dir="${package.prefix.directory}"/>
