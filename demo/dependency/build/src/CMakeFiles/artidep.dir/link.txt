@@ -1,2 +1,0 @@
-/usr/bin/ar cr libartidep.a  CMakeFiles/artidep.dir/artidep.cpp.o
-/usr/bin/ranlib libartidep.a

@@ -1,2 +1,0 @@
-/mnt/hgfs/Devel/clavin/dependency/build/_CPack_Packages/Linux/TBZ2/artidep-0.0.2-SNAPSHOT/lib/libartidep.a
-/mnt/hgfs/Devel/clavin/dependency/build/_CPack_Packages/Linux/TBZ2/artidep-0.0.2-SNAPSHOT/include/artidep.h

@@ -1,4 +1,0 @@
-/mnt/hgfs/Devel/clavin/dependency/build/src/CMakeFiles/artidep.dir
-/mnt/hgfs/Devel/clavin/dependency/build/test/CMakeFiles/artidepTest.dir
-/mnt/hgfs/Devel/clavin/dependency/build/build/exports/googletest-0.0.2-SNAPSHOT/CMakeFiles/gtest.dir
-/mnt/hgfs/Devel/clavin/dependency/build/build/exports/googletest-0.0.2-SNAPSHOT/CMakeFiles/gtest_main.dir

@@ -1,1 +1,0 @@
-/usr/bin/c++       CMakeFiles/artidepTest.dir/main.cpp.o  -o artidepTest -rdynamic -lpthread ../build/exports/googletest-0.0.2-SNAPSHOT/libgtest.a ../build/exports/googletest-0.0.2-SNAPSHOT/libgtest_main.a ../src/libartidep.a 
