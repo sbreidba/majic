@@ -3,9 +3,9 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.sri.vt.test</groupId>
-    <artifactId>vt-cmake-maven</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <groupId>com.sri.vt.clavin</groupId>
+    <artifactId>cmake-maven-parent</artifactId>
+    <version>0.0.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>CMake/Maven parent pom</name>
 
@@ -13,6 +13,14 @@
         <name>SRI International</name>
         <url>http://www.sri.com</url>
     </organization>
+
+    <repositories>
+        <repository>
+            <id>artifactory-vt</id>
+            <name>SRI VT Repository</name>
+            <url>https://artifactory-vt.sarnoff.internal/repo</url>
+        </repository>
+    </repositories>
 
     <properties>
         <!-- allow maven default build directory to be overridden
@@ -88,6 +96,10 @@
                 </file>
             </activation>
             <properties>
+                <!-- TODO: consider using a property, always set in the aggregator pom
+                     to define the location of that pom. That way, if we nest more than one
+                     level deep, this will continue to work - as is, we only support one
+                     level of aggregation -->
                 <package.prefix.directory>${basedir}/../build/pkg</package.prefix.directory>
                 <package.touch.directory>${basedir}/../build/cache</package.touch.directory>
             </properties>
