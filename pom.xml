@@ -84,7 +84,9 @@
                 </os>
             </activation>
             <properties>
-                <os.classifier>linux</os.classifier>
+                <os.classifier>win64</os.classifier>
+                <build.command>cmake</build.command>
+                <build.arguments>--build . --target test></build.arguments>
             </properties>
         </profile>
 
