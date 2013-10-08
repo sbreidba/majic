@@ -91,7 +91,7 @@
             <properties>
                 <os.classifier>win64</os.classifier>
                 <build.command>cmake</build.command>
-                <build.arguments>--build .</build.arguments>
+                <build.arguments>--build . --config Release</build.arguments>
                 <cmake.generator>Visual Studio 10</cmake.generator>
             </properties>
         </profile>
