@@ -23,11 +23,6 @@
     </repositories>
 
     <properties>
-        <!-- allow maven default build directory to be overridden
-             note that ${project.build.directory} (not this parameter)
-             can (should) still be referenced everywhere -->
-        <alt.build.directory>build</alt.build.directory>
-
         <!-- the CMake INSTALL_PATH -->
         <package.install.directory>${project.build.directory}/exports</package.install.directory>
 
@@ -37,8 +32,14 @@
         <!-- used to determine if a package has been processed or not -->
         <package.touch.directory>${project.build.directory}/cache</package.touch.directory>
 
-        <!-- classifier must be defined by OS profile -->
+        <!-- classifier and build path are defined by OS profile -->
         <package.file.classifier>undefined-classifier</package.file.classifier>
+
+        <!-- allow maven default build directory to be overridden
+             note that ${project.build.directory} (not this parameter)
+             can (should) still be referenced everywhere a full, 
+             project-specific path is needed. -->
+        <alt.build.directory>build/${os.classifier}</alt.build.directory>
 
         <!-- the top-level directory in the output tarball -->
         <package.root.directory>${project.artifactId}-${project.version}</package.root.directory>
@@ -46,8 +47,11 @@
         <package.file.extension>tar.bz2</package.file.extension>
         <package.file.generator>TBZ2</package.file.generator>
 
-        <package.unpack.command>cmake</package.unpack.command>
+        <!--<package.unpack.command>cmake</package.unpack.command>
         <package.unpack.arguments>-E tar xvjf</package.unpack.arguments>
+        -->
+        <package.unpack.command>tar</package.unpack.command>
+        <package.unpack.arguments>-xvjf</package.unpack.arguments>
 
         <package.file.name>${project.artifactId}-${project.version}</package.file.name>
         <package.file.path>${project.build.directory}/${package.file.name}.${package.file.extension}</package.file.path>
@@ -73,6 +77,7 @@
                 <os.classifier>linux</os.classifier>
                 <build.command>make</build.command>
                 <build.arguments>-j5</build.arguments>
+                <cmake.generator>Unix Makefiles</cmake.generator>
             </properties>
         </profile>
 
@@ -86,7 +91,8 @@
             <properties>
                 <os.classifier>win64</os.classifier>
                 <build.command>cmake</build.command>
-                <build.arguments>--build . --target test></build.arguments>
+                <build.arguments>--build .</build.arguments>
+                <cmake.generator>Visual Studio 10</cmake.generator>
             </properties>
         </profile>
 
@@ -102,8 +108,12 @@
                      to define the location of that pom. That way, if we nest more than one
                      level deep, this will continue to work - as is, we only support one
                      level of aggregation -->
-                <package.prefix.directory>${basedir}/../build/pkg</package.prefix.directory>
-                <package.touch.directory>${basedir}/../build/cache</package.touch.directory>
+                     <package.prefix.directory>
+                         ${basedir}/../${alt.build.directory}/pkg
+                     </package.prefix.directory>
+                     <package.touch.directory>
+                         ${basedir}/../${alt.build.directory}/cache
+                     </package.touch.directory>
             </properties>
         </profile>
 
@@ -130,6 +140,7 @@
                                     <executable>cmake</executable>
                                     <workingDirectory>${project.build.directory}</workingDirectory>
                                     <arguments>
+                                        <argument>-G${cmake.generator}</argument>
                                         <argument>-DPACKAGE_PATH=${package.prefix.directory}</argument>
                                         <argument>-DINSTALL_PATH=${package.install.directory}</argument>
                                         <argument>-DCPACK_GENERATOR=${package.file.generator}</argument>
@@ -212,7 +223,7 @@
                                         <mkdir dir="${package.prefix.directory}"/>
                                         <mkdir dir="${package.touch.directory}"/>
 
-                                        <apply executable="${package.unpack.command}" dir="${package.touch.directory}">
+                                        <apply executable="${package.unpack.command}" dir="${package.touch.directory}" verbose="true">
                                             <arg line="${package.unpack.arguments}"/>
                                             <restrict refid="filtered.dependencies"/>
                                             <mapper type="regexp" from="^.*/(.*)" to="${package.touch.directory}/\1" />
