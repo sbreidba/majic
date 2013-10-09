@@ -18,7 +18,7 @@
         <repository>
             <id>artifactory-vt</id>
             <name>SRI VT Repository</name>
-            <url>https://artifactory-vt.sarnoff.internal/repo</url>
+            <url>https://artifactory-vt.sarnoff.internal/artifactory/repo</url>
         </repository>
     </repositories>
 
@@ -47,12 +47,6 @@
         <package.file.extension>tar.bz2</package.file.extension>
         <package.file.generator>TBZ2</package.file.generator>
 
-        <!--<package.unpack.command>cmake</package.unpack.command>
-        <package.unpack.arguments>-E tar xvjf</package.unpack.arguments>
-        -->
-        <package.unpack.command>tar</package.unpack.command>
-        <package.unpack.arguments>-xvjf</package.unpack.arguments>
-
         <package.file.name>${project.artifactId}-${project.version}</package.file.name>
         <package.file.path>${project.build.directory}/${package.file.name}.${package.file.extension}</package.file.path>
         <package.file.classifier>${os.classifier}</package.file.classifier>
@@ -78,6 +72,8 @@
                 <build.command>make</build.command>
                 <build.arguments>-j5</build.arguments>
                 <cmake.generator>Unix Makefiles</cmake.generator>
+                <package.unpack.command>tar</package.unpack.command>
+                <package.unpack.arguments>-xvjf</package.unpack.arguments>
             </properties>
         </profile>
 
@@ -93,6 +89,8 @@
                 <build.command>cmake</build.command>
                 <build.arguments>--build . --config Release</build.arguments>
                 <cmake.generator>Visual Studio 10</cmake.generator>
+                <package.unpack.command>cmake</package.unpack.command>
+                <package.unpack.arguments>-E tar xvjf</package.unpack.arguments>
             </properties>
         </profile>
 
@@ -222,6 +220,12 @@
 
                                         <mkdir dir="${package.prefix.directory}"/>
                                         <mkdir dir="${package.touch.directory}"/>
+
+                                        <!--<apply executable="echo" dir="${package.touch.directory}" verbose="true">
+                                            <arg line="unpacking ${package.unpack.arguments} in ${package.touch.directory}"/>
+                                            <restrict refid="filtered.dependencies"/>
+                                            <mapper type="regexp" from="^.*/(.*)" to="${package.touch.directory}/\1" />
+                                        </apply>-->
 
                                         <apply executable="${package.unpack.command}" dir="${package.touch.directory}" verbose="true">
                                             <arg line="${package.unpack.arguments}"/>
