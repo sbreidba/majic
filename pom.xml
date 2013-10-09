@@ -88,7 +88,7 @@
                 <os.classifier>win64</os.classifier>
                 <build.command>cmake</build.command>
                 <build.arguments>--build . --config Release</build.arguments>
-                <cmake.generator>Visual Studio 10</cmake.generator>
+                <cmake.generator>Visual Studio 10 Win64</cmake.generator>
                 <package.unpack.command>cmake</package.unpack.command>
                 <package.unpack.arguments>-E tar xvjf</package.unpack.arguments>
             </properties>
@@ -210,27 +210,20 @@
                                         <!-- Set up a fileset. -->
                                         <dependencyfilesets scopes="compile" types="${package.file.extension}"/>
 
-                                        <restrict id="filtered.dependencies">
+                                        <!--<restrict id="filtered.dependencies">
                                             <fileset refid="maven.project.dependencies"/>
-                                            <!--<rsel:name 
+                                            <rsel:name 
                                                 name="*.${package.file.extension}" 
                                                 xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors"/>
-                                            -->
-                                        </restrict>
+                                        </restrict>-->
 
                                         <mkdir dir="${package.prefix.directory}"/>
                                         <mkdir dir="${package.touch.directory}"/>
 
-                                        <!--<apply executable="echo" dir="${package.touch.directory}" verbose="true">
-                                            <arg line="unpacking ${package.unpack.arguments} in ${package.touch.directory}"/>
-                                            <restrict refid="filtered.dependencies"/>
-                                            <mapper type="regexp" from="^.*/(.*)" to="${package.touch.directory}/\1" />
-                                        </apply>-->
-
                                         <apply executable="${package.unpack.command}" dir="${package.touch.directory}" verbose="true">
                                             <arg line="${package.unpack.arguments}"/>
-                                            <restrict refid="filtered.dependencies"/>
-                                            <mapper type="regexp" from="^.*/(.*)" to="${package.touch.directory}/\1" />
+                                            <fileset refid="maven.project.dependencies"/>
+                                            <mapper type="regexp" from="^.*[\\/](.*)" to="${package.touch.directory}/\1" />
                                         </apply>
 
                                         <move todir="${package.prefix.directory}" includeEmptyDirs="yes" verbose="false">
@@ -241,8 +234,8 @@
                                         </move>
 
                                         <touch verbose="false">
-                                            <restrict refid="filtered.dependencies"/>
-                                            <mapper type="regexp" from="^.*/(.*)" to="${package.touch.directory}/\1" />
+                                            <fileset refid="maven.project.dependencies"/>
+                                            <mapper type="regexp" from="^.*[\\/](.*)" to="${package.touch.directory}/\1" />
                                         </touch>
                                     </target>
                                 </configuration>
