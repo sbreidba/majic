@@ -9,6 +9,10 @@
     <packaging>pom</packaging>
     <name>CMake/Maven parent pom</name>
 
+    <prerequisites>
+        <maven>3.0.0</maven>
+    </prerequisites>
+
     <organization>
         <name>SRI International</name>
         <url>http://www.sri.com</url>
@@ -210,22 +214,23 @@
                                         <!-- Set up a fileset. -->
                                         <dependencyfilesets scopes="compile" types="${package.file.extension}"/>
 
-                                        <!--<restrict id="filtered.dependencies">
-                                            <fileset refid="maven.project.dependencies"/>
-                                            <rsel:name 
-                                                name="*.${package.file.extension}" 
-                                                xmlns:rsel="antlib:org.apache.tools.ant.types.resources.selectors"/>
-                                        </restrict>-->
-
                                         <mkdir dir="${package.prefix.directory}"/>
                                         <mkdir dir="${package.touch.directory}"/>
 
-                                        <apply executable="${package.unpack.command}" dir="${package.touch.directory}" verbose="true">
+                                        <!-- 
+                                        Unpack into the touch directory as a temp, but only if the tar 
+                                        is newer than our marker.
+                                        -->
+                                        <apply executable="${package.unpack.command}" dir="${package.touch.directory}/tmp" verbose="true">
                                             <arg line="${package.unpack.arguments}"/>
                                             <fileset refid="maven.project.dependencies"/>
                                             <mapper type="regexp" from="^.*[\\/](.*)" to="${package.touch.directory}/\1" />
                                         </apply>
 
+                                        <!-- 
+                                        Move the unpacked components to their final location, removing
+                                        the top-level conventional tar directory.
+                                        -->
                                         <move todir="${package.prefix.directory}" includeEmptyDirs="yes" verbose="false">
                                             <fileset dir="${package.touch.directory}" >
                                                 <include name="**/*"/>
@@ -233,6 +238,7 @@
                                             <cutdirsmapper dirs="1"/>
                                         </move>
 
+                                        <!-- update the marker -->
                                         <touch verbose="false">
                                             <fileset refid="maven.project.dependencies"/>
                                             <mapper type="regexp" from="^.*[\\/](.*)" to="${package.touch.directory}/\1" />
@@ -359,6 +365,11 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-install-plugin</artifactId>
+                    <version>2.5</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
                     <version>2.5</version>
                 </plugin>
             </plugins>
