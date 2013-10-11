@@ -67,7 +67,9 @@
                 <build.arguments>-j5</build.arguments>
                 <cmake.generator>Unix Makefiles</cmake.generator>
                 <package.unpack.command>tar</package.unpack.command>
-                <package.unpack.arguments>-xvjf</package.unpack.arguments>
+                <package.unpack.arguments>-xjf</package.unpack.arguments>
+                <package.pack.command>tar</package.pack.command>
+                <package.pack.arguments>-cjf</package.pack.arguments>
             </properties>
         </profile>
 
@@ -81,10 +83,13 @@
             <properties>
                 <os.classifier>win64</os.classifier>
                 <build.command>cmake</build.command>
+                <!-- TODO release vs. debug -->
                 <build.arguments>--build . --config Release</build.arguments>
                 <cmake.generator>Visual Studio 10 Win64</cmake.generator>
                 <package.unpack.command>cmake</package.unpack.command>
-                <package.unpack.arguments>-E tar xvjf</package.unpack.arguments>
+                <package.unpack.arguments>-E tar xjf</package.unpack.arguments>
+                <package.pack.command>cmake</package.pack.command>
+                <package.pack.arguments>-E tar cjf</package.pack.arguments>
             </properties>
         </profile>
 
