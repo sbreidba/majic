@@ -211,10 +211,12 @@
 
                                         <mkdir dir="${package.prefix.directory}"/>
                                         <mkdir dir="${package.touch.directory}"/>
+                                        <mkdir dir="${package.touch.directory}/tmp"/>
 
                                         <!-- 
                                         Unpack into the touch directory as a temp, but only if the tar 
-                                        is newer than our marker.
+                                        is newer than our marker. We extract to tmp to make sure we
+                                        never collide with the touch file name.
                                         -->
                                         <apply executable="${package.unpack.command}" dir="${package.touch.directory}/tmp" verbose="true">
                                             <arg line="${package.unpack.arguments}"/>
@@ -224,13 +226,13 @@
 
                                         <!-- 
                                         Move the unpacked components to their final location, removing
-                                        the top-level conventional tar directory.
+                                        the top-level conventional tar directory and the tmp location.
                                         -->
                                         <move todir="${package.prefix.directory}" includeEmptyDirs="yes" verbose="false">
                                             <fileset dir="${package.touch.directory}" >
                                                 <include name="**/*"/>
                                             </fileset>
-                                            <cutdirsmapper dirs="1"/>
+                                            <cutdirsmapper dirs="2"/>
                                         </move>
 
                                         <!-- update the marker -->
