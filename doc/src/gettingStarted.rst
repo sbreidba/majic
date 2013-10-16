@@ -53,7 +53,7 @@ CentOs
    
       sudo rpm -Uvh $HOME/Downloads/jdk-7u40-linux-x64.rpm
 
-   The rpm command above came from `Here
+   I found the above rpm command `here
    <http://www.if-not-true-then-false.com/2010/install-sun-oracle-java-jdk-jre-7-on-fedora-centos-red-hat-rhel/>`__
 
 Ubuntu
@@ -62,6 +62,9 @@ Ubuntu
    :envvar:`JAVA_HOME` to point to the parent folder of
    :file:`bin/java`
 
+   Alternatively, :ref:`java install with apt-get` shows how to use
+   :command:`apt-get` to install the jdk. Installing with apt-get will
+   provide automatic notifications of updates.
 
 Note that maven requires the java *jdk*; the *jre* is not sufficient
 for using for maven. 
@@ -145,7 +148,18 @@ Unix-based Operating Systems (Linux, Solaris and Mac OS X)
 cmake Installation
 ==================
 
-.. todo::
+Linux
+   Use the source distribution in our local cmake repository on
+   git-open. The commands below will install :command:`cmake` to
+   :file:`/usr/local`:: 
 
-   Put installation notes for cmake here.
+      git clone ssh://git-open/scm/3rdparty/cmake.git -b v2.8.12
+      mkdir cmake-build
+      cd cmake-build
+      ../cmake/configure
+      make -j4 -l4
+      sudo make install
 
+Windows
+   Use the latest installer from `cmake.org
+   <http://www.cmake.org/cmake/resources/software.html>`__. 

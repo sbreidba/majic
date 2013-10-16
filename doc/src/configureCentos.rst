@@ -2,26 +2,18 @@
 Configuring a Linux (CentOs/RedHat) System for Development
 ==========================================================
 
-Installing Packages
-===================
-   
-cmake
------
+EPEL
+====
 
-Use the source in our local cmake repository on git-open::
+  $ wget http://download.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm
+  $ rpm -Uvh epel-release-5-4.noarch.rpm
 
-   git clone ssh://git-open/scm/3rdparty/cmake.git -b v2.8.12
-   mkdir cmake-build
-   cd cmake-build
-   ../cmake/configure
-   make -j6 -l6
-   sudo make install
+Or simply click on this link: http://download.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm .
 
 boost
------
+=====
 
 Before building install::
-
 
    sudo yum install bzip2-devel
    sudo yum install zlib-devel
@@ -31,22 +23,28 @@ Build using::
    ./bootstrap.sh --prefix=$HOME/projects/aspn-pkg
    ./b2 --build-type=complete --layout=tagged -j4 address-model=64 link=static,shared install
 
+.. todo:: 
+
+   installation/building of boost become part of the general
+   documentation of clavin and should not be mentioned in this CentOs
+   section. 
+
 7zip
-----
+====
 
 Using the epel repository::
 
    sudo yum install p7zip-plugins
 
 xerces-c-dev
-------------
+============
 
 Install using::
 
    sudo yum install xerces-c-devel
 
 gdal
-----
+====
 
 There are various versions of gdal available from several
 repositories. At the current time (October 14, 2013), the choices are: 
@@ -61,7 +59,7 @@ EPEL
    1.10.1 (Aug, 2013)
 
 doxygen (and graphviz)
-----------------------
+======================
 
 The installed doxygen (1.6) is old and does not meet the requirements
 for generating geographiclib's docuementation. The easiest thing is to
@@ -80,20 +78,15 @@ use the following commands::
    sudo make install
    
 
+Packages Peculiar to Locktight
+==============================
+
 ACE
 ---
 
 Copy the repo file from
 http://download.opensuse.org/repositories/devel:/libraries:/ACE:/bugfixonly/CentOS_CentOS-5/devel:libraries:ACE:bugfixonly.repo
 to :file:`/etc/yum.repos.d/OpenSUSE-ACE.repo`
-
-EPEL
-----
-
-  $ wget http://download.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm
-  $ rpm -Uvh epel-release-5-4.noarch.rpm
-
-Or simply click on this link: http://download.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm .
 
 
 Add/Remove Software
@@ -119,7 +112,7 @@ From Add/Remove Software, Development, make sure the following are checked:
 (See note below on configuring boost on CentOs 5.7.)
 
 Qt
-==
+--
 
 Qt is not readily available for Centos 5.7. On Centos 6.3, you can get
 Qt from the base repository, but it is old. On windows I could not

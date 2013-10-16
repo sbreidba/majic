@@ -31,7 +31,7 @@ the additional option of ``--bare``.
 Selecting branches when cloning with git-svn
 ============================================
 
-.. sidebar:: git-svn is Fragile
+.. warning:: git-svn is Fragile
    
    My very limited experience agrees with the comments in the links
    reference :ref:`above <boost-svn on github>` that mention

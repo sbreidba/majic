@@ -1,8 +1,8 @@
-.. _configuring jenkins::
+.. _configuring jenkins:
 
-=================================
-Configuring Jenkins to Build ASPN
-=================================
+===================
+Configuring Jenkins
+===================
 
 Install Jenkins
 ===============
@@ -25,7 +25,7 @@ proper configuration of a jenkins build account. Here is what I did
 for the aspn build.
 
 I first logged into the jenkins account on the computer running the
-jenkins server using the following command as explained at this `Stack
+jenkins server using the following command as explained in this `Stack
 Overflow answer
 <http://stackoverflow.com/questions/15314760/managing-ssh-keys-within-jenkins-for-git>`_
 
@@ -40,19 +40,6 @@ This gave me a command prompt for the jenkins user account. Then I
 generated an empty passphrase key using::
 
    ssh-keygen
-
-
-.. sidebar:: Other repositories and build accounts
-
-   Here I am describing how you get the jenkins public key into the
-   ``vtbuild-open`` account on the ``git-open`` server. You will need
-   to repeat these steps for each additional git server and user that
-   you want Jenkins to use. For aspn, you must repeat this for the
-   shared ``aspn-user`` account on ``aspn-sri.sarnoff.com``
-   server. The aspn account is used to clone the gtsam repository from
-   this externally accessible server. For other projects you may also
-   need to repeat it for ``vtbuild-itar`` account on the ``git-itar``
-   server.
 
 From another terminal session I ssh'ed to ``vtbuild-open@git-open`` using
 the credentials for the vtbuild-open account. Then I vi'ed the
@@ -73,6 +60,19 @@ ssh keys, you need to configure git for the jenkins account using::
 Verify that git works without prompts using::
 
    git clone ssh://vtbuild-open@git-open/scm/vision/vtcmake.git
+
+.. tip:: 
+
+   Other repositories and build accounts
+      Above I am describing how you get the jenkins public key into the
+      ``vtbuild-open`` account on the ``git-open`` server. You will need
+      to repeat these steps for each additional git server and user that
+      you want Jenkins to use. For aspn, you must repeat this for the
+      shared ``aspn-user`` account on ``aspn-sri.sarnoff.com``
+      server. The aspn account is used to clone the gtsam repository from
+      this externally accessible server. For other projects you may also
+      need to repeat it for ``vtbuild-itar`` account on the ``git-itar``
+      server.
 
 Configure vtbuild-open user account on a slave computer
 =======================================================
@@ -120,8 +120,13 @@ In the verification commands above, I use the notation of
 the *computer*.
 
 
-Manage Jenkins
-==============
+Configuring/Managing the Jenkins Master
+=======================================
+
+.. todo:: 
+
+   add more details about configuring the jenkins master, slave, build
+   jobs, test jobs, etc. 
 
 JDK and Maven
 -------------
@@ -129,20 +134,34 @@ JDK and Maven
 As part of the system configuration, initialize the JDK and Maven
 settings for the master.
 
-A Slave Node
-------------
+Plugins
+-------
+
+Build Jobs
+----------
+
+Test Jobs
+---------
+
+Documentation Jobs
+------------------
+
+Slave Nodes
+-----------
+
+On the Master
+~~~~~~~~~~~~~
 
 Once you have a jenkins installed and running on a master, and a
 second computer to which the jenkins account has ssh privileges, you
 can then configure a jenkins node and jobs meant to run on that node. 
 
-.. todo:: 
+The slave itself
+~~~~~~~~~~~~~~~~
 
-   add more details about configuring a jenkins slave
 
-
-Copy a Jenkins Configuration
-============================
+Copy a Jenkins Master Configuration
+===================================
 
 There are at least two ways to copy a jenkins configuration from one
 computer to another. 
@@ -169,28 +188,3 @@ Disable the Jenkins Service at Startup
 .. code-block:: bash
 
    sudo sh -c "echo 'manual' > /etc/init/jenkins.override"
-
-
-TODO
-====
-
-* jenkins build on aspn-cloud01
-
-* jenkins build of required packages: boost 1.48, geographiclib, hdf5
-
-* store and use packages with artifactory
-
-* remove or reduce usage of environment variables
-
-* use the construct ``cmake ... || true`` so jenkins will not choke on
-  a test failure but will continue its build, generate reports,
-  etc. *AND* still mark the build as FAILED.
-
-* incorporate the command ``cp Testing/`head -n 1
-  Testing/TAG`/Test.xml ./CTestResults.xml`` into the cmake build step
-  so it does not have to be replicated in every jenkins job.
-
-* make separate job(s) to generate and gather documentation
-
-
-

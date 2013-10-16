@@ -4,11 +4,11 @@
 Configuration of new ubuntu 12.04 computer aspn03
 =================================================
 
-apt-get Installs
-================
+In this section we show various apt-get installs of packages used for
+ASPN development. 
 
 Generally useful packages
--------------------------
+=========================
 
 .. index:: p7zip, 7z, emacs
 
@@ -23,10 +23,10 @@ Generally useful packages
       aptitude
 
 :index:`ROS` Desktop
---------------------
+====================
 
 Install ROS following the directions on the `ROS Wiki
-<http://www.ros.org/wiki/groovy/Installation/Ubuntu>`_
+<http://www.ros.org/wiki/groovy/Installation/Ubuntu>`__
 
 ::
 
@@ -37,11 +37,8 @@ Install ROS following the directions on the `ROS Wiki
    sudo apt-get install ros-groovy-desktop-full
 
 
-Install other packages needed for ASPN development
---------------------------------------------------
-
 :index:`xerces-c`
-~~~~~~~~~~~~~~~~~
+=================
 
 ::
 
@@ -51,21 +48,8 @@ Install other packages needed for ASPN development
       libxerces-c-samples \
       libxerces-c3.1
 
-:index:`Qt4`
-~~~~~~~~~~~~
-
-::
-
-   sudo apt-get install \
-      qt4-dev-tools \
-      qt4-designer \
-      qtcreator \
-      qtcreator-doc \
-      qt4-doc \
-      qt4-demos
-
 :index:`gdal`
-~~~~~~~~~~~~~
+=============
 
 The conventional Ubuntu source for gdal does not install with ROS
 because it has a conflicting dependency. So I download and build gdal
@@ -84,8 +68,21 @@ If you are not using ROS and want a conventional install of gdal, use::
    sudo apt-get install libgdal1-dev libgdal-doc gdal-bin python-gdal
 
 
+:index:`Qt4`
+============
+
+::
+
+   sudo apt-get install \
+      qt4-dev-tools \
+      qt4-designer \
+      qtcreator \
+      qtcreator-doc \
+      qt4-doc \
+      qt4-demos
+
 :index:`Eclipse` for C++:
-~~~~~~~~~~~~~~~~~~~~~~~~~
+=========================
 
 Before installing eclipse, you may want to install an up-to-date JDK
 as described below. You will need a JRE, but the one that comes with
@@ -104,15 +101,10 @@ says to::
 (The reason you must run eclipse first is the target directory for
 this link will not exist until eclipse has been run.)
 
-Packages Peculiar to Phil
-=========================
+.. _java install with apt-get:
 
-Oracle Java :index:`JDK`
-------------------------
-
-(The only reason I install this is for PyCharm and SmartGit. But when
-we start using ``clavin`` everyone will need to install the jdk to get
-maven to work correctly.)
+Oracle Java :index:`JDK` with apt-get
+=====================================
 
 PPA installation instructions for the Oracle JDK are found at `webupd8
 <http://www.webupd8.org/2012/01/install-oracle-java-jdk-7-in-ubuntu-via.html>`_. To
@@ -127,69 +119,26 @@ The environment variable :envvar:`JAVA_HOME` is a conventional way to
 tell java applications where to get the JRE.
 
 :index:`hdf5`
--------------
+=============
 
 ::
 
    sudo apt-get install libhdf5-serial-dev libhdf5-doc hdf5-tools hdfview
 
-
-Licensed Applications
----------------------
-
-.. _install smartgit:
-
-:index:`smartgit`
-~~~~~~~~~~~~~~~~~
-
-  smartgit may be downloaded from `syntevo
-  <http://www.syntevo.com/smartgithg/download.html>`_. Unpack the
-  tarball into ``~/pkg``::
-
-    cd smartgithg-4_5_4/bin
-    ./add-menuitem.sh
-    ln `pwd`/smartgithg.sh ~/bin     
-
-:index:`PyCharm`
-~~~~~~~~~~~~~~~~
-
-PyCharm may be downloaded from `jetbrains
-<http://www.jetbrains.com/pycharm/download/index.html>`_.
-
 Python Goodies
---------------
+==============
 
 ::
 
    sudo apt-get install python-setuptools
+   sudo easy_install pip
+   sudo pip install docutils
 
-:index:`Acrobat` Reader
------------------------
-
-You must first enable the "Canonical Partners" option from the "Other
-Software" tab in the Software Center. Then install using::
-
-   sudo apt-get update
-   sudo apt-get install acroread
-
-This installs a lot of i386 packages that are not usually needed, but
-I really do not like the native Ubuntu pdf reader(s), so I install
-:index:`acroread` anyway. 
-
-See
-`askubuntu <http://askubuntu.com/questions/89127/how-do-i-install-adobe-acrobat-reader>`__
-for detailed instructions.
-
-:index:`Flash` Player
----------------------
-
-::
-
-   sudo apt-get install flashplugin-installer
-
+The docutils package contains the sphinx documentation builder used to
+generate this documentation set.
 
 :index:`Grub`-customizer
-------------------------
+========================
 
 To get a gui for customizing grub see `this blog
 <https://launchpad.net/~danielrichter2007/+archive/grub-customizer?field.series_filter=precise>`_,
@@ -199,10 +148,14 @@ which has the following instructions::
    sudo apt-get update
    sudo apt-get install grub-customizer
 
+
+Miscellaneous Tips
+==================
+
 .. index:: windows, shortcut, snap
 
 Customize Windows Shortcut Keys
-===============================
+-------------------------------
 
 Ubuntu has something very close to the win7 winkey-right/winkey-left
 behavior to snap a window to the right or left side of the screen. You
@@ -216,7 +169,7 @@ Hardware/Keyboard -> Shortcuts -> Windows then set the shortcut for
 .. index:: mount, ntfs
 
 Mount Windows Partitions
-========================
+------------------------
 
 ::
 
@@ -226,7 +179,7 @@ Mount Windows Partitions
 .. index:: dpkg
 
 Use Same Packages as Another Computer
-=====================================
+-------------------------------------
 
 To configure a computer with same packages as another computer (from
 `askubuntu

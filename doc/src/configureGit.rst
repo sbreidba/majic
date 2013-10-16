@@ -1,7 +1,3 @@
-.. only:: html
-
-   .. contents::
-
 .. _Configuring git:
 
 ===========
@@ -27,7 +23,7 @@ Installing git
 
 :smartgit gui client:
 
-   I cannot effectively use git via command line only. I have to have
+   I (pwm) cannot effectively use git via command line only. I have to have
    a gui client. I use `smartgit
    <http://www.syntevo.com/smartgithg/download>`_, which has nominal
    (about $80) license fee but is portable across and linux and may be
@@ -42,9 +38,8 @@ every computer account. He has very good instructions on the `Git-ssh
 <https://wiki.sri.com/display/VT/Git-ssh>`__ page on the `VT Wiki
 <https://wiki.sri.com/display/VT/Home>`__. I think it is easier and
 better to reuse mine, so I copy them from an existing :file:`~/.ssh`
-folder. I did create a second private key, ``pkey2`` that I am using
-for bitbucket.  After copying the keys to the new account, be sure to
-remove insecure permissions to it by::
+folder. When you copy those keys around, be sure to remove insecure
+permissions to the :file:`~/.ssh` folder and its files by using::
 
    $ chmod -R g-rwx,o-rwx ~/.ssh
 
@@ -52,8 +47,7 @@ For other accounts to be able to :command:`ssh` to this computer
 without using a password, you need to add your public key(s) to the
 :file:`~/.ssh/authorized_keys` file.
 
-You should also copy and install your SRI Certificate so you can
-access the `SRI Insider <https://insider.sri.com>`_.
+Details of configuring jenkins and ssh are discussed in :ref:`configuring jenkins`.
 
 Tips
 ====
