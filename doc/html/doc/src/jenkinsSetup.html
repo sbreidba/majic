@@ -1,0 +1,304 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Configuring Jenkins &mdash; clavin 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="clavin 0.1 documentation" href="../../index.html" />
+    <link rel="next" title="Configuration of new ubuntu 12.04 computer aspn03" href="configureUbuntu.html" />
+    <link rel="prev" title="git Tips" href="gitTips.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="configureUbuntu.html" title="Configuration of new ubuntu 12.04 computer aspn03"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="gitTips.html" title="git Tips"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">clavin 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Configuring Jenkins</a><ul>
+<li><a class="reference internal" href="#install-jenkins">Install Jenkins</a></li>
+<li><a class="reference internal" href="#configure-ssh-keys-for-the-jenkins-user">Configure ssh Keys for the jenkins User</a></li>
+<li><a class="reference internal" href="#configure-vtbuild-open-user-account-on-a-slave-computer">Configure vtbuild-open user account on a slave computer</a></li>
+<li><a class="reference internal" href="#configuring-managing-the-jenkins-master">Configuring/Managing the Jenkins Master</a><ul>
+<li><a class="reference internal" href="#jdk-and-maven">JDK and Maven</a></li>
+<li><a class="reference internal" href="#plugins">Plugins</a></li>
+<li><a class="reference internal" href="#build-jobs">Build Jobs</a></li>
+<li><a class="reference internal" href="#test-jobs">Test Jobs</a></li>
+<li><a class="reference internal" href="#documentation-jobs">Documentation Jobs</a></li>
+<li><a class="reference internal" href="#slave-nodes">Slave Nodes</a><ul>
+<li><a class="reference internal" href="#on-the-master">On the Master</a></li>
+<li><a class="reference internal" href="#the-slave-itself">The slave itself</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#copy-a-jenkins-master-configuration">Copy a Jenkins Master Configuration</a></li>
+<li><a class="reference internal" href="#disable-the-jenkins-service-at-startup">Disable the Jenkins Service at Startup</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="gitTips.html"
+                        title="previous chapter">git Tips</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="configureUbuntu.html"
+                        title="next chapter">Configuration of new ubuntu 12.04 computer aspn03</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/doc/src/jenkinsSetup.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="configuring-jenkins">
+<span id="id1"></span><h1>Configuring Jenkins<a class="headerlink" href="#configuring-jenkins" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="install-jenkins">
+<h2>Install Jenkins<a class="headerlink" href="#install-jenkins" title="Permalink to this headline">¶</a></h2>
+<p>The documentation for Jenkins says that to use stable releases use:</p>
+<div class="highlight-python"><pre>wget -q -O - http://pkg.jenkins-ci.org/debian-stable/jenkins-ci.org.key | sudo apt-key add -
+sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian-stable binary/ &gt; /etc/apt/sources.list.d/jenkins.list'
+sudo apt-get update
+sudo apt-get install jenkins</pre>
+</div>
+<p>To use more recent releases remove the <tt class="docutils literal"><span class="pre">-stable</span></tt> suffix from
+<tt class="docutils literal"><span class="pre">debian-stable</span></tt> in the two http URLs above.</p>
+</div>
+<div class="section" id="configure-ssh-keys-for-the-jenkins-user">
+<h2>Configure ssh Keys for the jenkins User<a class="headerlink" href="#configure-ssh-keys-for-the-jenkins-user" title="Permalink to this headline">¶</a></h2>
+<p>There is a lot of unexplained/misremembered folklore relating to
+proper configuration of a jenkins build account. Here is what I did
+for the aspn build.</p>
+<p>I first logged into the jenkins account on the computer running the
+jenkins server using the following command as explained in this <a class="reference external" href="http://stackoverflow.com/questions/15314760/managing-ssh-keys-within-jenkins-for-git">Stack
+Overflow answer</a></p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="c"># Login as the jenkins user and specify shell explicity,</span>
+<span class="c"># since the default shell is /bin/false for most</span>
+<span class="c"># jenkins installations.</span>
+sudo su jenkins -s /bin/bash
+</pre></div>
+</div>
+<p>This gave me a command prompt for the jenkins user account. Then I
+generated an empty passphrase key using:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ssh</span><span class="o">-</span><span class="n">keygen</span>
+</pre></div>
+</div>
+<p>From another terminal session I ssh&#8217;ed to <tt class="docutils literal"><span class="pre">vtbuild-open&#64;git-open</span></tt> using
+the credentials for the vtbuild-open account. Then I vi&#8217;ed the
+<tt class="file docutils literal"><span class="pre">~/.ssh/authorized_keys</span></tt> file, and at the very end of that file, I
+pasted the contents from the public key from the
+<tt class="file docutils literal"><span class="pre">~jenkins/.ssh/id_rsa.pub</span></tt>. To verify that it works, use:</p>
+<div class="highlight-python"><pre>ssh vtbuild-open@git-open date</pre>
+</div>
+<p>When you are able to get this to execute with no errors <em>AND</em> no
+prompts, the jenkins build should be able to use the vtbuild-open
+account for cloning git repositories. In addition to setting up the
+ssh keys, you need to configure git for the jenkins account using:</p>
+<div class="highlight-python"><pre>git config --global user.email jenkins@aspn
+git config --global user.name "Jenkins Build"</pre>
+</div>
+<p>Verify that git works without prompts using:</p>
+<div class="highlight-python"><pre>git clone ssh://vtbuild-open@git-open/scm/vision/vtcmake.git</pre>
+</div>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<dl class="last docutils">
+<dt>Other repositories and build accounts</dt>
+<dd>Above I am describing how you get the jenkins public key into the
+<tt class="docutils literal"><span class="pre">vtbuild-open</span></tt> account on the <tt class="docutils literal"><span class="pre">git-open</span></tt> server. You will need
+to repeat these steps for each additional git server and user that
+you want Jenkins to use. For aspn, you must repeat this for the
+shared <tt class="docutils literal"><span class="pre">aspn-user</span></tt> account on <tt class="docutils literal"><span class="pre">aspn-sri.sarnoff.com</span></tt>
+server. The aspn account is used to clone the gtsam repository from
+this externally accessible server. For other projects you may also
+need to repeat it for <tt class="docutils literal"><span class="pre">vtbuild-itar</span></tt> account on the <tt class="docutils literal"><span class="pre">git-itar</span></tt>
+server.</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="configure-vtbuild-open-user-account-on-a-slave-computer">
+<h2>Configure vtbuild-open user account on a slave computer<a class="headerlink" href="#configure-vtbuild-open-user-account-on-a-slave-computer" title="Permalink to this headline">¶</a></h2>
+<p>For jenkins to execute jobs on a slave, the master jenkins account
+needs ssh privileges to the slave. Following the current VT
+conventions for Jenkins, this is done by creating a user named
+<tt class="docutils literal"><span class="pre">vtbuild-open</span></tt> on the slave.</p>
+<p>After creating the <tt class="docutils literal"><span class="pre">vtbuild-open</span></tt> account (I am sure there is a
+command line way that Doug or Skip would use, but I use the gui for
+this), put the public key for the jenkins user on the master into the
+newly created vtbuild-open <tt class="file docutils literal"><span class="pre">~/.ssh/authorized_keys</span></tt> file
+following the same instructions as above. (Remember: put the contents
+of the <tt class="file docutils literal"><span class="pre">~.ssh/id_rsa.pub</span></tt> from the jenkins user account on the
+master into the <tt class="file docutils literal"><span class="pre">vtbuild-open:.ssh/authorized_keys</span></tt> file on the
+slave.)</p>
+<p>Then repeat these steps so that the vtbuild-open account on the slave
+can clone from git-open without prompts. In summary there are two
+required special <strong class="command">ssh</strong> permissions that are needed
+for a Jenkins master/slave relationship. The two verification steps are:</p>
+<ol class="arabic">
+<li><p class="first">in a terminal window for the <em>jenkins</em> account on the
+<em>vtbuild-open</em> computer execute:</p>
+<div class="highlight-python"><pre>jenkins@vtbuild-open$ ssh vtbuild-open@bso-cent-xyz date</pre>
+</div>
+<p>to verify that no prompts occur between that session and a remote
+session for the <em>vtbuild-open</em> account on the <em>bso-cent-xyz</em> slave
+computer. This ensures that the jenkins account on the master will
+be able to run commands as the build account on the slave computer.</p>
+</li>
+<li><p class="first">in a terminal window for the <em>vtbuild-open</em> account on the
+<em>bso-cent-xyx</em> computer execute:</p>
+<div class="highlight-python"><pre>vtbuild-open@bso-cent-xyz$ ssh vtbuild-open@git-open date
+vtbuild-open@bso-cent-xyz$ git clone ssh:://vtbuild-open@git-open/scm/vision/vtcmake.git</pre>
+</div>
+<p>and verify that no prompts occur. This ensures that the build
+account on the slave will be able to clone projects from git-open.</p>
+</li>
+</ol>
+<p>In the verification commands above, I use the notation of
+<tt class="docutils literal"><span class="pre">user&#64;computer$</span></tt> to indicate the shell prompt <em>$</em> for the <em>user</em> on
+the <em>computer</em>.</p>
+</div>
+<div class="section" id="configuring-managing-the-jenkins-master">
+<h2>Configuring/Managing the Jenkins Master<a class="headerlink" href="#configuring-managing-the-jenkins-master" title="Permalink to this headline">¶</a></h2>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">add more details about configuring the jenkins master, slave, build
+jobs, test jobs, etc.</p>
+</div>
+<div class="section" id="jdk-and-maven">
+<h3>JDK and Maven<a class="headerlink" href="#jdk-and-maven" title="Permalink to this headline">¶</a></h3>
+<p>As part of the system configuration, initialize the JDK and Maven
+settings for the master.</p>
+</div>
+<div class="section" id="plugins">
+<h3>Plugins<a class="headerlink" href="#plugins" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="build-jobs">
+<h3>Build Jobs<a class="headerlink" href="#build-jobs" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="test-jobs">
+<h3>Test Jobs<a class="headerlink" href="#test-jobs" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="documentation-jobs">
+<h3>Documentation Jobs<a class="headerlink" href="#documentation-jobs" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="slave-nodes">
+<h3>Slave Nodes<a class="headerlink" href="#slave-nodes" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="on-the-master">
+<h4>On the Master<a class="headerlink" href="#on-the-master" title="Permalink to this headline">¶</a></h4>
+<p>Once you have a jenkins installed and running on a master, and a
+second computer to which the jenkins account has ssh privileges, you
+can then configure a jenkins node and jobs meant to run on that node.</p>
+</div>
+<div class="section" id="the-slave-itself">
+<h4>The slave itself<a class="headerlink" href="#the-slave-itself" title="Permalink to this headline">¶</a></h4>
+</div>
+</div>
+</div>
+<div class="section" id="copy-a-jenkins-master-configuration">
+<h2>Copy a Jenkins Master Configuration<a class="headerlink" href="#copy-a-jenkins-master-configuration" title="Permalink to this headline">¶</a></h2>
+<p>There are at least two ways to copy a jenkins configuration from one
+computer to another.</p>
+<ol class="arabic simple">
+<li>You can manually copy the jobs (without the builds) and the plugins
+from the jenkins account and use them in a jenkins account on
+another computer. This requires you to know where files are.</li>
+<li>You can use a thinBackup set. Do a &#8220;Backup Now&#8221; on the source
+computer and copy the timestamped subdirectory to the destination
+computer. You will need to edit the backed up file with the url
+location, so it uses the proper url for the jenkins installation on
+the destination computer. Point your browser to the jenkins server
+on the destination computer and go to the Manage Jenkins -&gt;
+Plugins page and install the thinBackup plugin. Change the
+ThinBackup settings to point to the folder containing the backup
+set, and restore the configuration. (I successfully did this when
+copying a jenkins configuration from a vm on my laptop to a vm on
+the vtopen vcloud.)</li>
+</ol>
+</div>
+<div class="section" id="disable-the-jenkins-service-at-startup">
+<h2>Disable the Jenkins Service at Startup<a class="headerlink" href="#disable-the-jenkins-service-at-startup" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash"><div class="highlight"><pre>sudo sh -c <span class="s2">&quot;echo &#39;manual&#39; &gt; /etc/init/jenkins.override&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="configureUbuntu.html" title="Configuration of new ubuntu 12.04 computer aspn03"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="gitTips.html" title="git Tips"
+             >previous</a> |</li>
+        <li><a href="../../index.html">clavin 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, SRI International.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+    </div>
+  </body>
+</html>

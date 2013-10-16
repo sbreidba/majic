@@ -1,0 +1,261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Configuring a Linux (CentOs/RedHat) System for Development &mdash; clavin 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="clavin 0.1 documentation" href="../../index.html" />
+    <link rel="next" title="VC10 Notes" href="configureVc10.html" />
+    <link rel="prev" title="Configuration of new ubuntu 12.04 computer aspn03" href="configureUbuntu.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="configureVc10.html" title="VC10 Notes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="configureUbuntu.html" title="Configuration of new ubuntu 12.04 computer aspn03"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">clavin 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Configuring a Linux (CentOs/RedHat) System for Development</a><ul>
+<li><a class="reference internal" href="#epel">EPEL</a></li>
+<li><a class="reference internal" href="#boost">boost</a></li>
+<li><a class="reference internal" href="#zip">7zip</a></li>
+<li><a class="reference internal" href="#xerces-c-dev">xerces-c-dev</a></li>
+<li><a class="reference internal" href="#gdal">gdal</a></li>
+<li><a class="reference internal" href="#doxygen-and-graphviz">doxygen (and graphviz)</a></li>
+<li><a class="reference internal" href="#packages-peculiar-to-locktight">Packages Peculiar to Locktight</a><ul>
+<li><a class="reference internal" href="#ace">ACE</a></li>
+<li><a class="reference internal" href="#add-remove-software">Add/Remove Software</a></li>
+<li><a class="reference internal" href="#qt">Qt</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="configureUbuntu.html"
+                        title="previous chapter">Configuration of new ubuntu 12.04 computer aspn03</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="configureVc10.html"
+                        title="next chapter">VC10 Notes</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/doc/src/configureCentos.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="configuring-a-linux-centos-redhat-system-for-development">
+<h1>Configuring a Linux (CentOs/RedHat) System for Development<a class="headerlink" href="#configuring-a-linux-centos-redhat-system-for-development" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="epel">
+<h2>EPEL<a class="headerlink" href="#epel" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>$ wget <a class="reference external" href="http://download.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm">http://download.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm</a>
+$ rpm -Uvh epel-release-5-4.noarch.rpm</div></blockquote>
+<p>Or simply click on this link: <a class="reference external" href="http://download.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm">http://download.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm</a> .</p>
+</div>
+<div class="section" id="boost">
+<h2>boost<a class="headerlink" href="#boost" title="Permalink to this headline">¶</a></h2>
+<p>Before building install:</p>
+<div class="highlight-python"><pre>sudo yum install bzip2-devel
+sudo yum install zlib-devel</pre>
+</div>
+<p>Build using:</p>
+<div class="highlight-python"><pre>./bootstrap.sh --prefix=$HOME/projects/aspn-pkg
+./b2 --build-type=complete --layout=tagged -j4 address-model=64 link=static,shared install</pre>
+</div>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">installation/building of boost become part of the general
+documentation of clavin and should not be mentioned in this CentOs
+section.</p>
+</div>
+</div>
+<div class="section" id="zip">
+<h2>7zip<a class="headerlink" href="#zip" title="Permalink to this headline">¶</a></h2>
+<p>Using the epel repository:</p>
+<div class="highlight-python"><pre>sudo yum install p7zip-plugins</pre>
+</div>
+</div>
+<div class="section" id="xerces-c-dev">
+<h2>xerces-c-dev<a class="headerlink" href="#xerces-c-dev" title="Permalink to this headline">¶</a></h2>
+<p>Install using:</p>
+<div class="highlight-python"><pre>sudo yum install xerces-c-devel</pre>
+</div>
+</div>
+<div class="section" id="gdal">
+<h2>gdal<a class="headerlink" href="#gdal" title="Permalink to this headline">¶</a></h2>
+<p>There are various versions of gdal available from several
+repositories. At the current time (October 14, 2013), the choices are:</p>
+<dl class="docutils">
+<dt>EPEL</dt>
+<dd>1.7.3 (Nov, 2010)</dd>
+<dt><a class="reference external" href="http://elgis.argeo.org/repos/6/elgis-release-6-6_0.noarch.rpm">EL GIS</a></dt>
+<dd>1.9.2 (Oct, 2012), 1.9.1, 1.8.1, 1.8.0, 1.7.3, and 1.7.2</dd>
+<dt><a class="reference external" href="http://download.osgeo.org/gdal">osgeo</a> source distribution:</dt>
+<dd>1.10.1 (Aug, 2013)</dd>
+</dl>
+</div>
+<div class="section" id="doxygen-and-graphviz">
+<h2>doxygen (and graphviz)<a class="headerlink" href="#doxygen-and-graphviz" title="Permalink to this headline">¶</a></h2>
+<p>The installed doxygen (1.6) is old and does not meet the requirements
+for generating geographiclib&#8217;s docuementation. The easiest thing is to
+uninstall doxygen and install it locally. You may get the source from:
+<a class="reference external" href="http://www.stack.nl/~dimitri/doxygen/download.html">here</a>. Then
+use the following commands:</p>
+<div class="highlight-python"><pre>sudo yum remove doxygen
+sudo yum install graphviz
+
+cd ~/projects/pkg-src
+zcat ~/Downloads/doxygen-1.8.5.src.tar.gz | tar -xvf -
+cd doxygen-1.8.5
+./configure
+make -j6 -l6
+sudo make install</pre>
+</div>
+</div>
+<div class="section" id="packages-peculiar-to-locktight">
+<h2>Packages Peculiar to Locktight<a class="headerlink" href="#packages-peculiar-to-locktight" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="ace">
+<h3>ACE<a class="headerlink" href="#ace" title="Permalink to this headline">¶</a></h3>
+<p>Copy the repo file from
+<a class="reference external" href="http://download.opensuse.org/repositories/devel:/libraries:/ACE:/bugfixonly/CentOS_CentOS-5/devel:libraries:ACE:bugfixonly.repo">http://download.opensuse.org/repositories/devel:/libraries:/ACE:/bugfixonly/CentOS_CentOS-5/devel:libraries:ACE:bugfixonly.repo</a>
+to <tt class="file docutils literal"><span class="pre">/etc/yum.repos.d/OpenSUSE-ACE.repo</span></tt></p>
+</div>
+<div class="section" id="add-remove-software">
+<h3>Add/Remove Software<a class="headerlink" href="#add-remove-software" title="Permalink to this headline">¶</a></h3>
+<p>From Add/Remove Software, Development, make sure the following are checked:</p>
+<ol class="arabic">
+<li><p class="first">Development Libraries</p>
+<ol class="arabic simple">
+<li>Development Tools</li>
+<li>Legacy Software Development</li>
+<li>X Software Development</li>
+</ol>
+<p>After that is done, remove boost 1.33.</p>
+</li>
+<li><p class="first">ace-devel</p>
+</li>
+<li><p class="first">boost-devel</p>
+</li>
+<li><p class="first">gdal-devel</p>
+</li>
+<li><p class="first">gsoap-devel</p>
+</li>
+<li><p class="first">openmotif-devel</p>
+</li>
+<li><p class="first">xerces-c-devel</p>
+</li>
+</ol>
+<p>(See note below on configuring boost on CentOs 5.7.)</p>
+</div>
+<div class="section" id="qt">
+<h3>Qt<a class="headerlink" href="#qt" title="Permalink to this headline">¶</a></h3>
+<p>Qt is not readily available for Centos 5.7. On Centos 6.3, you can get
+Qt from the base repository, but it is old. On windows I could not
+find a 64-bit distribution for VS 2010. So we now have our own Qt
+source tree on git-open that is a clone of the one on gitorious. Here
+are the build instructions for Linux:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>git clone ssh://&lt;username&gt;@git-open/scm/vendor/gitorious/qt.git
+<span class="nv">$ </span><span class="nb">cd </span>qt
+<span class="nv">$ </span>./configure
+
+<span class="nv">$ </span>make -j8
+<span class="nv">$ </span>make install
+
+<span class="c"># default configuration of Qt will be install into /usr/local/Trolltech/Qt-4.8.5</span>
+<span class="c">#</span>
+<span class="c"># the cmake find scripts for Qt use the ``qmake`` that it finds</span>
+<span class="c"># first in your path when setting paths to Qt components, so make a</span>
+<span class="c"># softlink to qmake to put it early in your path.</span>
+
+<span class="nv">$ </span>ln -s /usr/local/Trolltech/Qt-4.8.5/bin/qmake <span class="se">\</span>
+        someDirectoryAtTheBeginningOfYourPath
+</pre></div>
+</div>
+<p>If you want a recent version of qtcreator, then visit
+<a class="reference external" href="http://qt-project.org/downloads#qt-creator">http://qt-project.org/downloads#qt-creator</a> and download and install
+the bin file.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="configureVc10.html" title="VC10 Notes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="configureUbuntu.html" title="Configuration of new ubuntu 12.04 computer aspn03"
+             >previous</a> |</li>
+        <li><a href="../../index.html">clavin 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, SRI International.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+    </div>
+  </body>
+</html>

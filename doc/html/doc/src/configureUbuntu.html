@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Configuration of new ubuntu 12.04 computer aspn03 &mdash; clavin 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="clavin 0.1 documentation" href="../../index.html" />
+    <link rel="next" title="Configuring a Linux (CentOs/RedHat) System for Development" href="configureCentos.html" />
+    <link rel="prev" title="Configuring Jenkins" href="jenkinsSetup.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="configureCentos.html" title="Configuring a Linux (CentOs/RedHat) System for Development"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="jenkinsSetup.html" title="Configuring Jenkins"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">clavin 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Configuration of new ubuntu 12.04 computer aspn03</a><ul>
+<li><a class="reference internal" href="#generally-useful-packages">Generally useful packages</a></li>
+<li><a class="reference internal" href="#ros-desktop">ROS Desktop</a></li>
+<li><a class="reference internal" href="#xerces-c">xerces-c</a></li>
+<li><a class="reference internal" href="#gdal">gdal</a></li>
+<li><a class="reference internal" href="#qt4">Qt4</a></li>
+<li><a class="reference internal" href="#eclipse-for-c">Eclipse for C++:</a></li>
+<li><a class="reference internal" href="#oracle-java-jdk-with-apt-get">Oracle Java JDK with apt-get</a></li>
+<li><a class="reference internal" href="#hdf5">hdf5</a></li>
+<li><a class="reference internal" href="#python-goodies">Python Goodies</a></li>
+<li><a class="reference internal" href="#grub-customizer">Grub-customizer</a></li>
+<li><a class="reference internal" href="#miscellaneous-tips">Miscellaneous Tips</a><ul>
+<li><a class="reference internal" href="#customize-windows-shortcut-keys">Customize Windows Shortcut Keys</a></li>
+<li><a class="reference internal" href="#mount-windows-partitions">Mount Windows Partitions</a></li>
+<li><a class="reference internal" href="#use-same-packages-as-another-computer">Use Same Packages as Another Computer</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="jenkinsSetup.html"
+                        title="previous chapter">Configuring Jenkins</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="configureCentos.html"
+                        title="next chapter">Configuring a Linux (CentOs/RedHat) System for Development</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/doc/src/configureUbuntu.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="configuration-of-new-ubuntu-12-04-computer-aspn03">
+<span id="ubuntuinstall"></span><h1>Configuration of new ubuntu 12.04 computer aspn03<a class="headerlink" href="#configuration-of-new-ubuntu-12-04-computer-aspn03" title="Permalink to this headline">¶</a></h1>
+<p>In this section we show various apt-get installs of packages used for
+ASPN development.</p>
+<div class="section" id="generally-useful-packages">
+<h2>Generally useful packages<a class="headerlink" href="#generally-useful-packages" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python" id="index-0"><pre>sudo apt-get install \
+   emacs23 \
+   gnome-system-tools \
+   unrar-free \
+   p7zip-full \
+   synaptic \
+   aptitude</pre>
+</div>
+</div>
+<div class="section" id="ros-desktop">
+<h2><span class="target" id="index-1"></span>ROS Desktop<a class="headerlink" href="#ros-desktop" title="Permalink to this headline">¶</a></h2>
+<p>Install ROS following the directions on the <a class="reference external" href="http://www.ros.org/wiki/groovy/Installation/Ubuntu">ROS Wiki</a></p>
+<div class="highlight-python"><pre>sudo sh -c \
+   'echo "deb http://packages.ros.org/ros/ubuntu precise main" &gt; /etc/apt/sources.list.d/ros-latest.list'
+wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install ros-groovy-desktop-full</pre>
+</div>
+</div>
+<div class="section" id="xerces-c">
+<h2><span class="target" id="index-2"></span>xerces-c<a class="headerlink" href="#xerces-c" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>sudo apt-get install \
+   libxerces-c-dev \
+   libxerces-c-doc \
+   libxerces-c-samples \
+   libxerces-c3.1</pre>
+</div>
+</div>
+<div class="section" id="gdal">
+<h2><span class="target" id="index-3"></span>gdal<a class="headerlink" href="#gdal" title="Permalink to this headline">¶</a></h2>
+<p>The conventional Ubuntu source for gdal does not install with ROS
+because it has a conflicting dependency. So I download and build gdal
+from source instead. Current source for gdal may be obtained from
+<a class="reference external" href="http://download.osgeo.org/gdal/CURRENT">osgeo</a>. Unpack and do an
+in-source configure and build with:</p>
+<div class="highlight-python"><pre>cd gdal-1.10.0
+./configure --prefix=/home/pmiller/projects/aspn-super-pkg
+make -j12
+make install
+echo export GDAL_ROOT=/home/pmiller/projects/aspn-super-pkg &gt;&gt; ~/.bashrc</pre>
+</div>
+<p>If you are not using ROS and want a conventional install of gdal, use:</p>
+<div class="highlight-python"><pre>sudo apt-get install libgdal1-dev libgdal-doc gdal-bin python-gdal</pre>
+</div>
+</div>
+<div class="section" id="qt4">
+<h2><span class="target" id="index-4"></span>Qt4<a class="headerlink" href="#qt4" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>sudo apt-get install \
+   qt4-dev-tools \
+   qt4-designer \
+   qtcreator \
+   qtcreator-doc \
+   qt4-doc \
+   qt4-demos</pre>
+</div>
+</div>
+<div class="section" id="eclipse-for-c">
+<h2><span class="target" id="index-5"></span>Eclipse for C++:<a class="headerlink" href="#eclipse-for-c" title="Permalink to this headline">¶</a></h2>
+<p>Before installing eclipse, you may want to install an up-to-date JDK
+as described below. You will need a JRE, but the one that comes with
+Ubuntu should be okay for eclipse. Either way, you may install Eclipse
+using:</p>
+<div class="highlight-python"><pre>sudo apt-get install eclipse-cdt</pre>
+</div>
+<p>Then try to run the <tt class="docutils literal"><span class="pre">eclipse</span></tt> executable. If/when eclipse does not
+run because of an error with swt, a <a class="reference external" href="http://stackoverflow.com/questions/10970754/cant-open-eclipse-in-ubuntu-12-04-java-lang-unsatisfiedlinkerror-could-not-l">Stack Overflow answer</a>
+says to:</p>
+<div class="highlight-python"><pre>ln -s /usr/lib/jni/libswt-* ~/.swt/lib/linux/x86_64/</pre>
+</div>
+<p>(The reason you must run eclipse first is the target directory for
+this link will not exist until eclipse has been run.)</p>
+</div>
+<div class="section" id="oracle-java-jdk-with-apt-get">
+<span id="java-install-with-apt-get"></span><h2>Oracle Java <span class="target" id="index-6"></span>JDK with apt-get<a class="headerlink" href="#oracle-java-jdk-with-apt-get" title="Permalink to this headline">¶</a></h2>
+<p>PPA installation instructions for the Oracle JDK are found at <a class="reference external" href="http://www.webupd8.org/2012/01/install-oracle-java-jdk-7-in-ubuntu-via.html">webupd8</a>. To
+install:</p>
+<div class="highlight-python"><pre>sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+sudo apt-get install oracle-java7-installer
+echo export JAVA_HOME=/usr &gt;&gt; ~/.bashrc</pre>
+</div>
+<p>The environment variable <span class="target" id="index-7"></span><tt class="xref std std-envvar docutils literal"><span class="pre">JAVA_HOME</span></tt> is a conventional way to
+tell java applications where to get the JRE.</p>
+</div>
+<div class="section" id="hdf5">
+<h2><span class="target" id="index-8"></span>hdf5<a class="headerlink" href="#hdf5" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>sudo apt-get install libhdf5-serial-dev libhdf5-doc hdf5-tools hdfview</pre>
+</div>
+</div>
+<div class="section" id="python-goodies">
+<h2>Python Goodies<a class="headerlink" href="#python-goodies" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>sudo apt-get install python-setuptools
+sudo easy_install pip
+sudo pip install docutils</pre>
+</div>
+<p>The docutils package contains the sphinx documentation builder used to
+generate this documentation set.</p>
+</div>
+<div class="section" id="grub-customizer">
+<h2><span class="target" id="index-9"></span>Grub-customizer<a class="headerlink" href="#grub-customizer" title="Permalink to this headline">¶</a></h2>
+<p>To get a gui for customizing grub see <a class="reference external" href="https://launchpad.net/~danielrichter2007/+archive/grub-customizer?field.series_filter=precise">this blog</a>,
+which has the following instructions:</p>
+<div class="highlight-python"><pre>sudo add-apt-repository ppa:danielrichter2007/grub-customizer
+sudo apt-get update
+sudo apt-get install grub-customizer</pre>
+</div>
+</div>
+<div class="section" id="miscellaneous-tips">
+<h2>Miscellaneous Tips<a class="headerlink" href="#miscellaneous-tips" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="customize-windows-shortcut-keys">
+<span id="index-10"></span><h3>Customize Windows Shortcut Keys<a class="headerlink" href="#customize-windows-shortcut-keys" title="Permalink to this headline">¶</a></h3>
+<p>Ubuntu has something very close to the win7 winkey-right/winkey-left
+behavior to snap a window to the right or left side of the screen. You
+may use Ctrl-Alt 1, 3, 9, or 7 to snap to the bottom left, bottom
+right, top right or top left quadrants of the screen. Then you may
+maximize vertically, by assigning Super-Up as the windows shortcut
+key. To create the short cut key, go to System Settings -&gt;
+Hardware/Keyboard -&gt; Shortcuts -&gt; Windows then set the shortcut for
+&#8220;Maximize window vertically&#8221;.</p>
+</div>
+<div class="section" id="mount-windows-partitions">
+<span id="index-11"></span><h3>Mount Windows Partitions<a class="headerlink" href="#mount-windows-partitions" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><pre>sudo apt-get install ntfs-config
+sudo ntfs-config</pre>
+</div>
+</div>
+<div class="section" id="use-same-packages-as-another-computer">
+<span id="index-12"></span><h3>Use Same Packages as Another Computer<a class="headerlink" href="#use-same-packages-as-another-computer" title="Permalink to this headline">¶</a></h3>
+<p>To configure a computer with same packages as another computer (from
+<a class="reference external" href="http://askubuntu.com/questions/17823/how-to-list-all-installed-packages)">askubuntu</a>:</p>
+<ul>
+<li><p class="first">Create a backup of what packages are currently installed:</p>
+<div class="highlight-python"><pre>sudo dpkg --get-selections &gt; list.txt</pre>
+</div>
+</li>
+<li><p class="first">Then (on another system) restore installations from that list:</p>
+<div class="highlight-python"><pre>sudo dpkg --clear-selections
+sudo dpkg --set-selections &lt; list.txt</pre>
+</div>
+</li>
+<li><p class="first">To get rid of stale packages:</p>
+<div class="highlight-python"><pre>sudo apt-get autoremove</pre>
+</div>
+</li>
+<li><p class="first">To get installed like at backup time:</p>
+<div class="highlight-python"><pre>sudo apt-get dselect-upgrade</pre>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="configureCentos.html" title="Configuring a Linux (CentOs/RedHat) System for Development"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="jenkinsSetup.html" title="Configuring Jenkins"
+             >previous</a> |</li>
+        <li><a href="../../index.html">clavin 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, SRI International.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+    </div>
+  </body>
+</html>

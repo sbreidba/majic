@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Building aspn-super &mdash; clavin 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="clavin 0.1 documentation" href="../../index.html" />
+    <link rel="next" title="Miscellaneous Notes on Linux" href="linuxNotes.html" />
+    <link rel="prev" title="VC10 Notes" href="configureVc10.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="linuxNotes.html" title="Miscellaneous Notes on Linux"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="configureVc10.html" title="VC10 Notes"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">clavin 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Building aspn-super</a><ul>
+<li><a class="reference internal" href="#install-project-specific-packages">Install Project Specific Packages</a><ul>
+<li><a class="reference internal" href="#boost-1-48">boost 1.48</a></li>
+<li><a class="reference internal" href="#demdata">DEMData</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fetch-and-build">Fetch and Build</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="configureVc10.html"
+                        title="previous chapter">VC10 Notes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="linuxNotes.html"
+                        title="next chapter">Miscellaneous Notes on Linux</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/doc/src/aspnBuild.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="building-aspn-super">
+<h1>Building aspn-super<a class="headerlink" href="#building-aspn-super" title="Permalink to this headline">¶</a></h1>
+<p>Configure the computer following the instructions given in
+<a class="reference internal" href="configureUbuntu.html#ubuntuinstall"><em>Ubuntu Install</em></a> notes.</p>
+<div class="section" id="install-project-specific-packages">
+<h2>Install Project Specific Packages<a class="headerlink" href="#install-project-specific-packages" title="Permalink to this headline">¶</a></h2>
+<p>Install the following project specific packages:</p>
+<div class="section" id="boost-1-48">
+<h3><span class="target" id="index-0"></span>boost 1.48<a class="headerlink" href="#boost-1-48" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><pre>cd ~/Downloads
+wget http://artifactory-vt/artifactory/simple/vt-libraries/com/sri/vt/aspn/boost/1.48/boost-1.48-ubuntu_x86_64.z7
+mkdir ~/projects/aspn-super-pkg
+cd ~/projects/aspn-super-pkg
+7z x ~/Downloads/boost-1.48-ubuntu_x86_64.z7
+cd boost-1.48
+echo export BOOST_ROOT=`pwd` &gt;&gt; ~/.bashrc</pre>
+</div>
+<p>The simplest way to make sure this is the version of boost found by
+cmake is to set the <span class="target" id="index-1"></span><tt class="xref std std-envvar docutils literal"><span class="pre">BOOST_ROOT</span></tt> as shown above.</p>
+</div>
+<div class="section" id="demdata">
+<span id="index-2"></span><h3><span class="target" id="index-3"></span>DEMData<a class="headerlink" href="#demdata" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><pre>cd ~/Downloads
+wget http://artifactory-vt/artifactory/simple/vt-libraries/com/sri/vt/aspn/DEMData/1.0/DEMData-1.0-data.z7
+sudo mkdir /opt/sarnoff
+cd /opt/sarnoff
+7z x ~/Downloads/DEMData-1.0-data.z7</pre>
+</div>
+</div>
+</div>
+<div class="section" id="fetch-and-build">
+<h2>Fetch and Build<a class="headerlink" href="#fetch-and-build" title="Permalink to this headline">¶</a></h2>
+<div class="admonition-todo admonition" id="index-4">
+<p class="first admonition-title">Todo</p>
+<p class="last">Need to update and simplify these instructions for building.</p>
+</div>
+<p>The simplest build of this meta project for aspn may be obtained using
+the following:</p>
+<div class="highlight-python"><pre>$ cmake -P fetch.cmake
+$ mkdir ../aspn-super-build
+$ cd ../aspn-super-build
+$ cmake -DPKG_PATH=../aspn-pkg-vc10 -DINSTALL_PATH=exports -P ../aspn-super/build.cmake</pre>
+</div>
+<p>Possible variations include:</p>
+<ul>
+<li><p class="first">when getting the source code from git-open, you may need to use
+<tt class="docutils literal"><span class="pre">-Dgit-open=git-open</span></tt> (without the default .sarnoff.com domain
+suffix) if your ssh key was generated without the <tt class="docutils literal"><span class="pre">.sarnoff.com</span></tt>
+domain suffix. (Mine, Phil&#8217;s, is, but the default seems to be okay
+for most people.)</p>
+</li>
+<li><p class="first">fetch from the externally accessible <tt class="docutils literal"><span class="pre">aspn&#64;aspn-sri.sarnoff.com</span></tt>
+using:</p>
+<div class="highlight-python"><pre>$ cmake -Dgit-open=aspn-sri.sarnoff.com -Dgit-open-user=aspn@ -P fetch.cmake</pre>
+</div>
+</li>
+</ul>
+<p id="index-5">The above usage of the build.cmake script assumes that you have
+already pre-built and installed the external packages required to
+<tt class="docutils literal"><span class="pre">../aspn-pkg-vc10</span></tt>. When you are building on Ubuntu 12.04, the only
+package not easily obtained from the Software Center or apt-get is
+<a class="reference external" href="http://sourceforge.net/projects/geographiclib">GeographicLib from sourceforge</a>.</p>
+<p>I built geographic lib using:</p>
+<div class="highlight-python"><pre>cmake -G "Visual Studio 10 Win64" \
+   -DINSTALL_PATH=__PATH_TO_YOUR_EXPORTS_GOES_HERE__ \
+   -DGEOGRAPHICLIB_DOCUMENTATION=ON \
+   -DCOMMON_INSTALL_PATH=ON \
+   -DMATLAB_COMPILER=mex \
+   c:\Users/pmiller/projects/aspn-super-build-pkg/extproj/Source/geographiclib</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="linuxNotes.html" title="Miscellaneous Notes on Linux"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="configureVc10.html" title="VC10 Notes"
+             >previous</a> |</li>
+        <li><a href="../../index.html">clavin 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, SRI International.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+    </div>
+  </body>
+</html>
