@@ -71,14 +71,6 @@ Maven Installation Instructions
 
 .. index:: maven; installation
 
-.. note::
-
-   The Jenkins master will automatically install/use :command:`maven`
-   from its configuration. So a manual installation of maven is not
-   needed (and probably not wanted) on a slave. Developers will need
-   to have maven (and the prerequisite jdk) on their development
-   computers.
-
 The content in this subsection was copied from maven 
 `Installation Instructions <http://maven.apache.org/download.cgi>`__.
 
@@ -140,6 +132,14 @@ Unix-based Operating Systems (Linux, Solaris and Mac OS X)
       is in your PATH environment variable.
 
    #. Run ``mvn --version`` to verify that it is correctly installed.
+
+.. note:: Maven and Jenkins
+
+   The Jenkins master will automatically install/use :command:`maven`
+   from its configuration. So a manual installation of maven is not
+   needed (and probably not wanted) on a slave. Developers will need
+   to have maven (and the prerequisite jdk) on their development
+   computers.
 
 
 cmake Installation
