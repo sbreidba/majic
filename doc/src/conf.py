@@ -34,7 +34,7 @@ source_suffix = '.rst'
 #source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'doc/src/index'
+master_doc = 'index'
 
 # General information about the project.
 project = u'clavin'
@@ -183,7 +183,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('doc/src/index', 'clavin.tex', u'clavin Documentation',
+  ('index', 'clavin.tex', u'clavin Documentation',
    u'Philip Miller, Skip Breidbach', 'manual', True),
 ]
 

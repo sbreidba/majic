@@ -7,16 +7,16 @@ Welcome to clavin documentation!
 .. toctree::
    :maxdepth: 2
 
-   gettingStarted
-   configureGit
-   configureUbuntu
-   configureCentos
-   configureVc10
-   aspnBuild
-   jenkinsSetup
-   linuxNotes
+   doc/src/gettingStarted
+   doc/src/configureGit
+   doc/src/configureUbuntu
+   doc/src/configureCentos
+   doc/src/configureVc10
+   doc/src/aspnBuild
+   doc/src/jenkinsSetup
+   doc/src/linuxNotes
 
-   todoList
+   doc/src/todoList
 
 ==================
 Indices and tables
