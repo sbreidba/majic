@@ -163,3 +163,26 @@ Linux
 Windows
    Use the latest installer from `cmake.org
    <http://www.cmake.org/cmake/resources/software.html>`__. 
+
+A note about this documentation
+===============================
+
+This documentation is written in RestructuredText and generated
+using Sphinx. This is a common toolset, particularly in the python
+domain, but is also widely used elsewhere; e.g., The OpenCV
+documentation uses this toolset. If you are unfamilar with
+RestructuredText and Sphinx, here are a few links to get you
+started:
+
+- `Installation
+  <http://docutils.sourceforge.net/README.html#installation>`__
+
+- `ReStructuredText Primer <http://sphinx-doc.org/rest.html>`__
+  describes the basics of ReStructuredText markup.
+
+- `Sphinx Markup <http://sphinx-doc.org/markup/index.html>`__
+  describes relevant additional constructs available when using the
+  sphinx builder.
+
+The above links should be adequate for anyone wishing to contribute to
+this documentation. 
