@@ -321,7 +321,7 @@
                                 </goals>
                                 <configuration>
                                     <executable>${package.pack.command}</executable>
-                                    <workingDirectory>${package.install.directory}</workingDirectory>
+                                    <workingDirectory>${package.install.directory}/..</workingDirectory>
                                     <commandlineArgs>
                                         ${package.pack.arguments} ${package.file.path} .
                                     </commandlineArgs>
