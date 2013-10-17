@@ -10,6 +10,7 @@ A pdf version is available :download:`here <doc/clavin.pdf>`
    :maxdepth: 2
 
    doc/src/gettingStarted
+   doc/src/clavin
    doc/src/configureGit
    doc/src/jenkinsSetup
    doc/src/configureUbuntu
