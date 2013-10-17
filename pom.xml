@@ -293,8 +293,7 @@
                                     <executable>${package.pack.command}</executable>
                                     <workingDirectory>${package.install.directory}/..</workingDirectory>
                                     <commandlineArgs>
-                                        ${package.pack.arguments} ${package.file.path} 
-                                        ${package.root.directory}
+                                        ${package.pack.arguments} ${package.file.path} ${package.root.directory}
                                     </commandlineArgs>
                                 </configuration>
                             </execution>
