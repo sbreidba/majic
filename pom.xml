@@ -24,8 +24,9 @@
             <basedir>/build/[operatingsystem]/exports/foo-1.3.2-snapshot
         The last directory becomes the root directory of the archive.
         -->
+        <package.root.directory>${package.file.name}</package.root.directory>
         <package.install.directory>
-            ${project.build.directory}/exports/${package.file.name}
+            ${project.build.directory}/exports/${package.root.directory}
         </package.install.directory>
 
         <!-- becomes the cmake prefix path - all dependencies are unpacked here -->
@@ -51,6 +52,11 @@
             ${project.build.directory}/${package.file.name}.${package.file.extension}
         </package.file.path>
         <package.file.classifier>${os.classifier}</package.file.classifier>
+
+        <build.subtype></build.subtype>
+        <cmake.working.directory>
+            ${project.build.directory}{build.subtype}
+        </cmake.working.directory>
 
         <!-- allow child projects to skip dependency extraction phase.
              this is especially useful for projects with no dependencies -
@@ -137,7 +143,7 @@
         </profile>
 
         <profile>
-            <id>cmake-configure</id>
+            <id>cmake</id>
             <activation>
                 <file>
                     <exists>${basedir}/CMakeLists.txt</exists>
@@ -152,6 +158,7 @@
                             <execution>
                                 <id>cmake-configure-build</id>
                                 <phase>process-sources</phase>
+                                <skip>${skip.cmake.configure}</skip>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
@@ -167,25 +174,7 @@
                                     </arguments>
                                 </configuration>
                             </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
 
-        <profile>
-            <id>cmake-build</id>
-            <activation>
-                <file>
-                    <exists>${basedir}/CMakeLists.txt</exists>
-                </file>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <executions>
                             <execution>
                                 <id>cmake-build</id>
                                 <phase>compile</phase>
@@ -198,25 +187,7 @@
                                     <commandlineArgs>${build.arguments}</commandlineArgs>
                                 </configuration>
                             </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
 
-        <profile>
-            <id>cmake-install</id>
-            <activation>
-                <file>
-                    <exists>${basedir}/CMakeLists.txt</exists>
-                </file>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <executions>
                             <execution>
                                 <id>cmake-install-build</id>
                                 <phase>prepare-package</phase>
@@ -323,7 +294,8 @@
                                     <executable>${package.pack.command}</executable>
                                     <workingDirectory>${package.install.directory}/..</workingDirectory>
                                     <commandlineArgs>
-                                        ${package.pack.arguments} ${package.file.path} .
+                                        ${package.pack.arguments} ${package.file.path} 
+                                        ${package.root.directory}
                                     </commandlineArgs>
                                 </configuration>
                             </execution>
