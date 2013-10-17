@@ -158,7 +158,6 @@
                             <execution>
                                 <id>cmake-configure-build</id>
                                 <phase>process-sources</phase>
-                                <skip>${skip.cmake.configure}</skip>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
