@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Miscellaneous Notes on Linux &mdash; clavin 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="clavin 0.1 documentation" href="../../index.html" />
+    <link rel="next" title="TODO" href="todoList.html" />
+    <link rel="prev" title="Building aspn-super" href="aspnBuild.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="todoList.html" title="TODO"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="aspnBuild.html" title="Building aspn-super"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">clavin 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Miscellaneous Notes on Linux</a><ul>
+<li><a class="reference internal" href="#gcc">gcc</a><ul>
+<li><a class="reference internal" href="#predefined-macros">predefined macros</a></li>
+<li><a class="reference internal" href="#version-macros">Version Macros</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#add-disk-to-vm">Add Disk to VM</a></li>
+<li><a class="reference internal" href="#ipp-and-mkl">IPP and MKL</a></li>
+<li><a class="reference internal" href="#install-matlab">Install Matlab</a></li>
+<li><a class="reference internal" href="#vpn">VPN</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="aspnBuild.html"
+                        title="previous chapter">Building aspn-super</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="todoList.html"
+                        title="next chapter">TODO</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/doc/src/linuxNotes.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#miscellaneous-notes-on-linux" id="id1">Miscellaneous Notes on Linux</a><ul>
+<li><a class="reference internal" href="#gcc" id="id2">gcc</a><ul>
+<li><a class="reference internal" href="#predefined-macros" id="id3">predefined macros</a></li>
+<li><a class="reference internal" href="#version-macros" id="id4">Version Macros</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#add-disk-to-vm" id="id5">Add Disk to VM</a></li>
+<li><a class="reference internal" href="#ipp-and-mkl" id="id6">IPP and MKL</a></li>
+<li><a class="reference internal" href="#install-matlab" id="id7">Install Matlab</a></li>
+<li><a class="reference internal" href="#vpn" id="id8">VPN</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="miscellaneous-notes-on-linux">
+<h1><a class="toc-backref" href="#contents">Miscellaneous Notes on Linux</a><a class="headerlink" href="#miscellaneous-notes-on-linux" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gcc">
+<h2><a class="toc-backref" href="#contents">gcc</a><a class="headerlink" href="#gcc" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="predefined-macros">
+<h3><a class="toc-backref" href="#contents">predefined macros</a><a class="headerlink" href="#predefined-macros" title="Permalink to this headline">¶</a></h3>
+<p id="index-0"><a class="reference external" href="http://stackoverflow.com/questions/1936719/what-are-the-gcc-predefined-macros-for-the-compilers-version-number">This post</a>
+on stackoverflow provides a very handy tip for getting
+<strong class="command">gcc</strong> to give you all of the predefined macros that is uses.</p>
+<div class="highlight-python"><pre>gcc -E -dM - &lt; /dev/null</pre>
+</div>
+</div>
+<div class="section" id="version-macros">
+<h3><a class="toc-backref" href="#contents">Version Macros</a><a class="headerlink" href="#version-macros" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>__GNUC__</dt>
+<dd>major version number</dd>
+<dt>__GNUC_MINOR__</dt>
+<dd>minor version number</dd>
+<dt>__GNUC_PATCHLEVEL__</dt>
+<dd>patch level number</dd>
+</dl>
+<p>For example, Ubuntu 12.04 comes with gcc 4.6.3 and Centos6 comes with
+gcc 4.4.7. To distinguish between the two versions, you may use:</p>
+<div class="highlight-python"><pre>__GNUC__ == 4 &amp;&amp; __GNUC_MINOR__ &lt; 5</pre>
+</div>
+<p>when you encounter differences between the newer gcc with Ubuntu and
+the older gcc with Centos6.</p>
+</div>
+</div>
+<div class="section" id="add-disk-to-vm">
+<h2><a class="toc-backref" href="#contents">Add Disk to VM</a><a class="headerlink" href="#add-disk-to-vm" title="Permalink to this headline">¶</a></h2>
+<p>Use the virtual machine software application (either VMWare
+Workstation or VDirector) to add a new disk to the VM. Then I followed
+this posting, <a class="reference external" href="http://blog.jiwen.info/?p=115">http://blog.jiwen.info/?p=115</a>, which mostly consists of</p>
+<ol class="arabic">
+<li><p class="first">Create the partition using <tt class="docutils literal"><span class="pre">fdisk</span></tt>. For my system I used <tt class="docutils literal"><span class="pre">fdisk</span>
+<span class="pre">/dev/sdb</span></tt> since it was my second drive. Ater using <tt class="docutils literal"><span class="pre">m</span></tt> for help
+(i.e., menu), I believe I used the commands <tt class="docutils literal"><span class="pre">n</span></tt> for new, and
+<tt class="docutils literal"><span class="pre">p</span></tt> for parition, and <tt class="docutils literal"><span class="pre">w</span></tt> for writing.</p>
+</li>
+<li><p class="first">Format the filesystem using <tt class="docutils literal"><span class="pre">mkfs</span></tt>. I used <tt class="docutils literal"><span class="pre">mkfs</span> <span class="pre">-t</span> <span class="pre">ext3</span>
+<span class="pre">/dev/sdb1</span></tt></p>
+</li>
+<li><p class="first">Create a mount point: <tt class="docutils literal"><span class="pre">mkdir</span> <span class="pre">/disk2</span></tt></p>
+</li>
+<li><p class="first">Add this line to /etc/fstab:</p>
+<div class="highlight-python"><pre>/dev/sdb1   /disk2   ext3   default 1 2</pre>
+</div>
+</li>
+<li><p class="first">reboot or just remount using <tt class="docutils literal"><span class="pre">mount</span> <span class="pre">-a</span></tt></p>
+</li>
+</ol>
+</div>
+<div class="section" id="ipp-and-mkl">
+<h2><a class="toc-backref" href="#contents">IPP and MKL</a><a class="headerlink" href="#ipp-and-mkl" title="Permalink to this headline">¶</a></h2>
+<p>Get a license, download the latest version, and install following the
+instructions. You will get a warning about installing on an
+unsupported operating system, but you may ignore that because it seems
+to work on CentOs 5.7, 5.8, 6.3, and OpenSuse 12.2.</p>
+</div>
+<div class="section" id="install-matlab">
+<h2><a class="toc-backref" href="#contents">Install <span class="target" id="index-1"></span>Matlab</a><a class="headerlink" href="#install-matlab" title="Permalink to this headline">¶</a></h2>
+<p>Matlab installers may be obtained from
+<tt class="docutils literal"><span class="pre">\\rebel\it_installs\Matlab\Linux</span> <span class="pre">64-bit</span></tt>. For the <tt class="docutils literal"><span class="pre">R2013a</span></tt>
+version, make a local copy of the entire R2013a folder, unzip the
+glnxa64 installer in place, and then run the setup.</p>
+<div class="highlight-python"><pre>cd R2013a
+unzip matlab_R2013a_glnxa64_installer.zip
+cp matlab_license.dat ~/Documents
+sudo ./install
+echo export PATH=\$PATH:/usr/local/MATLAB/R2013a/bin &gt;&gt; ~/.bashrc</pre>
+</div>
+<p>Use the file installation key
+<tt class="docutils literal"><span class="pre">02586-43325-41039-17882-41372-47263</span></tt>.</p>
+<p>After installation is complete, be sure to add the matlab bin folder
+to your <span class="target" id="index-2"></span><tt class="xref std std-envvar docutils literal"><span class="pre">PATH</span></tt> environment variable.</p>
+</div>
+<div class="section" id="vpn">
+<h2><a class="toc-backref" href="#contents">VPN</a><a class="headerlink" href="#vpn" title="Permalink to this headline">¶</a></h2>
+<div class="admonition-todo admonition" id="index-4">
+<span id="index-3"></span><p class="first admonition-title">Todo</p>
+<p class="last">These instructions for vpn are now out of date. Need to bug Doug
+Corliss to get a new set of instructions.</p>
+</div>
+<p>Use <a class="reference external" href="https://whitebeard.sarnoff.com">this link</a> and download and
+install the snx application. It will likely not run until you also
+install the following dependent packages:</p>
+<div class="highlight-python"><pre>sudo apt-get install libstdc++5:i386
+sudo apt-get install libpam-dev:i386</pre>
+</div>
+<p>Then you may run it with your SRI certificate using:</p>
+<div class="highlight-python"><pre>snx -g -s whitebeard.sarnoff.com -c /home/pmiller/Documents/pmiller.p12</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="todoList.html" title="TODO"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="aspnBuild.html" title="Building aspn-super"
+             >previous</a> |</li>
+        <li><a href="../../index.html">clavin 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, SRI International.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+    </div>
+  </body>
+</html>
