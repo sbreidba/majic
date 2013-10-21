@@ -61,3 +61,24 @@ phases are for the corresponding cmake steps discussed above.
 |    site-deploy
 
 
+Troubleshooting
+===============
+
+Effective POM
+   The "effective" pom is the pom that is actually used when
+   building. The effective pom has all of the variables replaced with
+   their actual value. The effective pom is analogous to the
+   output of the pre-processor in a C/C++ compilation. To see the
+   effective pom use::
+
+      mvn help:effective-pom
+
+Active Profiles
+   mvn profiles are ... To see the active profiles available use:: 
+
+      mvn help:active-profiles
+
+.. todo::
+
+   Skip, please put in a short description of maven profiles above.
+   
