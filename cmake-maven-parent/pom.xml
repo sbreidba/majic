@@ -53,11 +53,6 @@
         </package.file.path>
         <package.file.classifier>${os.classifier}</package.file.classifier>
 
-        <build.subtype></build.subtype>
-        <cmake.working.directory>
-            ${project.build.directory}{build.subtype}
-        </cmake.working.directory>
-
         <!-- allow child projects to skip dependency extraction phase.
              this is especially useful for projects with no dependencies -
              there appears to be a bug within the and dependencyFilesets
@@ -87,10 +82,10 @@
                 <install.arguments>install</install.arguments>
 
                 <package.unpack.command>tar</package.unpack.command>
-                <package.unpack.arguments>-xjf</package.unpack.arguments>
+                <package.unpack.arguments>-xvjf</package.unpack.arguments>
 
                 <package.pack.command>tar</package.pack.command>
-                <package.pack.arguments>-cjf</package.pack.arguments>
+                <package.pack.arguments>-cvjf</package.pack.arguments>
             </properties>
         </profile>
 
@@ -114,10 +109,10 @@
                 <install.arguments>--build . --target install --config Release</install.arguments>
 
                 <package.unpack.command>cmake</package.unpack.command>
-                <package.unpack.arguments>-E tar xjf</package.unpack.arguments>
+                <package.unpack.arguments>-E tar xvjf</package.unpack.arguments>
 
                 <package.pack.command>cmake</package.pack.command>
-                <package.pack.arguments>-E tar cjf</package.pack.arguments>
+                <package.pack.arguments>-E tar cvjf</package.pack.arguments>
             </properties>
         </profile>
 
@@ -173,7 +168,7 @@
                                     </arguments>
                                 </configuration>
                             </execution>
-
+                            
                             <execution>
                                 <id>cmake-build</id>
                                 <phase>compile</phase>
@@ -236,10 +231,13 @@
                                         is newer than our marker. We extract to tmp to make sure we
                                         never collide with the touch file name.
                                         -->
-                                        <apply executable="${package.unpack.command}" dir="${package.touch.directory}/tmp" verbose="true">
+                                        <apply 
+                                            executable="${package.unpack.command}" 
+                                            dir="${package.touch.directory}/tmp" 
+                                            verbose="true" dest="${package.touch.directory}">
                                             <arg line="${package.unpack.arguments}"/>
                                             <fileset refid="maven.project.dependencies"/>
-                                            <mapper type="regexp" from="^.*[\\/](.*)" to="${package.touch.directory}/\1" />
+                                            <regexpmapper handledirsep="true" from="^.*/(.*)" to="\1" />
                                         </apply>
 
                                         <!-- 
@@ -253,10 +251,19 @@
                                             <cutdirsmapper dirs="2"/>
                                         </move>
 
+                                        <!-- 
+                                        Canonicalize the touch path. On Windows, the ant touch task
+                                        silently removes ".."'s in the middle of a path instead of 
+                                        backing up one level.
+                                        -->
+                                        <pathconvert property="package.touch.canonical" targetos="unix">
+                                            <path location="${package.touch.directory}" />
+                                        </pathconvert>
+
                                         <!-- update the marker -->
-                                        <touch verbose="true">
+                                        <touch verbose="true" datetime="now">
                                             <fileset refid="maven.project.dependencies"/>
-                                            <mapper type="regexp" from="^.*[\\/](.*)" to="${package.touch.directory}/\1" />
+                                            <regexpmapper handledirsep="true" from="^.*/(.*)" to="${package.touch.canonical}/\1" />
                                         </touch>
                                     </target>
                                 </configuration>
