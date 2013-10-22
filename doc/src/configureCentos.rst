@@ -10,6 +10,17 @@ EPEL
 
 Or simply click on this link: http://download.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm .
 
+RepoForge
+=========
+
+`RepoForge <http://repoforge.org/use/>`__ is the next generation
+rpmforge. RepoForge was the only place I could find a reasonably up to
+date git. The system install of git was 1.7.1, but when I used the
+*annotate* feature in the new qtcreator, it complained that it needed
+at least git version 1.7.2. So I added the RepoForge `EL 6 x86_64
+<http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm>`__
+repository and got 1.7.11.3.
+
 boost
 =====
 
@@ -138,6 +149,72 @@ are the build instructions for Linux:
    $ ln -s /usr/local/Trolltech/Qt-4.8.5/bin/qmake \
            someDirectoryAtTheBeginningOfYourPath
 
-If you want a recent version of qtcreator, then visit
-http://qt-project.org/downloads#qt-creator and download and install
-the bin file.
+Red Hat Software Collections for new gcc and friends
+====================================================
+
+First install the scl package::
+
+   sudo yum install scl-utils scl-utils-build
+
+Then install the collection itself (this is what includes a new gcc
+and is described at http://qt-project.org/wiki/Building_Qt_5_from_Git:: 
+
+   sudo wget http://people.centos.org/tru/devtools-1.1/devtools-1.1.repo -O /etc/yum.repos.d/devtools-1.1.repo
+   sudo yum install devtoolset-1.1
+
+Enable the software collection::
+
+    scl enable devtoolset-1.1 bash
+     
+    # Test - Expect to see gcc version 4.7.2 ( * not * gcc version 4.4.7 )
+    gcc -v
+
+Build qt5 from git
+==================
+
+    # Install missing Qt build dependencies:
+    yum install libxcb libxcb-devel xcb-util xcb-util-devel
+     
+    # Install Red Hat DevTools 1.1 for CentOS-5/6 x86_64
+    wget http://people.centos.org/tru/devtools-1.1/devtools-1.1.repo -O /etc/yum.repos.d/devtools-1.1.repo
+    yum install devtoolset-1.1
+     
+    # Open new terminal in ~/projects folder and enable devtoolset-1.1
+    mkdir ~/projects
+    cd ~/projects
+    scl enable devtoolset-1.1 bash
+     
+    # Test - Expect to see gcc version 4.7.2 ( * not * gcc version 4.4.7 )
+    gcc -v
+     
+    # Git Qt source
+    git clone git://gitorious.org/qt/qt5.git qt5
+    cd qt5
+    git checkout stable
+    perl init-repository
+     
+    # Clean and configure
+    # Optional clean is needed if re-configuring
+    git submodule foreach --recursive "git clean -dfx"
+    ./configure -opensource -nomake examples -nomake tests -no-gtkstyle -confirm-license -qt-libpng -no-c++11
+     
+    # If making on multi-core, for example a quad-core,use "make -j 4"
+    make
+     
+    # make install copies to /usr/local/Qt-5.1.2/
+    # Run as su or using sudo
+    make install
+     
+    # Build Qt Creator
+    export QTDIR=/usr/local/Qt-5.1.2/
+     
+    # Git Qt Creator source
+    cd ~/projects
+    git clone git://gitorious.org/qt-creator/qt-creator.git
+    cd qt-creator
+     
+    ${QTDIR}/bin/qmake -r
+    make
+     
+     ./bin/qtcreator &
+
