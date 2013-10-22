@@ -1,1 +1,1 @@
-pscp -p -r ../../doc pmiller@pmiller-aspn04:public_html/pdev-setup
+pscp -p -r ../../doc pmiller@pmiller-aspn04:public_html/clavin

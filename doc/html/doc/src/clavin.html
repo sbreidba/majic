@@ -50,6 +50,7 @@
   <ul>
 <li><a class="reference internal" href="#">clavin</a><ul>
 <li><a class="reference internal" href="#lifecycle">Lifecycle</a></li>
+<li><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
 </ul>
 </li>
 </ul>
@@ -148,6 +149,29 @@ phases are for the corresponding cmake steps discussed above.</p>
 <div class="line">post-site</div>
 <div class="line">site-deploy</div>
 </div>
+</div>
+</div>
+<div class="section" id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Effective POM</dt>
+<dd><p class="first">The &#8220;effective&#8221; pom is the pom that is actually used when
+building. The effective pom has all of the variables replaced with
+their actual value. The effective pom is analogous to the
+output of the pre-processor in a C/C++ compilation. To see the
+effective pom use:</p>
+<div class="last highlight-python"><pre>mvn help:effective-pom</pre>
+</div>
+</dd>
+<dt>Active Profiles</dt>
+<dd><p class="first">mvn profiles are ... To see the active profiles available use:</p>
+<div class="last highlight-python"><pre>mvn help:active-profiles</pre>
+</div>
+</dd>
+</dl>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">Skip, please put in a short description of maven profiles above.</p>
 </div>
 </div>
 </div>
