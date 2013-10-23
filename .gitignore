@@ -1,5 +1,7 @@
-*/target/
-*/build/
+target/
+build/
 doc/_build
 *~
+*.idea/
+*.swp
 
