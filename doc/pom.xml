@@ -25,7 +25,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.4</version>
                 <reportSets>
                     <reportSet>
                         <reports></reports>
@@ -35,7 +34,7 @@
             <plugin>
                 <groupId>org.tomdz.maven</groupId>
                 <artifactId>sphinx-maven-plugin</artifactId>
-                <version>1.0.2</version>
+                <version>1.0.3</version>
             </plugin>
         </plugins>
     </reporting>
