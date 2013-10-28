@@ -61,7 +61,7 @@
 
         <!-- allow child projects to skip dependency extraction phase.
              this is especially useful for projects with no dependencies -
-             there appears to be a bug within the and dependencyFilesets
+             there appears to be a bug within the dependencyFilesets
              task such that if there are no deps, it will get *all* dependencies
              that just happen to be installed to the local repository -->
         <skip.dependency.extraction>false</skip.dependency.extraction>
