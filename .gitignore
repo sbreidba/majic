@@ -4,4 +4,4 @@ doc/_build
 *~
 *.idea/
 *.swp
-
+.DS_Store
