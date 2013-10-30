@@ -127,4 +127,7 @@
             </build>
         </profile>
     </profiles>
+    <description>Description of the distro-maven-plugin goes here.
+
+With a second paragraph here.</description>
 </project>

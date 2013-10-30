@@ -411,4 +411,7 @@
             </plugins>
         </pluginManagement>
     </build>
+    <description>A specific description for this CMake/Maven parent pom module goes here.
+
+Another paragraph is here.</description>
 </project>

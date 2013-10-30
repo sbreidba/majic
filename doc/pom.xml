@@ -18,7 +18,7 @@
     <artifactId>doc</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Clavin Documentation</name>
+    <name>Clavin User Guide</name>
 
     <reporting>
         <plugins>
@@ -38,4 +38,5 @@
             </plugin>
         </plugins>
     </reporting>
+    <description>Top-level getting started guide for developing a clavin based project. This guide includes notes on getting a new computer set up for development.</description>
 </project>
