@@ -1,4 +1,4 @@
-.. _configuring jenkins:
+.. _configuring-jenkins:
 
 ===================
 Configuring Jenkins
