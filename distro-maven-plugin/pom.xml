@@ -5,12 +5,12 @@
     <parent>
         <groupId>com.sri.vt.clavin</groupId>
         <artifactId>clavin</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>0.1.1-SNAPSHOT</version>
     </parent>
  
     <groupId>com.sri.vt.clavin</groupId>
     <artifactId>distro-maven-plugin</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.1.1-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
     <name>distro-maven-plugin Maven Plugin</name>
