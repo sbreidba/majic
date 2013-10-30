@@ -20,5 +20,18 @@
     <activeProfiles>
         <activeProfile>artifactory-vt</activeProfile>
     </activeProfiles>
+
+    <servers>
+      <!-- set up private key to use when deploying the clavin site -->
+      <server>
+        <id>clavin.website</id>
+        <username>johndoe</username>
+	<privateKey>c:/Users/jdoe/Documents/git-private.ppk</privateKey>
+        <configuration>
+          <sshExecutable>c:\Program Files (x86)\GitExtensions\PuTTY\plink.exe</sshExecutable>
+          <scpExecutable>pscp</scpExecutable>
+        </configuration>
+      </server>
+    </servers>
 </settings>
 

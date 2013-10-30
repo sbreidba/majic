@@ -2,6 +2,14 @@
 Maven Overview
 ==============
 
+Maven Settings File
+===================
+
+A sample maven settings file is shown in :ref:`maven-settings`. If you
+do not have one, copy this file to :file:`~/.m2/settings.xml`. This
+file is used by maven to hold user specific settings such as
+repository URLs, private key files, etc.
+
 Lifecycle
 =========
 
@@ -82,3 +90,10 @@ Active Profiles
 
    Skip, please put in a short description of maven profiles above.
    
+Listings
+========
+
+.. toctree::
+
+   maven-settings
+
