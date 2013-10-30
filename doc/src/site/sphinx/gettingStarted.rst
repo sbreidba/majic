@@ -18,7 +18,6 @@ series *Cheers*.
 
 .. image:: _static/clavin.jpg
    :align: center
-   :scale: 50%
 
 
 Developing a clavin Based Project

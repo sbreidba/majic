@@ -37,6 +37,17 @@
                 <version>1.0.3</version>
 		<configuration>
 		  <sourceDirectory>..</sourceDirectory>
+		  <!-- if you want to mix in conventional maven apt
+		       and fml documentation, they will likely
+		       generate an index output file to the same
+		       directory as the default sphinx output. The
+		       lines below let you configure the sphinx output
+		       so it will not clash.
+		  -->
+		  <!--
+		  <outputDirectory>${project.reporting.outputDirectory}/sphinx</outputDirectory>
+		  <outputName>sphinx/index</outputName>
+		  -->
 		</configuration>
             </plugin>
         </plugins>

@@ -1,8 +1,8 @@
 .. top-level TOC file for clavin
 
-================================
-Welcome to clavin documentation!
-================================
+=================
+clavin User Guide
+=================
 
 A pdf version is available :download:`here <doc/src/site/sphinx/clavin.pdf>`
 
@@ -10,7 +10,7 @@ A pdf version is available :download:`here <doc/src/site/sphinx/clavin.pdf>`
    :maxdepth: 2
 
    doc/src/site/sphinx/gettingStarted
-   doc/src/site/sphinx/clavin
+   doc/src/site/sphinx/maven
    doc/src/site/sphinx/configureGit
    doc/src/site/sphinx/jenkinsSetup
    doc/src/site/sphinx/configureUbuntu
