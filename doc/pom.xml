@@ -10,7 +10,7 @@
 
     <parent>
         <groupId>com.sri.vt.clavin</groupId>
-        <artifactId>clavin-aggregator</artifactId>
+        <artifactId>clavin</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
