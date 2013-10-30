@@ -1,17 +1,16 @@
-<project 
-    xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>com.sri.vt.clavin</groupId>
         <artifactId>clavin</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.2-SNAPSHOT</version>
     </parent>
  
     <groupId>com.sri.vt.clavin</groupId>
     <artifactId>cmake-maven-parent</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>CMake/Maven parent pom</name>
 
@@ -226,23 +225,20 @@
                                     <skip>${skip.dependency.extraction}</skip>
                                     <target>
                                         <!-- Set up a fileset. -->
-                                        <dependencyfilesets scopes="compile" types="${package.file.extension}"/>
+                                        <dependencyfilesets scopes="compile" types="${package.file.extension}" />
 
-                                        <mkdir dir="${package.prefix.directory}"/>
-                                        <mkdir dir="${package.touch.directory}"/>
-                                        <mkdir dir="${package.touch.directory}/tmp"/>
+                                        <mkdir dir="${package.prefix.directory}" />
+                                        <mkdir dir="${package.touch.directory}" />
+                                        <mkdir dir="${package.touch.directory}/tmp" />
 
                                         <!-- 
                                         Unpack into the touch directory as a temp, but only if the tar 
                                         is newer than our marker. We extract to tmp to make sure we
                                         never collide with the touch file name.
                                         -->
-                                        <apply 
-                                            executable="${package.unpack.command}" 
-                                            dir="${package.touch.directory}/tmp" 
-                                            verbose="true" dest="${package.touch.directory}">
-                                            <arg line="${package.unpack.arguments}"/>
-                                            <fileset refid="maven.project.dependencies"/>
+                                        <apply executable="${package.unpack.command}" dir="${package.touch.directory}/tmp" verbose="true" dest="${package.touch.directory}">
+                                            <arg line="${package.unpack.arguments}" />
+                                            <fileset refid="maven.project.dependencies" />
                                             <regexpmapper handledirsep="true" from="^.*/(.*)" to="\1" />
                                         </apply>
 
@@ -251,10 +247,10 @@
                                         the top-level conventional tar directory and the tmp location.
                                         -->
                                         <move todir="${package.prefix.directory}" includeEmptyDirs="yes" verbose="false">
-                                            <fileset dir="${package.touch.directory}" >
-                                                <include name="**/*"/>
+                                            <fileset dir="${package.touch.directory}">
+                                                <include name="**/*" />
                                             </fileset>
-                                            <cutdirsmapper dirs="2"/>
+                                            <cutdirsmapper dirs="2" />
                                         </move>
 
                                         <!-- 
@@ -268,7 +264,7 @@
 
                                         <!-- update the marker -->
                                         <touch verbose="true" datetime="now">
-                                            <fileset refid="maven.project.dependencies"/>
+                                            <fileset refid="maven.project.dependencies" />
                                             <regexpmapper handledirsep="true" from="^.*/(.*)" to="${package.touch.canonical}/\1" />
                                         </touch>
                                     </target>
