@@ -35,6 +35,9 @@
                 <groupId>org.tomdz.maven</groupId>
                 <artifactId>sphinx-maven-plugin</artifactId>
                 <version>1.0.3</version>
+		<configuration>
+		  <sourceDirectory>..</sourceDirectory>
+		</configuration>
             </plugin>
         </plugins>
     </reporting>

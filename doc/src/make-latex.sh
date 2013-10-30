@@ -1,8 +1,9 @@
 set -x
-export src_dir=site/sphinx
-export build_dir=_build
-sphinx-build -c ${src_dir} -d ${build_dir} -b latex ${src_dir} ${build_dir}/latex
-pushd ${build_dir}/latex
+export src_dir=../..
+export bld_dir=_build
+export builder=latex
+sphinx-build -c ${src_dir} -d ${bld_dir} -b ${builder} ${src_dir} ${bld_dir}/${builder}
+pushd ${bld_dir}/${builder}
 make
 popd
-cp ${build_dir}/latex/clavin.pdf ${src_dir}
+cp ${bld_dir}/${builder}/clavin.pdf site/sphinx

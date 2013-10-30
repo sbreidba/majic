@@ -16,7 +16,7 @@ may help to think of *clavin* sounding like *cmake* and *maven* joined
 together. It is also last name of the Cliff Clavin character on the TV
 series *Cheers*. 
 
-.. image:: /_static/clavin.jpg
+.. image:: _static/clavin.jpg
    :align: center
    :scale: 50%
 
