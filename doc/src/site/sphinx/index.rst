@@ -4,7 +4,7 @@
 Welcome to clavin documentation!
 ================================
 
-A pdf version is available :download:`here <doc/clavin.pdf>`
+A pdf version is available :download:`here <clavin.pdf>`
 
 .. toctree::
    :maxdepth: 2
