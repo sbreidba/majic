@@ -47,7 +47,7 @@ For other accounts to be able to :command:`ssh` to this computer
 without using a password, you need to add your public key(s) to the
 :file:`~/.ssh/authorized_keys` file.
 
-Details of configuring jenkins and ssh are discussed in :ref:`configuring jenkins`.
+Details of configuring jenkins and ssh are discussed in :ref:`configuring-jenkins`.
 
 Tips
 ====

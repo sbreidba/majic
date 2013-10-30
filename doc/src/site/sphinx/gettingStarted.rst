@@ -28,8 +28,8 @@ https://artifactory-vt.  Please make sure you have read access to this
 server.
 
 Typical developers do not install jenkins on their individual
-development computers, so we discuss `configuring jenkins <configuring
-jenkins>`_ later in this document. 
+development computers, so we discuss that later in this document in
+:ref:`configuring-jenkins`.
 
 The rest of this section will focus
 on the installation of cmake and maven.
