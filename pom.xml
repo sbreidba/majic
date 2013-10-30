@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.sri.vt.clavin</groupId>
-    <artifactId>clavin-aggregator</artifactId>
+    <artifactId>clavin</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Clavin</name>
@@ -70,43 +70,50 @@
                             <artifactId>wagon-ssh</artifactId>
                             <version>2.5</version>
                         </dependency>
-			<dependency>
-			  <groupId>org.apache.maven.wagon</groupId>
-			  <artifactId>wagon-ssh-external</artifactId>
-			  <version>1.0</version>
-			</dependency>
+                        <dependency>
+                            <groupId>org.apache.maven.wagon</groupId>
+                            <artifactId>wagon-ssh-external</artifactId>
+                            <version>1.0</version>
+                        </dependency>
                     </dependencies>
                 </plugin>
             </plugins>
         </pluginManagement>
     </build>
 
+    <issueManagement>
+        <url>http://jira.sarnoff.internal/secure/Dashboard.jspa?selectPageId=10900</url>
+        <system>JIRA</system>
+    </issueManagement>
+
+    <url>http://pmiller-aspn04/clavin/</url>
+
+    <description>Clavin is the code name for the VT software build process using cmake, maven, jenkins, and artifactory.
+
+        Another paragraph. Is this in the summary table too?
+
+    </description>
+
+    <organization>
+        <name>SRI Vision Technologies Lab</name>
+        <url>https://wiki.sri.com/display/VT/Home</url>
+    </organization>
+
+    <ciManagement>
+        <system>Jenkins</system>
+        <url>http://build-open/job/vt-clavin/</url>
+    </ciManagement>
+
+    <scm>
+        <connection>scm:git:ssh://git-open.sarnoff.internal/scm/vision/clavin.git</connection>
+        <url>http://git-open.sarnoff.internal/contents</url>
+    </scm>
+
+    <inceptionYear>2013</inceptionYear>
+
     <modules>
         <module>doc</module>
         <module>cmake-maven-parent</module>
         <module>distro-maven-plugin</module>
     </modules>
-    <issueManagement>
-    	<url>http://jira.sarnoff.internal/secure/Dashboard.jspa?selectPageId=10900</url>
-    	<system>JIRA</system>
-    </issueManagement>
-    <url>http://pmiller-aspn04/clavin/</url>
-    <description>Clavin is the code name for the VT software build process using cmake, maven, jenkins, and artifactory.
-
-Another paragraph. Is this in the summary table too?
-
-</description>
-    <organization>
-    	<name>SRI Vision Technologies Lab</name>
-    	<url>https://wiki.sri.com/display/VT/Home</url>
-    </organization>
-    <ciManagement>
-    	<system>Jenkins</system>
-    	<url>http://build-open/job/vt-clavin/</url>
-    </ciManagement>
-    <scm>
-    	<connection>scm:git:ssh://git-open.sarnoff.internal/scm/vision/clavin.git</connection>
-    	<url>http://git-open.sarnoff.internal/contents</url>
-    </scm>
-    <inceptionYear>2013</inceptionYear>
 </project>
