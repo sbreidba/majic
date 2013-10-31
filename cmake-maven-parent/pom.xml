@@ -11,7 +11,7 @@
  
     <groupId>com.sri.vt.clavin</groupId>
     <artifactId>cmake-maven-parent</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>CMake/Maven parent pom</name>
     <description>A specific description for this CMake/Maven parent pom module goes here.</description>
