@@ -7,6 +7,9 @@
     <version>0.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Clavin</name>
+    <description>Clavin is the code name for the VT software build process using cmake, maven, jenkins, and artifactory.
+    </description>
+    <inceptionYear>2013</inceptionYear>
 
     <prerequisites>
         <maven>3.0.0</maven>
@@ -29,48 +32,10 @@
                     <version>2.7</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.7</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <version>2.5</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>2.5</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>1.8</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>exec-maven-plugin</artifactId>
-                    <version>1.2.1</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <version>2.8</version>
-                </plugin>
-                <plugin>
                     <!-- add support for ssh/scp -->
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
                     <version>3.3</version>
-		    <executions>
-		      <execution>
-			<id>attach-descriptor</id>
-			<goals>
-			  <goal>attach-descriptor</goal>
-			</goals>
-		      </execution>
-		    </executions>
                     <dependencies>
                         <dependency>
                             <groupId>org.apache.maven.wagon</groupId>
@@ -95,12 +60,6 @@
 
     <url>http://pmiller-aspn04/clavin/</url>
 
-    <description>Clavin is the code name for the VT software build process using cmake, maven, jenkins, and artifactory.
-
-        Another paragraph. Is this in the summary table too?
-
-    </description>
-
     <organization>
         <name>SRI Vision Technologies Lab</name>
         <url>https://wiki.sri.com/display/VT/Home</url>
@@ -116,11 +75,8 @@
         <url>http://git-open.sarnoff.internal/contents</url>
     </scm>
 
-    <inceptionYear>2013</inceptionYear>
-
     <modules>
         <module>doc</module>
-        <module>cmake-maven-parent</module>
         <module>distro-maven-plugin</module>
     </modules>
 </project>
