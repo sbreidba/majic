@@ -10,6 +10,7 @@ A pdf version is available :download:`here <doc/src/site/sphinx/clavin.pdf>`
    :maxdepth: 2
 
    doc/src/site/sphinx/gettingStarted
+   doc/src/site/sphinx/bobParentPom
    doc/src/site/sphinx/maven
    doc/src/site/sphinx/configureGit
    doc/src/site/sphinx/jenkinsSetup
@@ -18,6 +19,7 @@ A pdf version is available :download:`here <doc/src/site/sphinx/clavin.pdf>`
    doc/src/site/sphinx/configureVc10
    doc/src/site/sphinx/linuxNotes
 
+   doc/src/site/sphinx/glossary
    doc/src/site/sphinx/todoList
 
 ==================
