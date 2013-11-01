@@ -14,7 +14,7 @@
     </parent>
 
     <groupId>com.sri.vt.clavin</groupId>
-    <artifactId>doc</artifactId>
+    <artifactId>clavin-documentation</artifactId>
     <version>0.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Clavin User Guide</name>
