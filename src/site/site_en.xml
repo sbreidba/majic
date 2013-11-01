@@ -13,13 +13,11 @@
       </fluidoSkin>
     </custom>
 
-    <poweredBy>
-        <logo 
-            name="It's a little known fact that..." 
-            href="http://maven.apache.org"
-            img="images/poweredby.jpg"
-            />
-    </poweredBy>
+    <bannerRight>
+      <name>Clavin</name>
+      <title>The Clavin Project</title>
+      <src>images/clavin.jpg</src>
+    </bannerRight>
 
     <body>
         <menu ref="parent" inherit="top"/>
