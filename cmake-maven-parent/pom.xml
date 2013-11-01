@@ -7,22 +7,18 @@
     any site information in it - that will get inherited as well,
     which is not good -->
  
+    <!-- bob:gavc -->
     <groupId>com.sri.vt.clavin</groupId>
     <artifactId>cmake-maven-parent</artifactId>
     <version>0.1.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>CMake/Maven parent pom</name>
-    <description>A specific description for this CMake/Maven parent pom module goes here.</description>
 
     <prerequisites>
         <maven>3.0.0</maven>
     </prerequisites>
 
-    <organization>
-        <name>SRI International</name>
-        <url>http://www.sri.com</url>
-    </organization>
-
+    <!-- bob:properties -->
     <properties>
         <!-- 
         The CMake INSTALL_PATH. Usual form is something like 
@@ -65,8 +61,10 @@
              that just happen to be installed to the local repository -->
         <skip.dependency.extraction>false</skip.dependency.extraction>
     </properties>
+    <!-- bob:properties -->
 
     <profiles>
+        <!-- bob:profile unix -->
         <profile>
             <id>OS-Unix</id>
             <activation>
@@ -93,7 +91,9 @@
                 <package.pack.arguments>-cvjf</package.pack.arguments>
             </properties>
         </profile>
+        <!-- bob:profile unix -->
 
+        <!-- bob:profile win -->
         <profile>
             <id>OS-Windows</id>
             <activation>
@@ -120,7 +120,9 @@
                 <package.pack.arguments>-E tar cvjf</package.pack.arguments>
             </properties>
         </profile>
+        <!-- bob:profile win -->
 
+        <!-- bob:profile aggregator -->
         <profile>
             <id>aggregator-present</id>
             <activation>
@@ -141,7 +143,9 @@
                  </package.touch.directory>
             </properties>
         </profile>
+        <!-- bob:profile aggregator -->
 
+        <!-- bob:profile cmake -->
         <profile>
             <id>cmake</id>
             <activation>
@@ -155,6 +159,7 @@
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
                         <executions>
+			    <!-- the cmake configure step -->
                             <execution>
                                 <id>cmake-configure-build</id>
                                 <phase>process-sources</phase>
@@ -174,6 +179,7 @@
                                 </configuration>
                             </execution>
                             
+			    <!-- the cmake build step -->
                             <execution>
                                 <id>cmake-build</id>
                                 <phase>compile</phase>
@@ -187,6 +193,7 @@
                                 </configuration>
                             </execution>
 
+			    <!-- the cmake install step -->
                             <execution>
                                 <id>cmake-install-build</id>
                                 <phase>prepare-package</phase>
@@ -204,6 +211,9 @@
                 </plugins>
             </build>
         </profile>
+        <!-- bob:profile cmake -->
+
+        <!-- bob:profile unpack -->
         <profile>
             <id>unpack-packages</id>
             <activation>
@@ -278,7 +288,9 @@
                 </plugins>
             </build>
         </profile>
+        <!-- bob:profile unpack -->
 
+        <!-- bob:profile package -->
         <profile>
             <id>create-package</id>
             <activation>
@@ -311,7 +323,9 @@
                 </plugins>
             </build>
         </profile>
+        <!-- bob:profile package -->
 
+        <!-- bob:profile attach-package -->
         <profile>
             <id>attach-package</id>
             <activation>
@@ -344,6 +358,7 @@
                 </plugins>
             </build>
         </profile>
+        <!-- bob:profile attach-package -->
     </profiles>
 
     <build>
@@ -408,4 +423,14 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <organization>
+        <name>SRI International</name>
+        <url>http://www.sri.com</url>
+    </organization>
+
+    <description>
+      The parent pom file to use for all maven projects following the
+      Bob conventions.
+    </description>
 </project>
