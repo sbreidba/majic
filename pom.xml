@@ -18,7 +18,7 @@
     <distributionManagement>
         <site>
             <id>clavin.website</id>
-            <name>Clavin Documentation</name>
+            <name>Clavin</name>
             <url>scpexe://pmiller-aspn04.sarnoff.internal/var/www/html/clavin</url>
         </site>
     </distributionManagement>
@@ -76,7 +76,7 @@
     </scm>
 
     <modules>
-        <module>doc</module>
+        <module>clavin-documentation</module>
         <module>distro-maven-plugin</module>
     </modules>
 </project>

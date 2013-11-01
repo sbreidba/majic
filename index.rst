@@ -4,23 +4,23 @@
 clavin User Guide
 =================
 
-A pdf version is available :download:`here <doc/src/site/sphinx/clavin.pdf>`
+A pdf version is available :download:`here <clavin-documentation/src/site/sphinx/clavin.pdf>`
 
 .. toctree::
    :maxdepth: 2
 
-   doc/src/site/sphinx/gettingStarted
-   doc/src/site/sphinx/bobParentPom
-   doc/src/site/sphinx/maven
-   doc/src/site/sphinx/configureGit
-   doc/src/site/sphinx/jenkinsSetup
-   doc/src/site/sphinx/configureUbuntu
-   doc/src/site/sphinx/configureCentos
-   doc/src/site/sphinx/configureVc10
-   doc/src/site/sphinx/linuxNotes
+   clavin-documentation/src/site/sphinx/gettingStarted
+   clavin-documentation/src/site/sphinx/bobParentPom
+   clavin-documentation/src/site/sphinx/maven
+   clavin-documentation/src/site/sphinx/configureGit
+   clavin-documentation/src/site/sphinx/jenkinsSetup
+   clavin-documentation/src/site/sphinx/configureUbuntu
+   clavin-documentation/src/site/sphinx/configureCentos
+   clavin-documentation/src/site/sphinx/configureVc10
+   clavin-documentation/src/site/sphinx/linuxNotes
 
-   doc/src/site/sphinx/glossary
-   doc/src/site/sphinx/todoList
+   clavin-documentation/src/site/sphinx/glossary
+   clavin-documentation/src/site/sphinx/todoList
 
 ==================
 Indices and tables

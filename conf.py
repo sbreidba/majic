@@ -61,7 +61,7 @@ release = '0.1'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build', 'README.rst', 'doc/target']
+exclude_patterns = ['clavin-documentation/src/_build', 'README.rst', 'clavin-documentation/target']
 
 # The reST default role (used for this markup: `text`) to use for all documents.
 #default_role = None
@@ -109,7 +109,7 @@ html_theme = 'default'
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
 #html_logo = None
-html_logo = 'doc/src/site/sphinx/_static/clavin.jpg'
+html_logo = 'clavin-documentation/src/site/sphinx/_static/clavin.jpg'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -119,7 +119,7 @@ html_logo = 'doc/src/site/sphinx/_static/clavin.jpg'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['doc/src/site/sphinx/_static']
+html_static_path = ['clavin-documentation/src/site/sphinx/_static']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -192,7 +192,7 @@ latex_documents = [
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
 #latex_logo = None
-latex_logo = 'doc/src/site/sphinx/_static/clavin.jpg'
+latex_logo = 'clavin-documentation/src/site/sphinx/_static/clavin.jpg'
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.

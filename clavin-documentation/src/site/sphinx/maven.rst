@@ -86,6 +86,14 @@ Active Profiles
 
       mvn help:active-profiles
 
+Starting a new projcect
+   validate a project's pom::
+      mvn validate
+
+Show environment::
+
+   mvn help:env
+
 .. todo::
 
    Skip, please put in a short description of maven profiles above.
