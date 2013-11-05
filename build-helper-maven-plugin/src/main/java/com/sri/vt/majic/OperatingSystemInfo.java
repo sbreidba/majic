@@ -1,4 +1,4 @@
-package com.sri.vt;
+package com.sri.vt.majic;
 
 import org.apache.commons.lang3.SystemUtils;
 
@@ -11,18 +11,24 @@ public class OperatingSystemInfo
 {
     public OperatingSystemInfo() throws IOException
     {
-        m_name = SystemUtils.OS_NAME;
-        m_arch = SystemUtils.OS_ARCH;
-        m_distro = "unsupported";
+        name = SystemUtils.OS_NAME;
+        arch = SystemUtils.OS_ARCH;
+        distro = "unknown";
+        cmakeGenerator = "unknown";
 
         if (SystemUtils.IS_OS_WINDOWS)
         {
-            if (SystemUtils.IS_OS_WINDOWS_7) m_distro = "win7";
-            else if (SystemUtils.IS_OS_WINDOWS_XP) m_distro = "winxp";
-            else if (SystemUtils.IS_OS_WINDOWS) m_distro = "win";
+            // TODO: this should be more sophisticated - check the arch, etc.
+            cmakeGenerator = "Visual Studio 10 Win64";
+            
+            if (SystemUtils.IS_OS_WINDOWS_7) distro = "win7";
+            else if (SystemUtils.IS_OS_WINDOWS_XP) distro = "winxp";
+            else if (SystemUtils.IS_OS_WINDOWS) distro = "win";
         }
         else if (SystemUtils.IS_OS_LINUX)
         {
+            cmakeGenerator = "Unix Makefiles";
+            
             Process process = Runtime.getRuntime().exec(new String[]
                 {
                     "lsb_release",
@@ -67,26 +73,38 @@ public class OperatingSystemInfo
                 dist.append(versionFull.replace(".", ""));
             }
 
-            m_distro = dist.toString();
+            distro = dist.toString();
+        }
+        else if (SystemUtils.IS_OS_MAC_OSX)
+        {
+            // TODO these are just for testing
+            cmakeGenerator = "Unix Makefiles";
+            distro = "osx";
         }
     }
 
     public String getName()
     {
-        return m_name;
+        return name;
     }
 
     public String getArch()
     {
-        return m_arch;
+        return arch;
     }
 
     public String getDistro()
     {
-        return m_distro;
+        return distro;
     }
 
-    private String m_name;
-    private String m_arch;
-    private String m_distro;
+    public String getCMakeGenerator()
+    {
+        return cmakeGenerator;
+    }
+
+    private String name;
+    private String arch;
+    private String distro;
+    private String cmakeGenerator;
 }

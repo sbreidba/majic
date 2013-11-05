@@ -8,12 +8,12 @@
         <version>0.1.1-SNAPSHOT</version>
     </parent>
  
-    <groupId>com.sri.vt.clavin</groupId>
-    <artifactId>distro-maven-plugin</artifactId>
+    <groupId>com.sri.vt.majic</groupId>
+    <artifactId>build-helper-maven-plugin</artifactId>
     <version>0.1.1-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
-
-    <name>distro-maven-plugin Maven Plugin</name>
+    <name>Majic Build Helper Maven Plugin</name>
+    <description>Goals to make packaging and cmake builds simpler.</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -58,6 +58,21 @@
             <artifactId>maven-project</artifactId>
             <version>2.0.9</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.jponge</groupId>
+            <artifactId>lzma-java</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.twdata.maven</groupId>
+            <artifactId>mojo-executor</artifactId>
+            <version>2.1.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -67,7 +82,7 @@
                 <artifactId>maven-plugin-plugin</artifactId>
                 <version>3.2</version>
                 <configuration>
-                    <goalPrefix>distro</goalPrefix>
+                    <goalPrefix>build-helper</goalPrefix>
                     <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
                 </configuration>
                 <executions>
@@ -84,6 +99,12 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
             </plugin>
         </plugins>
     </build>
@@ -127,7 +148,4 @@
             </build>
         </profile>
     </profiles>
-    <description>Description of the distro-maven-plugin goes here.
-
-With a second paragraph here.</description>
 </project>

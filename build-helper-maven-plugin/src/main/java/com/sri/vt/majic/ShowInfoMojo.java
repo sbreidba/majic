@@ -1,4 +1,4 @@
-package com.sri.vt;
+package com.sri.vt.majic;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;

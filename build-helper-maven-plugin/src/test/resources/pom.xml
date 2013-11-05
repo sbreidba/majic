@@ -16,8 +16,8 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>com.sri.vt.clavin</groupId>
-                <artifactId>distro-maven-plugin</artifactId>
+                <groupId>com.sri.vt.majic</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
 
                 <executions>
@@ -25,6 +25,15 @@
                         <goals>
                             <goal>set-properties</goal>
                         </goals>
+                    </execution>
+                    <execution>
+                        <goals>
+                            <goal>pack7zip</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectory>resources/toPack</sourceDirectory>
+                            <outputFile>foo.zip</outputFile>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
