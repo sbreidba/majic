@@ -12,6 +12,7 @@ import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.twdata.maven.mojoexecutor.MojoExecutor;
 
 import javax.lang.model.element.*;
@@ -43,7 +44,7 @@ public class ConfigureMojo extends AbstractMojo
 
     // Append an operating-system-specific sub-directory to the buildDirectory
     @Parameter(defaultValue = "true")
-    private boolean useOperatingSystemSpecificBuildDirectory;
+    private boolean useOSBuildSubdirectory;
 
     // Left blank, this will be computed automatically
     @Parameter()
@@ -71,11 +72,11 @@ public class ConfigureMojo extends AbstractMojo
             OperatingSystemInfo info = new OperatingSystemInfo();
 
             File buildDirectory = configuredBuildDirectory;
-            if (useOperatingSystemSpecificBuildDirectory)
+            if (useOSBuildSubdirectory)
             {
                 buildDirectory = new File(configuredBuildDirectory, info.getDistro());
             }
-            
+
             buildDirectory.mkdirs();
 
             if ((generator == null) || (generator.length() == 0))
@@ -83,15 +84,18 @@ public class ConfigureMojo extends AbstractMojo
                 generator = info.getCMakeGenerator();
             }
 
-            org.twdata.maven.mojoexecutor.MojoExecutor.Element[] argElements;
+            MojoExecutor.Element[] argElements = null;
             {
                 ArrayList<MojoExecutor.Element> args = new ArrayList<MojoExecutor.Element>();
 
                 args.add(element("argument", new StringBuilder("-G").append(generator).toString()));
 
-                for (String optionsKey : options.keySet())
+                if (options != null)
                 {
-                    args.add(element("argument", new StringBuilder("-D").append(optionsKey).append("=").append(options.get(optionsKey)).toString()));
+                    for (String optionsKey : options.keySet())
+                    {
+                        args.add(element("argument", new StringBuilder("-D").append(optionsKey).append("=").append(options.get(optionsKey)).toString()));
+                    }
                 }
 
                 args.add(element("argument", sourceDirectory.getAbsolutePath()));
@@ -99,8 +103,15 @@ public class ConfigureMojo extends AbstractMojo
                 argElements = new MojoExecutor.Element[args.size()];
                 args.toArray(argElements);
             }
-            
-            getLog().info(argElements.toString());
+
+            Xpp3Dom config = configuration(
+                    element(name("workingDirectory"), buildDirectory.getAbsolutePath()),
+                    element(name("executable"), cmakeExeName),
+                    element(name("arguments"), argElements)
+            );
+
+            getLog().info("Executing cmake configure:");
+            getLog().info(config.toString());
 
             executeMojo(
                     plugin(
@@ -109,11 +120,7 @@ public class ConfigureMojo extends AbstractMojo
                             version(execPlugin.getVersion())
                     ),
                     goal("exec"),
-                    configuration(
-                            element(name("workingDirectory"), buildDirectory.getAbsolutePath()),
-                            element(name("executable"), cmakeExeName),
-                            element(name("arguments"), argElements)
-                    ),
+                    config,
                     executionEnvironment(
                             project,
                             session,
