@@ -13,9 +13,7 @@
         <version>0.1.2-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.sri.vt.clavin</groupId>
     <artifactId>clavin-documentation</artifactId>
-    <version>0.1.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Clavin User Guide</name>
 
