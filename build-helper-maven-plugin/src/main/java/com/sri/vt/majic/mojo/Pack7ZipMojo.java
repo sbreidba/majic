@@ -1,4 +1,4 @@
-package com.sri.vt.majic;
+package com.sri.vt.majic.mojo;
 
 import lzma.streams.LzmaOutputStream;
 import org.apache.commons.io.IOUtils;

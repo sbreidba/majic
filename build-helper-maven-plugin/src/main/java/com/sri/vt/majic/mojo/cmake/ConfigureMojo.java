@@ -1,6 +1,7 @@
-package com.sri.vt.majic.cmake;
+package com.sri.vt.majic.mojo.cmake;
 
-import com.sri.vt.majic.OperatingSystemInfo;
+import com.sri.vt.majic.Utils;
+import com.sri.vt.majic.mojo.OperatingSystemInfo;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.AbstractMojo;
@@ -15,8 +16,6 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.twdata.maven.mojoexecutor.MojoExecutor;
 
-import javax.lang.model.element.*;
-import javax.lang.model.element.Element;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,13 +59,7 @@ public class ConfigureMojo extends AbstractMojo
     {
         try
         {
-            String execComponentKey = Plugin.constructKey("org.codehaus.mojo", "exec-maven-plugin");
-            Plugin execPlugin = project.getPluginManagement().getPluginsAsMap().get(execComponentKey);
-            if (execPlugin == null)
-            {
-                throw new MojoExecutionException(this, "Exec-maven-plugin version missing", "Could not determine exec plugin version. Please declare exec-maven-plugin in PluginManagement");
-            }
-            
+            Plugin execPlugin = Utils.getExecPlugin(this, project);
             getLog().info("Using exec plugin version: " + execPlugin.getVersion());
 
             OperatingSystemInfo info = new OperatingSystemInfo();
@@ -76,7 +69,6 @@ public class ConfigureMojo extends AbstractMojo
             {
                 buildDirectory = new File(configuredBuildDirectory, info.getDistro());
             }
-
             buildDirectory.mkdirs();
 
             if ((generator == null) || (generator.length() == 0))
@@ -104,14 +96,14 @@ public class ConfigureMojo extends AbstractMojo
                 args.toArray(argElements);
             }
 
-            Xpp3Dom config = configuration(
+            Xpp3Dom configElements = configuration(
                     element(name("workingDirectory"), buildDirectory.getAbsolutePath()),
                     element(name("executable"), cmakeExeName),
                     element(name("arguments"), argElements)
             );
 
             getLog().info("Executing cmake configure:");
-            getLog().info(config.toString());
+            getLog().info(configElements.toString());
 
             executeMojo(
                     plugin(
@@ -120,14 +112,13 @@ public class ConfigureMojo extends AbstractMojo
                             version(execPlugin.getVersion())
                     ),
                     goal("exec"),
-                    config,
+                    configElements,
                     executionEnvironment(
                             project,
                             session,
                             pluginManager
                     )
             );
-
         }
         catch (IOException e)
         {

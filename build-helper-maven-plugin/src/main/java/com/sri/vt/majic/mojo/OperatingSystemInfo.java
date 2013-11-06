@@ -1,4 +1,4 @@
-package com.sri.vt.majic;
+package com.sri.vt.majic.mojo;
 
 import org.apache.commons.lang3.SystemUtils;
 
