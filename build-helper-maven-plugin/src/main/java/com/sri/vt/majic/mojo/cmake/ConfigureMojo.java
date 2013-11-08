@@ -1,128 +1,79 @@
 package com.sri.vt.majic.mojo.cmake;
 
-import com.sri.vt.majic.Utils;
-import com.sri.vt.majic.mojo.OperatingSystemInfo;
-import org.apache.maven.execution.MavenSession;
-import org.apache.maven.model.Plugin;
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.BuildPluginManager;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
-import org.twdata.maven.mojoexecutor.MojoExecutor;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
-
 @Mojo(name="cmake-configure", defaultPhase=LifecyclePhase.PROCESS_SOURCES, requiresProject=true)
-public class ConfigureMojo extends AbstractMojo
+public class ConfigureMojo extends CMakeMojo
 {
-    @Parameter(defaultValue = "${project}", readonly = true, required = true)
-    private MavenProject project;
-
-    @Parameter(defaultValue = "${session}", readonly = true, required = true)
-    private MavenSession session;
-
-    @Component()
-    private BuildPluginManager pluginManager;
-
     @Parameter(defaultValue = "${basedir}")
     private File sourceDirectory;
 
-    @Parameter(alias = "buildDirectory", defaultValue = "${project.build.directory}")
-    private File configuredBuildDirectory;
-
-    // Append an operating-system-specific sub-directory to the buildDirectory
-    @Parameter(defaultValue = "true")
-    private boolean useOSBuildSubdirectory;
-
     // Left blank, this will be computed automatically
-    @Parameter()
+    @Parameter(defaultValue = "")
     private String generator;
     
-    @Parameter()
+    @Parameter(defaultValue = "")
     private Map<String, String> options;
 
-    @Parameter(defaultValue = "cmake")
-    private String cmakeExeName;
-
-    public void execute() throws MojoExecutionException, MojoFailureException
+    protected String getCMakeGenerator()
     {
-        try
+        if ((generator != null) && (generator.length() != 0)) return generator;
+
+        String cmakeGenerator = "unknown";
+        if (SystemUtils.IS_OS_WINDOWS)
         {
-            Plugin execPlugin = Utils.getExecPlugin(this, project);
-            getLog().info("Using exec plugin version: " + execPlugin.getVersion());
-
-            OperatingSystemInfo info = new OperatingSystemInfo();
-
-            File buildDirectory = configuredBuildDirectory;
-            if (useOSBuildSubdirectory)
-            {
-                buildDirectory = new File(configuredBuildDirectory, info.getDistro());
-            }
-            buildDirectory.mkdirs();
-
-            if ((generator == null) || (generator.length() == 0))
-            {
-                generator = info.getCMakeGenerator();
-            }
-
-            MojoExecutor.Element[] argElements = null;
-            {
-                ArrayList<MojoExecutor.Element> args = new ArrayList<MojoExecutor.Element>();
-
-                args.add(element("argument", new StringBuilder("-G").append(generator).toString()));
-
-                if (options != null)
-                {
-                    for (String optionsKey : options.keySet())
-                    {
-                        args.add(element("argument", new StringBuilder("-D").append(optionsKey).append("=").append(options.get(optionsKey)).toString()));
-                    }
-                }
-
-                args.add(element("argument", sourceDirectory.getAbsolutePath()));
-
-                argElements = new MojoExecutor.Element[args.size()];
-                args.toArray(argElements);
-            }
-
-            Xpp3Dom configElements = configuration(
-                    element(name("workingDirectory"), buildDirectory.getAbsolutePath()),
-                    element(name("executable"), cmakeExeName),
-                    element(name("arguments"), argElements)
-            );
-
-            getLog().info("Executing cmake configure:");
-            getLog().info(configElements.toString());
-
-            executeMojo(
-                    plugin(
-                            groupId("org.codehaus.mojo"),
-                            artifactId("exec-maven-plugin"),
-                            version(execPlugin.getVersion())
-                    ),
-                    goal("exec"),
-                    configElements,
-                    executionEnvironment(
-                            project,
-                            session,
-                            pluginManager
-                    )
-            );
+            // TODO: this should be more sophisticated - check the arch, etc.
+            cmakeGenerator = "Visual Studio 10 Win64";
         }
-        catch (IOException e)
+        else if (SystemUtils.IS_OS_LINUX)
         {
-            throw new MojoExecutionException(e.getMessage());
+            cmakeGenerator = "Unix Makefiles";
         }
+        else if (SystemUtils.IS_OS_MAC_OSX)
+        {
+            // TODO this is just for testing
+            cmakeGenerator = "Unix Makefiles";
+        }
+
+        return cmakeGenerator;
+    }
+
+    protected Map<String, String> getCMakeOptions()
+    {
+        return options;
+    }
+
+    protected File getSourceDirectory()
+    {
+        return sourceDirectory;
+    }
+
+    public List<String> getArguments()
+    {
+        List<String> arguments = super.getArguments();
+
+        if (arguments == null) arguments = new ArrayList<String>();
+
+        if (getCMakeGenerator() != null)
+        {
+            arguments.add(new StringBuilder("-G").append(getCMakeGenerator()).toString());
+        }
+
+        for (String optionsKey : getCMakeOptions().keySet())
+        {
+            arguments.add(new StringBuilder("-D").append(optionsKey).append("=").append(options.get(optionsKey)).toString());
+        }
+
+        arguments.add(getSourceDirectory().getAbsolutePath());
+
+        return arguments;
     }
 }

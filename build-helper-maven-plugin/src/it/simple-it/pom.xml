@@ -30,7 +30,7 @@
                 <artifactId>@project.artifactId@</artifactId>
                 <version>@project.version@</version>
                 <executions>
-                    <execution>
+                    <!--<execution>
                         <id>set-properties</id>
                         <phase>validate</phase>
                         <goals>
@@ -47,7 +47,7 @@
                             <sourceDirectory>${basedir}/src/test/resources/toPack/</sourceDirectory>
                             <outputFile>${basedir}/src/test/resources/toPack.zip</outputFile>
                         </configuration>
-                    </execution>
+                    </execution>-->
                     <execution>
                         <id>cmake-configure</id>
                         <phase>validate</phase>
@@ -62,6 +62,13 @@
                             </options>
                         </configuration>
                     </execution>
+<!--                    <execution>
+                        <id>cmake-install</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>cmake-doc</goal>
+                        </goals>
+                    </execution>-->
                 </executions>
             </plugin>
         </plugins>

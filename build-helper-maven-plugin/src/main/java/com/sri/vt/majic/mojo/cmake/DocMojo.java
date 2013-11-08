@@ -4,10 +4,10 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-@Mojo(name="cmake-install", defaultPhase=LifecyclePhase.PREPARE_PACKAGE, requiresProject=true)
-public class InstallMojo extends RunTargetMojo
+@Mojo(name="cmake-doc", defaultPhase=LifecyclePhase.PREPARE_PACKAGE, requiresProject=true)
+public class DocMojo extends RunTargetMojo
 {
-    @Parameter(alias = "target", defaultValue = "install")
+    @Parameter(alias = "target", defaultValue = "doc")
     protected String installTarget;
 
     protected String getTarget()

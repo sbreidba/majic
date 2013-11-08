@@ -1,4 +1,4 @@
-package com.sri.vt.majic.mojo;
+package com.sri.vt.majic.mojo.util;
 
 import org.apache.commons.lang3.SystemUtils;
 
@@ -14,21 +14,15 @@ public class OperatingSystemInfo
         name = SystemUtils.OS_NAME;
         arch = SystemUtils.OS_ARCH;
         distro = "unknown";
-        cmakeGenerator = "unknown";
 
         if (SystemUtils.IS_OS_WINDOWS)
         {
-            // TODO: this should be more sophisticated - check the arch, etc.
-            cmakeGenerator = "Visual Studio 10 Win64";
-            
             if (SystemUtils.IS_OS_WINDOWS_7) distro = "win7";
             else if (SystemUtils.IS_OS_WINDOWS_XP) distro = "winxp";
             else if (SystemUtils.IS_OS_WINDOWS) distro = "win";
         }
         else if (SystemUtils.IS_OS_LINUX)
         {
-            cmakeGenerator = "Unix Makefiles";
-            
             Process process = Runtime.getRuntime().exec(new String[]
                 {
                     "lsb_release",
@@ -66,10 +60,10 @@ public class OperatingSystemInfo
                 dist.append("unknown");
             }
 
-
             String versionFull = mapKeyValue.get("Release");
             if (versionFull != null)
             {
+                // TODO single digit?
                 dist.append(versionFull.replace(".", ""));
             }
 
@@ -77,8 +71,6 @@ public class OperatingSystemInfo
         }
         else if (SystemUtils.IS_OS_MAC_OSX)
         {
-            // TODO these are just for testing
-            cmakeGenerator = "Unix Makefiles";
             distro = "osx";
         }
     }
@@ -98,13 +90,7 @@ public class OperatingSystemInfo
         return distro;
     }
 
-    public String getCMakeGenerator()
-    {
-        return cmakeGenerator;
-    }
-
     private String name;
     private String arch;
     private String distro;
-    private String cmakeGenerator;
 }

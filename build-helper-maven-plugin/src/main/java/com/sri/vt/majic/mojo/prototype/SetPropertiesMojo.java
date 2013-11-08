@@ -1,6 +1,6 @@
-package com.sri.vt.majic.mojo;
+package com.sri.vt.majic.mojo.prototype;
 
-import com.sri.vt.majic.mojo.OperatingSystemInfo;
+import com.sri.vt.majic.mojo.util.OperatingSystemInfo;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
