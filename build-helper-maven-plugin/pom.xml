@@ -5,12 +5,12 @@
     <parent>
         <groupId>com.sri.vt.clavin</groupId>
         <artifactId>clavin</artifactId>
-        <version>0.1.1-SNAPSHOT</version>
+        <version>0.1.1</version>
     </parent>
  
     <groupId>com.sri.vt.majic</groupId>
     <artifactId>build-helper-maven-plugin</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.1.1</version>
     <packaging>maven-plugin</packaging>
     <name>Majic Build Helper Maven Plugin</name>
     <description>Goals to make packaging and cmake builds simpler.</description>
