@@ -89,18 +89,25 @@ public class ExecMojo extends AbstractMojo
 
     protected void append(List<Element> elements, String name, File value)
     {
-        if (value != null) elements.add(element(name, value.getAbsolutePath()));
+        if (value != null)
+        {
+        	append(elements, name, value.getAbsolutePath());
+        }
     }
 
     protected void append(List<Element> elements, String name, String value)
     {
         getLog().info(getClass().getSimpleName() + ": " + name + " is " + ((value == null) ? "(not set)" : "[" + value + "]"));
-        if (value != null) elements.add(element(name, value));
+		if (value != null)
+		{
+			elements.add(element(name, value));
+		}
     }
 
     protected void append(List<Element> elements, String elementName, String childName, List<String> values)
     {
-        if ((values == null) || (values.size() == 0)) return;
+        if ((values == null) || (values.size() == 0)) 
+        	return;
 
         List<Element> childElements = new ArrayList<Element>();
         for (String value : values)
