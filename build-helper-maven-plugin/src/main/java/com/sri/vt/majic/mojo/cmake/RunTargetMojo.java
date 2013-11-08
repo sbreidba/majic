@@ -1,5 +1,6 @@
 package com.sri.vt.majic.mojo.cmake;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
@@ -59,15 +60,18 @@ public class RunTargetMojo extends CMakeMojo
             hasDoubleDash = (extraArgs.contains("--"));
         }
 
-        if (jobs != null)
-        {
-            if (!hasDoubleDash)
-            {
-                extra.append(" -- ");
-            }
-            extra.append("-j");
-            extra.append(jobs);
-        }
+		if (SystemUtils.IS_OS_LINUX) 
+		{
+			if (jobs != null) 
+			{
+				if (!hasDoubleDash) 
+				{
+					extra.append(" -- ");
+				}
+				extra.append("-j");
+				extra.append(jobs);
+			}
+		}
 
         return extra.toString();
     }
