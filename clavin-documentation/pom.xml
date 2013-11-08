@@ -10,12 +10,12 @@
     <parent>
         <groupId>com.sri.vt.clavin</groupId>
         <artifactId>clavin</artifactId>
-        <version>0.1.1</version>
+        <version>0.1.2-SNAPSHOT</version>
     </parent>
 
     <groupId>com.sri.vt.clavin</groupId>
     <artifactId>clavin-documentation</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Clavin User Guide</name>
 
