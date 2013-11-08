@@ -7,17 +7,17 @@ import org.apache.maven.plugins.annotations.Parameter;
 public class RunTargetMojo extends CMakeMojo
 {
     @Parameter(defaultValue = "")
-    protected String target;
+    private String target;
 
-    @Parameter(defaultValue = "Release")
-    protected String config;
+    @Parameter(defaultValue = "")
+    private String config;
 
     // Note: it is up to the caller to pass the -- if desired.
     @Parameter(defaultValue = "")
-    protected String extraArgs;
+    private String extraArgs;
 
     @Parameter(defaultValue = "4")
-    protected Integer jobs;
+    private Integer jobs;
 
     @Override
     protected String getCommandlineArgs()

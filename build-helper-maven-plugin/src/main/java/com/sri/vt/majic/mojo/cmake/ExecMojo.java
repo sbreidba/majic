@@ -28,10 +28,22 @@ public class ExecMojo extends AbstractMojo
     protected BuildPluginManager pluginManager;
 
     @Parameter(alias = "workingDirectory", defaultValue = "${project.build.directory}")
-    protected File workingDirectory;
+    private File workingDirectory;
 
     @Parameter(defaultValue = "")
-    protected String executable;
+    private String executable;
+
+    @Parameter(defaultValue = "")
+    private String commandlineArgs;
+
+    @Parameter(defaultValue = "")
+    private List<String> arguments;
+
+    @Parameter(defaultValue = "false")
+    private boolean skip;
+
+    @Parameter(defaultValue = "")
+    private File outputFile;
 
     protected Plugin getExecPlugin(MavenProject project) throws MojoExecutionException
     {
@@ -47,7 +59,7 @@ public class ExecMojo extends AbstractMojo
 
     protected List<String> getArguments()
     {
-        return null;
+        return arguments;
     }
 
     protected String getExecutable()
@@ -62,7 +74,7 @@ public class ExecMojo extends AbstractMojo
 
     protected String getCommandlineArgs()
     {
-        return null;
+        return commandlineArgs;
     }
 
     protected File getOutputFile()
@@ -72,7 +84,7 @@ public class ExecMojo extends AbstractMojo
 
     protected boolean getSkip()
     {
-        return false;
+        return skip;
     }
 
     protected void append(List<Element> elements, String name, File value)
@@ -82,7 +94,7 @@ public class ExecMojo extends AbstractMojo
 
     protected void append(List<Element> elements, String name, String value)
     {
-        getLog().info(getClass().toString() + ": " + name + "=" + value);
+        getLog().info(getClass().getSimpleName() + ": " + name + " is " + ((value == null) ? "(not set)" : "[" + value + "]"));
         if (value != null) elements.add(element(name, value));
     }
 
@@ -110,6 +122,7 @@ public class ExecMojo extends AbstractMojo
         append(elements, "commandlineArgs", getCommandlineArgs());
         append(elements, "arguments", "argument", getArguments());
         append(elements, "skip", Boolean.toString(getSkip()));
+        append(elements, "outputFile", getOutputFile());
 
         Element[] elementArray = new Element[elements.size()];
         elements.toArray(elementArray);

@@ -8,7 +8,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 public class InstallMojo extends RunTargetMojo
 {
     @Parameter(alias = "target", defaultValue = "install")
-    protected String installTarget;
+    private String installTarget;
 
     protected String getTarget()
     {

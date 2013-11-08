@@ -8,7 +8,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 public class CompileMojo extends RunTargetMojo
 {
     @Parameter(alias = "target", defaultValue = "")
-    protected String compileTarget;
+    private String compileTarget;
 
     protected String getTarget()
     {

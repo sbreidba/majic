@@ -23,6 +23,9 @@ public class ConfigureMojo extends CMakeMojo
     @Parameter(defaultValue = "")
     private Map<String, String> options;
 
+    @Parameter(defaultValue = "true")
+    private boolean addCPackPackageVersion;
+
     protected String getCMakeGenerator()
     {
         if ((generator != null) && (generator.length() != 0)) return generator;
@@ -70,6 +73,11 @@ public class ConfigureMojo extends CMakeMojo
         for (String optionsKey : getCMakeOptions().keySet())
         {
             arguments.add(new StringBuilder("-D").append(optionsKey).append("=").append(options.get(optionsKey)).toString());
+        }
+
+        if (addCPackPackageVersion)
+        {
+            arguments.add(new StringBuilder("-D").append("CPACK_PACKAGE_VERSION").append("=").append(project.getVersion()).toString());
         }
 
         arguments.add(getSourceDirectory().getAbsolutePath());

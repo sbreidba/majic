@@ -8,7 +8,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 public class DocMojo extends RunTargetMojo
 {
     @Parameter(alias = "target", defaultValue = "doc")
-    protected String installTarget;
+    private String installTarget;
 
     protected String getTarget()
     {

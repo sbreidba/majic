@@ -9,11 +9,11 @@ import java.io.IOException;
 public class CMakeMojo extends ExecMojo
 {
     @Parameter(alias = "executable", defaultValue = "cmake")
-    protected String cmakeExeName;
+    private String cmakeExeName;
 
     // Append an operating-system-specific sub-directory to the workingDirectory
     @Parameter(defaultValue = "true")
-    protected boolean useOSBuildSubdirectory;
+    private boolean useOSBuildSubdirectory;
 
     protected OperatingSystemInfo operatingSystemInfo = null;
 
