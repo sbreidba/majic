@@ -10,6 +10,7 @@ A pdf version is available :download:`here <clavin-documentation/src/site/sphinx
    :maxdepth: 2
 
    clavin-documentation/src/site/sphinx/gettingStarted
+   clavin-documentation/src/site/sphinx/buildHelperPlugin
    clavin-documentation/src/site/sphinx/bobParentPom
    clavin-documentation/src/site/sphinx/maven
    clavin-documentation/src/site/sphinx/configureGit
