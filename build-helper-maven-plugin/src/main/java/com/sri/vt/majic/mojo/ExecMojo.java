@@ -1,5 +1,6 @@
-package com.sri.vt.majic.mojo.cmake;
+package com.sri.vt.majic.mojo;
 
+import com.sri.vt.majic.mojo.util.ILoggable;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.AbstractMojo;
@@ -16,7 +17,7 @@ import java.util.List;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
-public class ExecMojo extends AbstractMojo
+public class ExecMojo extends AbstractMojo implements ILoggable
 {
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     protected MavenProject project;

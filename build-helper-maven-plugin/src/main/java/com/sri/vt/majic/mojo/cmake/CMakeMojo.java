@@ -1,5 +1,6 @@
 package com.sri.vt.majic.mojo.cmake;
 
+import com.sri.vt.majic.mojo.ExecMojo;
 import com.sri.vt.majic.mojo.util.OperatingSystemInfo;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -32,6 +33,7 @@ public class CMakeMojo extends ExecMojo
         }
         catch(IOException e)
         {
+            // TODO this won't work - getLog() isn't usable in constructor!
             getLog().error("Could not load operating system info");
         }
     }

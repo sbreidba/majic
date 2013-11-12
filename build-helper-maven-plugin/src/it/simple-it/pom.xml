@@ -5,7 +5,8 @@
 
     <groupId>com.sri.vt.majic.it</groupId>
     <artifactId>simple-it</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
     <description>A simple IT verifying the basic use case.</description>
 
@@ -31,6 +32,14 @@
                 <version>@project.version@</version>
                 <executions>
                     <execution>
+                        <id>sandbox-1</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>sandbox</goal>
+                        </goals>
+                    </execution>
+
+                    <!-- <execution>
                         <id>cmake-configure</id>
                         <phase>validate</phase>
                         <goals>
@@ -52,32 +61,31 @@
                             <goal>cmake-tar</goal>
                         </goals>
                         <configuration>
-                            <appendOSBuildSubdirectory>false</appendOSBuildSubdirectory>
-                            <workingDirectory>${basedir}/src/test/resources</workingDirectory>
-                            <tarFile>${build.directory}/toPack.tar.bz2</tarFile>
-                            <items>
-                                <item>toPack</item>
-                            </items>
+                            <tarDirectory>${basedir}/src/test/resources/toPack</tarDirectory>
                         </configuration>
                     </execution>
                     
                     <execution>
-                        <id>cmake-tar</id>
+                        <id>cmake-untar</id>
                         <phase>validate</phase>
                         <goals>
-                            <goal>cmake-tar</goal>
+                            <goal>cmake-untar</goal>
                         </goals>
                         <configuration>
-<!--                            <appendOSBuildSubdirectory>false</appendOSBuildSubdirectory>
-                            <workingDirectory>${basedir}/src/test/resources</workingDirectory>-->
-                            <tarFile>${build.directory}/toPack.tar.bz2</tarFile>
-                            <items>
-                                <item>toPack</item>
-                            </items>
+                            <dryRunMove>true</dryRunMove>
+                            <appendOSBuildSubdirectory>false</appendOSBuildSubdirectory>
+                            <workingDirectory>${basedir}/src/test/resources</workingDirectory>
+
+                            TODO! another place where we need to know the computed cmake build dir
+                            <tarFile>${project.build.directory}/toPack.tar.bz2</tarFile>
                         </configuration>
-                    </execution>
+                    </execution> -->
                 </executions>
             </plugin>
         </plugins>
     </build>
+
+    <modules>
+        <module>module</module>
+    </modules>
 </project>

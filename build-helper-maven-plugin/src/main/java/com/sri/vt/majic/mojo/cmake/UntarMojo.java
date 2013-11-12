@@ -23,9 +23,6 @@ public class UntarMojo extends CMakeCommandMojo
     @Parameter(defaultValue = "", required = true)
     private File tarFile;
 
-    @Parameter(defaultValue = "", required = true)
-    private File outputDirectory;
-
     @Parameter(defaultValue = "${project.build.directory}/cmake-untar/markers")
     private File markersDirectory;
 
@@ -34,6 +31,9 @@ public class UntarMojo extends CMakeCommandMojo
 
     @Parameter(defaultValue = "true")
     private boolean stripRootDirectory;
+
+    @Parameter(defaultValue = "false")
+    private boolean dryRunMove;
 
     protected String getCommand()
     {
@@ -45,6 +45,13 @@ public class UntarMojo extends CMakeCommandMojo
         return tarFile;
     }
 
+    protected File getOutputDirectory()
+    {
+        // TODO: there needs to be a better way to share the auto-computed working directory
+        // TODO: perhaps export it as a variable?
+        return new File(getWorkingDirectory(), "pkg");
+    }
+
     protected File getMarkersDirectory()
     {
         return markersDirectory;
@@ -53,11 +60,6 @@ public class UntarMojo extends CMakeCommandMojo
     protected File getTemporaryExtractDir()
     {
         return temporaryExtractDir;
-    }
-
-    protected File getOutputDirectory()
-    {
-        return outputDirectory;
     }
 
     @Override
@@ -89,9 +91,16 @@ public class UntarMojo extends CMakeCommandMojo
                     moveContents(subDir);
                 }
 
-                if (!subDir.delete())
+                if (dryRunMove)
                 {
-                    getLog().warn("Could not clean up directory " + subDir);
+                    getLog().info("I would have deleted " + subDir + " during cleanup.");
+                }
+                else
+                {
+                    if (!subDir.delete())
+                    {
+                        getLog().warn("Could not clean up directory " + subDir);
+                    }
                 }
             }
         }
@@ -105,7 +114,14 @@ public class UntarMojo extends CMakeCommandMojo
     {
         for (File containedFile : file.listFiles())
         {
-            FileUtils.moveToDirectory(containedFile, getOutputDirectory(), true);
+            if (dryRunMove)
+            {
+                getLog().info("I would have moved " + containedFile + " to " + getOutputDirectory());
+            }
+            else
+            {
+                FileUtils.moveToDirectory(containedFile, getOutputDirectory(), true);
+            }
         }
     }
 
@@ -116,8 +132,6 @@ public class UntarMojo extends CMakeCommandMojo
         builder.append(super.getCommandlineArgs());
         builder.append(" ");
         builder.append(getTarFile().getAbsolutePath());
-        builder.append(" ");
-        builder.append(getOutputDirectory().getAbsolutePath());
 
         return builder.toString();
     }
