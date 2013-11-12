@@ -26,6 +26,9 @@ public class ConfigureMojo extends CMakeMojo
     @Parameter(defaultValue = "true")
     private boolean addCPackPackageVersion;
 
+    @Parameter(defaultValue = "Debug")
+    private String config;
+
     protected String getCMakeGenerator()
     {
         if ((generator != null) && (generator.length() != 0)) return generator;

@@ -87,6 +87,11 @@ public class ExecMojo extends AbstractMojo
         return skip;
     }
 
+    protected boolean isUpToDate()
+    {
+        return false;
+    }
+
     protected void append(List<Element> elements, String name, File value)
     {
         if (value != null)
@@ -138,6 +143,17 @@ public class ExecMojo extends AbstractMojo
 
     public void execute() throws MojoExecutionException, MojoFailureException
     {
+        if (getSkip())
+        {
+            getLog().info(getClass().getSimpleName() + ": Skipping execution - skip is set.");
+            return;
+        }
+
+        if (isUpToDate())
+        {
+            getLog().info(getClass().getSimpleName() + ": Skipping execution - target is up-to-date.");
+        }
+
         Plugin execPlugin = getExecPlugin(project);
         getLog().info("Using exec plugin version: " + execPlugin.getVersion());
 

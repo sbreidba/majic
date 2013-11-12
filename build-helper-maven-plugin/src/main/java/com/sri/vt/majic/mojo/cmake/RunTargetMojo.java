@@ -10,9 +10,6 @@ public class RunTargetMojo extends CMakeMojo
     @Parameter(defaultValue = "")
     private String target;
 
-    @Parameter(defaultValue = "")
-    private String config;
-
     // Note: it is up to the caller to pass the -- if desired.
     @Parameter(defaultValue = "")
     private String extraArgs;
@@ -25,8 +22,13 @@ public class RunTargetMojo extends CMakeMojo
     {
         StringBuilder builder = new StringBuilder();
         builder.append("--build ."); // always ., since we set the working dir at exec time
-        builder.append(" --target ");
-        builder.append(getTarget());
+
+        String target = getTarget();
+        if ((target != null) && (target.length() != 0))
+        {
+            builder.append(" --target ");
+            builder.append(getTarget());
+        }
 
         String config = getConfig();
         if ((config != null) && (config.length() != 0))
@@ -43,11 +45,6 @@ public class RunTargetMojo extends CMakeMojo
         }
 
         return builder.toString();
-    }
-
-    protected String getConfig()
-    {
-        return config;
     }
 
     protected String getExtraArgs()

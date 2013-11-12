@@ -30,24 +30,6 @@
                 <artifactId>@project.artifactId@</artifactId>
                 <version>@project.version@</version>
                 <executions>
-                    <!--<execution>
-                        <id>set-properties</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>set-properties</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>pack7zip</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>pack7zip</goal>
-                        </goals>
-                        <configuration>
-                            <sourceDirectory>${basedir}/src/test/resources/toPack/</sourceDirectory>
-                            <outputFile>${basedir}/src/test/resources/toPack.zip</outputFile>
-                        </configuration>
-                    </execution>-->
                     <execution>
                         <id>cmake-configure</id>
                         <phase>validate</phase>
@@ -62,13 +44,38 @@
                             </options>
                         </configuration>
                     </execution>
-<!--                    <execution>
-                        <id>cmake-install</id>
+
+                    <execution>
+                        <id>cmake-tar</id>
                         <phase>validate</phase>
                         <goals>
-                            <goal>cmake-doc</goal>
+                            <goal>cmake-tar</goal>
                         </goals>
-                    </execution>-->
+                        <configuration>
+                            <appendOSBuildSubdirectory>false</appendOSBuildSubdirectory>
+                            <workingDirectory>${basedir}/src/test/resources</workingDirectory>
+                            <tarFile>${build.directory}/toPack.tar.bz2</tarFile>
+                            <items>
+                                <item>toPack</item>
+                            </items>
+                        </configuration>
+                    </execution>
+                    
+                    <execution>
+                        <id>cmake-tar</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>cmake-tar</goal>
+                        </goals>
+                        <configuration>
+<!--                            <appendOSBuildSubdirectory>false</appendOSBuildSubdirectory>
+                            <workingDirectory>${basedir}/src/test/resources</workingDirectory>-->
+                            <tarFile>${build.directory}/toPack.tar.bz2</tarFile>
+                            <items>
+                                <item>toPack</item>
+                            </items>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

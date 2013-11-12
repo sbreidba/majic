@@ -1,6 +1,7 @@
 package com.sri.vt.majic.mojo.cmake;
 
 import com.sri.vt.majic.mojo.util.OperatingSystemInfo;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
@@ -13,7 +14,13 @@ public class CMakeMojo extends ExecMojo
 
     // Append an operating-system-specific sub-directory to the workingDirectory
     @Parameter(defaultValue = "true")
-    private boolean useOSBuildSubdirectory;
+    private boolean appendOSBuildSubdirectory;
+
+    @Parameter(defaultValue = BuildConfigDirectoryHandling.Constants.BY_OS_VALUE)
+    private BuildConfigDirectoryHandling appendConfigDirectory;
+
+    @Parameter(defaultValue = "")
+    private String config;
 
     protected OperatingSystemInfo operatingSystemInfo = null;
 
@@ -46,13 +53,44 @@ public class CMakeMojo extends ExecMojo
         return prepareBuildDirectory();
     }
 
+    protected String getConfig()
+    {
+        return config;
+    }
+    
     // Generates the full build (working) directory, creating it if needed
     protected File prepareBuildDirectory()
     {
         File buildDirectory = super.getWorkingDirectory();
-        if (useOSBuildSubdirectory)
+        if (appendOSBuildSubdirectory)
         {
             buildDirectory = new File(super.getWorkingDirectory(), operatingSystemInfo.getDistro());
+        }
+
+        boolean appendConfig;
+        switch(appendConfigDirectory)
+        {
+            case ALWAYS:
+                appendConfig = true;
+                break;
+
+            case BY_OS:
+                appendConfig = (!SystemUtils.IS_OS_WINDOWS);
+                break;
+
+            case NEVER:
+                appendConfig = true;
+                break;
+
+            default:
+                assert(false);
+                appendConfig = false;
+                break;
+        }
+
+        if (appendConfig && (config != null) && (config.length() != 0))
+        {
+            buildDirectory = new File(buildDirectory, getConfig());
         }
 
         buildDirectory.mkdirs();
