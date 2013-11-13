@@ -9,6 +9,7 @@ import org.apache.maven.project.MavenProject;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 
 import static com.sri.vt.majic.mojo.util.Logging.error;
 import static com.sri.vt.majic.mojo.util.Logging.info;
@@ -36,33 +37,6 @@ public class CMakeDirectories implements ILoggable
         mapSuffixes.put(CMAKE_PACKAGE_ROOT_PROPERTY, "pkg");
         mapSuffixes.put(CMAKE_EXPORT_ROOT_PROPERTY, "exports");
         mapSuffixes.put(CMAKE_BINDIR_ROOT_PROPERTY, "binary_dirs");
-    }
-
-    public void setProjectProperties(String config) throws IOException
-    {
-        getProject().getProperties().setProperty(
-                CMAKE_BUILD_ROOT_PROPERTY,
-                getBuildRoot().getAbsolutePath());
-
-        getProject().getProperties().setProperty(
-                CMAKE_PACKAGE_ROOT_PROPERTY,
-                getPackageRoot().getAbsolutePath());
-
-        getProject().getProperties().setProperty(
-                CMAKE_EXPORT_ROOT_PROPERTY,
-                getExportRoot().getAbsolutePath());
-
-        getProject().getProperties().setProperty(
-                CMAKE_BINDIR_ROOT_PROPERTY,
-                getBindirRoot().getAbsolutePath());
-
-        getProject().getProperties().setProperty(
-                CMAKE_PROJECT_BINDIR,
-                getProjectBindir(config).getAbsolutePath());
-
-        getProject().getProperties().setProperty(
-                CMAKE_PROJECT_INSTALLDIR,
-                getProjectInstalldir().getAbsolutePath());
     }
 
     public CMakeDirectories log(Log log)
@@ -180,10 +154,16 @@ public class CMakeDirectories implements ILoggable
 
     public File getProjectBindir(String config) throws IOException
     {
-        File root = getPropertyAsFile(CMAKE_PROJECT_BINDIR);
+        String property = CMAKE_PROJECT_BINDIR;
+        if ((config != null) && (config.length() != 0))
+        {
+            property += "." + config;
+        }
+
+        File root = getPropertyAsFile(property);
         if (root != null)
         {
-            info(this, "discovered property " + CMAKE_PROJECT_BINDIR);
+            info(this, "discovered property " + property);
             return root;
         }
 
@@ -200,7 +180,7 @@ public class CMakeDirectories implements ILoggable
         {
             if ((config != null) && (config.length() != 0))
             {
-                root = new File(root, config);
+                root = new File(root, config.toLowerCase(Locale.ENGLISH));
             }
         }
         
@@ -216,10 +196,12 @@ public class CMakeDirectories implements ILoggable
 
     public File getProjectPackagedir() throws IOException
     {
-        File root = getPropertyAsFile(CMAKE_PROJECT_PACKAGEDIR);
+        String property = CMAKE_PROJECT_PACKAGEDIR;
+
+        File root = getPropertyAsFile(property);
         if (root != null)
         {
-            info(this, "discovered property " + CMAKE_PROJECT_PACKAGEDIR);
+            info(this, "discovered property " + property);
             return root;
         }
 
@@ -242,10 +224,12 @@ public class CMakeDirectories implements ILoggable
 
     public File getProjectInstalldir() throws IOException
     {
-        File root = getPropertyAsFile(CMAKE_PROJECT_INSTALLDIR);
+        String property = CMAKE_PROJECT_INSTALLDIR;
+
+        File root = getPropertyAsFile(property);
         if (root != null)
         {
-            info(this, "discovered property " + CMAKE_PROJECT_INSTALLDIR);
+            info(this, "discovered property " + property);
             return root;
         }
 

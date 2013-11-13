@@ -1,15 +1,17 @@
 package com.sri.vt.majic.mojo.cmake;
 
 import org.apache.commons.lang3.SystemUtils;
-import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.sri.vt.majic.mojo.util.Logging.error;
 
 @Mojo(name="cmake-configure", defaultPhase=LifecyclePhase.PROCESS_SOURCES, requiresProject=true)
 public class ConfigureMojo extends CMakeMojo
@@ -27,26 +29,27 @@ public class ConfigureMojo extends CMakeMojo
     @Parameter(defaultValue = "true")
     private boolean addCPackPackageVersion;
 
-    @Parameter(defaultValue = "Debug")
-    private String config;
+    @Parameter(defaultValue = "true")
+    private boolean addCMakePrefixPath;
+    
+    @Parameter(defaultValue = "true")
+    private boolean addCMakeInstallPrefix;
+
+    @Parameter(defaultValue = "true")
+    private boolean addCMakeBuildTypeForSingleConfigBuilds;
 
     protected String getCMakeGenerator()
     {
         if ((generator != null) && (generator.length() != 0)) return generator;
 
-        String cmakeGenerator = "unknown";
+        String cmakeGenerator;
         if (SystemUtils.IS_OS_WINDOWS)
         {
             // TODO: this should be more sophisticated - check the arch, etc.
             cmakeGenerator = "Visual Studio 10 Win64";
         }
-        else if (SystemUtils.IS_OS_LINUX)
+        else
         {
-            cmakeGenerator = "Unix Makefiles";
-        }
-        else if (SystemUtils.IS_OS_MAC_OSX)
-        {
-            // TODO this is just for testing
             cmakeGenerator = "Unix Makefiles";
         }
 
@@ -63,6 +66,11 @@ public class ConfigureMojo extends CMakeMojo
         return sourceDirectory;
     }
 
+    private void appendDashD(List<String> list, String key, String value)
+    {
+        list.add(new StringBuilder("-D").append(key).append("=").append(value).toString());
+    }
+
     public List<String> getArguments()
     {
         List<String> arguments = super.getArguments();
@@ -76,12 +84,37 @@ public class ConfigureMojo extends CMakeMojo
 
         for (String optionsKey : getCMakeOptions().keySet())
         {
-            arguments.add(new StringBuilder("-D").append(optionsKey).append("=").append(options.get(optionsKey)).toString());
+            appendDashD(arguments, optionsKey, options.get(optionsKey));
         }
 
         if (addCPackPackageVersion)
         {
-            arguments.add(new StringBuilder("-D").append("CPACK_PACKAGE_VERSION").append("=").append(project.getVersion()).toString());
+            appendDashD(arguments, "CPACK_PACKAGE_VERSION", project.getVersion());
+        }
+
+        if (addCMakePrefixPath)
+        {
+            appendDashD(arguments, "CMAKE_PREFIX_PATH", getCMakeDirectories().getPackageRoot().getAbsolutePath());
+        }
+
+        if (addCMakeInstallPrefix)
+        {
+            try
+            {
+                appendDashD(arguments, "CMAKE_INSTALL_PREFIX", getCMakeDirectories().getProjectInstalldir().getAbsolutePath());
+            }
+            catch (IOException e)
+            {
+                error(this, "Could not determine cmake project directory");
+            }
+        }
+
+        if (addCMakeBuildTypeForSingleConfigBuilds)
+        {
+            if (!SystemUtils.IS_OS_WINDOWS)
+            {
+                appendDashD(arguments, "CMAKE_BUILD_TYPE", getConfig());
+            }
         }
 
         arguments.add(getSourceDirectory().getAbsolutePath());

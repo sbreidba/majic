@@ -1,7 +1,6 @@
 package com.sri.vt.majic.mojo.cmake;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -9,12 +8,11 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Date;
 
-@Mojo(name="cmake-untar", defaultPhase = LifecyclePhase.INITIALIZE, requiresProject=true)
+import static com.sri.vt.majic.mojo.util.Logging.error;
+
+@Mojo(name="cmake-untar", defaultPhase = LifecyclePhase.INITIALIZE, requiresProject = true)
 public class UntarMojo extends CMakeCommandMojo
 {
     @Parameter(defaultValue = "tar xjf", required = true)
@@ -23,18 +21,15 @@ public class UntarMojo extends CMakeCommandMojo
     @Parameter(defaultValue = "", required = true)
     private File tarFile;
 
-    @Parameter(defaultValue = "${project.build.directory}/cmake-untar/markers")
-    private File markersDirectory;
-
-    @Parameter(defaultValue = "${project.build.directory}/cmake-untar/tempExtract")
-    private File temporaryExtractDir;
+    @Parameter(defaultValue = "${cmake.build.root}")
+    private File unpackRoot;
 
     @Parameter(defaultValue = "true")
     private boolean stripRootDirectory;
 
-    @Parameter(defaultValue = "false")
-    private boolean dryRunMove;
-
+    @Parameter(defaultValue = "", required = true)
+    private File outputDirectory;
+    
     protected String getCommand()
     {
         return command;
@@ -45,34 +40,61 @@ public class UntarMojo extends CMakeCommandMojo
         return tarFile;
     }
 
-    protected File getOutputDirectory()
-    {
-        // TODO: there needs to be a better way to share the auto-computed working directory
-        // TODO: perhaps export it as a variable?
-        return new File(getWorkingDirectory(), "pkg");
-    }
+    // The extract dir becomes the working directory for purposes of exec()
+    // getTemporaryExtractDir exists since it's more expressive when used elsewhere.
 
-    protected File getMarkersDirectory()
+    protected File getWorkingDirectory()
     {
-        return markersDirectory;
+        return getTemporaryExtractDir();
     }
 
     protected File getTemporaryExtractDir()
     {
-        return temporaryExtractDir;
+        return new File(getUnpackRoot(), "cmake-untar/temp");
+    }
+
+    protected File getUnpackRoot()
+    {
+        if (unpackRoot != null)
+        {
+            return unpackRoot;
+        }
+
+        return getCMakeDirectories().getBuildRoot();
+    }
+    
+    protected File getOutputDirectory()
+    {
+        if (outputDirectory != null)
+        {
+            return outputDirectory;
+        }
+
+        try
+        {
+            return getCMakeDirectories().getProjectPackagedir();
+        }
+        catch (IOException e)
+        {
+            error(this, "Could not determine project package directory");
+            return null;
+        }
+    }
+
+    protected File getMarkersDirectory()
+    {
+        return new File(getUnpackRoot(), "cmake-untar/markers");
     }
 
     @Override
     protected boolean isUpToDate()
     {
-        getLog().debug("Comparing modification dates: " + getTarFile() + " vs. " + getMarkerFile());
+        getLog().debug("Checking up-to-date: " + getTarFile() + " vs. " + getMarkerFile());
 
-        if (!getMarkerFile().exists())
-        {
-            return false;
-        }
-        
-        return (getTarFile().lastModified() < getMarkerFile().lastModified());
+        return (
+            getMarkerFile().exists()
+            && (getTarFile().lastModified() <= getMarkerFile().lastModified())
+        );
     }
 
     protected File getMarkerFile()
@@ -91,16 +113,9 @@ public class UntarMojo extends CMakeCommandMojo
                     moveContents(subDir);
                 }
 
-                if (dryRunMove)
+                if (!subDir.delete())
                 {
-                    getLog().info("I would have deleted " + subDir + " during cleanup.");
-                }
-                else
-                {
-                    if (!subDir.delete())
-                    {
-                        getLog().warn("Could not clean up directory " + subDir);
-                    }
+                    getLog().warn("Could not clean up directory " + subDir);
                 }
             }
         }
@@ -110,9 +125,26 @@ public class UntarMojo extends CMakeCommandMojo
         }
     }
 
-    protected void moveContents(File file) throws IOException
+    protected void moveContents(File sourceDirectory) throws IOException
     {
-        for (File containedFile : file.listFiles())
+        /* TODO: moving directories doesn't really work very well.
+
+           First, FileUtils.moveXXX will complain if the destination already exists.
+           Second, even if it didn't, the java implementations seem to revert to copy & delete, so
+           successive extractions will be slow(er).
+
+           Possible fixes:
+           1. Upgrade to Java 1.7 and see if we can't do better with nio.Files.
+           2. Use a library to examine the tarball when stripRootDirectory is turned on.
+              Then we can selectively extract the contents of the tarball directly to the output directory.
+              This is probably our best option if it's practical.
+           3. Do a recursive move, but checking to see if the target exists before the move, deleting it first if so.
+        */
+
+        FileUtils.copyDirectory(sourceDirectory, getOutputDirectory());
+        FileUtils.deleteDirectory(sourceDirectory);
+
+        /*for (File containedFile : sourceDirectory.listFiles())
         {
             if (dryRunMove)
             {
@@ -122,7 +154,7 @@ public class UntarMojo extends CMakeCommandMojo
             {
                 FileUtils.moveToDirectory(containedFile, getOutputDirectory(), true);
             }
-        }
+        }*/
     }
 
     @Override
@@ -139,15 +171,8 @@ public class UntarMojo extends CMakeCommandMojo
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
     {
-        if (!getTemporaryExtractDir().mkdirs())
-        {
-            throw new MojoExecutionException("Could not create temporary extraction subdirectory: " + getTemporaryExtractDir());
-        }
-
-        if (!getMarkersDirectory().mkdirs())
-        {
-            throw new MojoExecutionException("Could not create markers subdirectory: " + getMarkersDirectory());
-        }
+        getTemporaryExtractDir().mkdirs();
+        getMarkersDirectory().mkdirs();
 
         super.execute();
 

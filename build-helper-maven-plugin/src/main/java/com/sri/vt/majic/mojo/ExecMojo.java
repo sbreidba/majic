@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.sri.vt.majic.mojo.util.Logging.info;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
 public class ExecMojo extends AbstractMojo implements ILoggable
@@ -103,7 +104,7 @@ public class ExecMojo extends AbstractMojo implements ILoggable
 
     protected void append(List<Element> elements, String name, String value)
     {
-        getLog().info(getClass().getSimpleName() + ": " + name + " is " + ((value == null) ? "(not set)" : "[" + value + "]"));
+        info(this, name + " is " + ((value == null) ? "(not set)" : "[" + value + "]"));
 		if (value != null)
 		{
 			elements.add(element(name, value));
@@ -146,17 +147,17 @@ public class ExecMojo extends AbstractMojo implements ILoggable
     {
         if (getSkip())
         {
-            getLog().info(getClass().getSimpleName() + ": Skipping execution - skip is set.");
+            info(this, "Skipping execution - skip is set.");
             return;
         }
 
         if (isUpToDate())
         {
-            getLog().info(getClass().getSimpleName() + ": Skipping execution - target is up-to-date.");
+            info(this, "Skipping execution - target is up-to-date.");
         }
 
         Plugin execPlugin = getExecPlugin(project);
-        getLog().info("Using exec plugin version: " + execPlugin.getVersion());
+        info(this, "Using exec plugin version: " + execPlugin.getVersion());
 
         executeMojo(
             plugin(

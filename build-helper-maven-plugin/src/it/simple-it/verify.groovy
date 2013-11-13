@@ -1,2 +1,2 @@
-//File packFile = new File(basedir, "target/toPack.tar.bz2");
-//assert(packFile.isFile());
+File moduleDocFile = new File(basedir, "../simple-it-build/exports/moduleDoc/module.txt");
+assert(moduleDocFile.isFile());

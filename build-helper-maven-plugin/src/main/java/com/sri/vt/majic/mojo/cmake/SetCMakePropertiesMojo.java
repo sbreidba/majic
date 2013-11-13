@@ -14,12 +14,12 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 import java.io.IOException;
-
-import static com.sri.vt.majic.mojo.util.Logging.info;
+import java.util.List;
 
 // use this mojo to proactively declare needed cmake properties in advance.
-// this can be helpful for debugging, though it's not usable for non-Windows
-// multi-config builds that use the cmake project bindir.
+// note that ${cmake.project.bindir} is a "config-neutral" directory
+// when configurations are specified, other bindir properties
+// in the form ${cmake.project.bindir}.<config> are also set.
 
 @Mojo(name="cmake-set-properties", defaultPhase=LifecyclePhase.VALIDATE, requiresProject=true)
 public class SetCMakePropertiesMojo extends AbstractMojo implements ILoggable
@@ -33,22 +33,27 @@ public class SetCMakePropertiesMojo extends AbstractMojo implements ILoggable
     @Component(hint = "")
     protected BuildPluginManager pluginManager;
 
-    @Parameter(defaultValue = "debug")
-    private String config;
+    @Parameter(defaultValue = "")
+    private List<String> configs;
 
     @Parameter(defaultValue = "false")
     private boolean verbose;
 
-    protected String getConfig()
+    protected List<String> getConfigs()
     {
-        return config;
+        return configs;
     }
 
     protected boolean isVerbose()
     {
         return verbose;
     }
-    
+
+    protected MavenProject getProject()
+    {
+        return project;
+    }
+
     public void execute() throws MojoExecutionException, MojoFailureException
     {
         CMakeDirectories cmakeDirectories = new CMakeDirectories(project);
@@ -57,9 +62,41 @@ public class SetCMakePropertiesMojo extends AbstractMojo implements ILoggable
             cmakeDirectories.log(getLog());
         }
 
+        getProject().getProperties().setProperty(
+                CMakeDirectories.CMAKE_BUILD_ROOT_PROPERTY,
+                cmakeDirectories.getBuildRoot().getAbsolutePath());
+
+        getProject().getProperties().setProperty(
+                CMakeDirectories.CMAKE_PACKAGE_ROOT_PROPERTY,
+                cmakeDirectories.getPackageRoot().getAbsolutePath());
+
+        getProject().getProperties().setProperty(
+                CMakeDirectories.CMAKE_EXPORT_ROOT_PROPERTY,
+                cmakeDirectories.getExportRoot().getAbsolutePath());
+
+        getProject().getProperties().setProperty(
+                CMakeDirectories.CMAKE_BINDIR_ROOT_PROPERTY,
+                cmakeDirectories.getBindirRoot().getAbsolutePath());
+
         try
         {
-            cmakeDirectories.setProjectProperties(getConfig());
+            getProject().getProperties().setProperty(
+                    CMakeDirectories.CMAKE_PROJECT_BINDIR,
+                    cmakeDirectories.getProjectBindir().getAbsolutePath());
+
+            if (getConfigs() != null)
+            {
+                for (String config : getConfigs())
+                {
+                    getProject().getProperties().setProperty(
+                            CMakeDirectories.CMAKE_PROJECT_BINDIR + "." + config,
+                            cmakeDirectories.getProjectBindir(config).getAbsolutePath());
+                }
+            }
+
+            getProject().getProperties().setProperty(
+                    CMakeDirectories.CMAKE_PROJECT_INSTALLDIR,
+                    cmakeDirectories.getProjectInstalldir().getAbsolutePath());
         }
         catch (IOException e)
         {
