@@ -1,6 +1,8 @@
 package com.sri.vt.majic.mojo.util;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 
@@ -14,14 +16,16 @@ import static com.sri.vt.majic.mojo.util.Logging.info;
 public class CMakeDirectories implements ILoggable
 {
     private static String CMAKE_BUILD_ROOT_ENV = "env.cmake.build.root";
-    private static String CMAKE_BUILD_ROOT_PROPERTY = "cmake.build.root";
+    
+    public static final String CMAKE_BUILD_ROOT_PROPERTY = "cmake.build.root";
 
-    private static String CMAKE_PACKAGE_ROOT_PROPERTY = "cmake.pkg.root";
-    private static String CMAKE_EXPORT_ROOT_PROPERTY = "cmake.export.root";
-    private static String CMAKE_BINDIR_ROOT_PROPERTY = "cmake.bindir.root";
+    public static final String CMAKE_PACKAGE_ROOT_PROPERTY = "cmake.pkg.root";
+    public static final String CMAKE_EXPORT_ROOT_PROPERTY = "cmake.export.root";
+    public static final String CMAKE_BINDIR_ROOT_PROPERTY = "cmake.bindir.root";
 
-    private static String CMAKE_PROJECT_BINDIR = "cmake.project.bindir";
-    private static String CMAKE_PROJECT_INSTALLDIR = "cmake.project.installdir";
+    public static final String CMAKE_PROJECT_BINDIR = "cmake.project.bindir";
+    public static final String CMAKE_PROJECT_PACKAGEDIR = "cmake.project.packagedir";
+    public static final String CMAKE_PROJECT_INSTALLDIR = "cmake.project.installdir";
 
     public CMakeDirectories(MavenProject project)
     {
@@ -32,6 +36,33 @@ public class CMakeDirectories implements ILoggable
         mapSuffixes.put(CMAKE_PACKAGE_ROOT_PROPERTY, "pkg");
         mapSuffixes.put(CMAKE_EXPORT_ROOT_PROPERTY, "exports");
         mapSuffixes.put(CMAKE_BINDIR_ROOT_PROPERTY, "binary_dirs");
+    }
+
+    public void setProjectProperties(String config) throws IOException
+    {
+        getProject().getProperties().setProperty(
+                CMAKE_BUILD_ROOT_PROPERTY,
+                getBuildRoot().getAbsolutePath());
+
+        getProject().getProperties().setProperty(
+                CMAKE_PACKAGE_ROOT_PROPERTY,
+                getPackageRoot().getAbsolutePath());
+
+        getProject().getProperties().setProperty(
+                CMAKE_EXPORT_ROOT_PROPERTY,
+                getExportRoot().getAbsolutePath());
+
+        getProject().getProperties().setProperty(
+                CMAKE_BINDIR_ROOT_PROPERTY,
+                getBindirRoot().getAbsolutePath());
+
+        getProject().getProperties().setProperty(
+                CMAKE_PROJECT_BINDIR,
+                getProjectBindir(config).getAbsolutePath());
+
+        getProject().getProperties().setProperty(
+                CMAKE_PROJECT_INSTALLDIR,
+                getProjectInstalldir().getAbsolutePath());
     }
 
     public CMakeDirectories log(Log log)
@@ -175,12 +206,37 @@ public class CMakeDirectories implements ILoggable
         
         return root;
     }
-    
-    // The project installdir is a specific project's export directory; this is often used
+
+    // The project packagedir is a specific project's export directory; this is often used
     // as the source for a project's packaging.
+    // If ${cmake.project.packagedir} is defined, that is returned, otherwise it is computed as
+    // getBinDirRoot()/exports (i.e. ${cmake.bindir.root}
+    // Note that the build config is *always* ignored here. Debug and release targets
+    // are assumed to be merged for packaging during installation.
+
+    public File getProjectPackagedir() throws IOException
+    {
+        File root = getPropertyAsFile(CMAKE_PROJECT_PACKAGEDIR);
+        if (root != null)
+        {
+            info(this, "discovered property " + CMAKE_PROJECT_PACKAGEDIR);
+            return root;
+        }
+
+        root = getProjectBindir();
+        if (root == null)
+        {
+            return null;
+        }
+
+        return new File(root, "exports");
+    }
+
+    // The project installdir is a specific project's export directory with artifact and
+    // version information appended.
     // If ${cmake.project.installdir} is defined, that is returned, otherwise it is computed as
-    // getBinDirRoot()/exports/${project.artifactId}-${project.version}
-    // (i.e. ${cmake.bindir.root}/${project.artifactId}-${project.version}
+    // getProjectInstalldir()/${project.artifactId}-${project.version}
+    // (i.e. ${cmake.project.packagedir}/${project.artifactId}-${project.version}
     // Note that the build config is *always* ignored here. Debug and release targets
     // are assumed to be merged for packaging during installation.
 
@@ -193,13 +249,13 @@ public class CMakeDirectories implements ILoggable
             return root;
         }
 
-        root = getProjectBindir();
+        root = getProjectPackagedir();
         if (root == null)
         {
             return null;
         }
 
-        return new File(root, "exports/" + getProject().getArtifactId() + "-" + getProject().getVersion());
+        return new File(root, getProject().getArtifactId() + "-" + getProject().getVersion());
     }
 
     // This helper method builds common paths out of the build root plus a suffix.

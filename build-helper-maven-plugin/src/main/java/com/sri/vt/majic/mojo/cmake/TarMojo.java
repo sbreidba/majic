@@ -7,8 +7,9 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+
+import static com.sri.vt.majic.mojo.util.Logging.error;
 
 @Mojo(name="cmake-tar", defaultPhase = LifecyclePhase.PACKAGE, requiresProject=true)
 public class TarMojo extends CMakeCommandMojo
@@ -16,29 +17,79 @@ public class TarMojo extends CMakeCommandMojo
     @Parameter(defaultValue = "tar cjf", required = true)
     private String command;
 
-    @Parameter(defaultValue = "", required = true)
-    private File tarDirectory;
+    @Parameter(defaultValue = "${cmake.project.packagedir}")
+    private File workingDirectory;
 
+    @Parameter(defaultValue = "${cmake.project.installdir}")
+    private File installDirectory;
+
+    @Parameter(defaultValue = "${project.artifactId}-${project.version}.tar.bz2")
+    private String outputName;
+
+    @Parameter(defaultValue = "${cmake.project.bindir}")
+    private File outputDirectory;
+    
     protected String getCommand()
     {
         return command;
     }
 
-    // This deserves some explanation. when execute() is run, the tarDirectory
-    // is one lower than where we want to CD to when tar starts doing its thing.
-    //
-    // This creates the tar structure from that point in the tree. However, the semantics of
-    // "working directory" are where we place the tarball. It's handy to use the parent for
-    // this since the os/config directory information is computed for us here.
-
+    // This is the directory that tar will execute in, meaning that everything in this directory
+    // will get packaged up.
     protected File getWorkingDirectory()
     {
-        return new File(tarDirectory, "/..");
+        File root = workingDirectory;
+        if (workingDirectory == null)
+        {
+            try
+            {
+                workingDirectory = getCMakeDirectories().getProjectPackagedir();
+            }
+            catch (IOException e)
+            {
+                error(this, "Failed to get project packagedir");
+                return null;
+            }
+        }
+        
+        return workingDirectory;
+    }
+
+    protected File getInstallDirectory()
+    {
+        File root = installDirectory;
+        if (installDirectory == null)
+        {
+            try
+            {
+                installDirectory = getCMakeDirectories().getProjectInstalldir();
+            }
+            catch (IOException e)
+            {
+                error(this, "Failed to get project installdir");
+                return null;
+            }
+        }
+
+        return installDirectory;
     }
 
     protected File getTarFile()
     {
-        return new File(super.getWorkingDirectory(), tarDirectory.getName() + ".tar.bz2");
+        File root = outputDirectory;
+        if (root == null)
+        {
+            try
+            {
+                root = getCMakeDirectories().getProjectBindir();
+            }
+            catch (IOException e)
+            {
+                error(this, "Failed to get project bin dir");
+            }
+        }
+        
+        return new File(root, outputName);
     }
     
     @Override
@@ -49,15 +100,8 @@ public class TarMojo extends CMakeCommandMojo
         builder.append(" ");
         builder.append(getTarFile().getAbsolutePath());
         builder.append(" ");
-        builder.append(tarDirectory);
+        builder.append(getInstallDirectory());
 
         return builder.toString();
-    }
-
-    @Override
-    public void execute() throws MojoExecutionException, MojoFailureException
-    {
-        getTarFile().getParentFile().mkdirs();
-        super.execute();
     }
 }

@@ -1,29 +1,40 @@
 package com.sri.vt.majic.mojo.cmake;
 
 import com.sri.vt.majic.mojo.ExecMojo;
+import com.sri.vt.majic.mojo.util.CMakeDirectories;
 import com.sri.vt.majic.mojo.util.OperatingSystemInfo;
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 import java.io.IOException;
+
+import static com.sri.vt.majic.mojo.util.Logging.info;
 
 public class CMakeMojo extends ExecMojo
 {
     @Parameter(alias = "executable", defaultValue = "cmake")
     private String cmakeExeName;
 
+    /*
     // Append an operating-system-specific sub-directory to the workingDirectory
     @Parameter(defaultValue = "true")
     private boolean appendOSBuildSubdirectory;
 
     @Parameter(defaultValue = BuildConfigDirectoryHandling.Constants.BY_OS_VALUE)
     private BuildConfigDirectoryHandling appendConfigDirectory;
-
-    @Parameter(defaultValue = "")
+*/
+    @Parameter(defaultValue = "debug")
     private String config;
 
-    protected OperatingSystemInfo operatingSystemInfo = null;
+    @Parameter(defaultValue = "")
+    private File buildRoot;
+
+    private CMakeDirectories cmakeDirectories;
+    
+/*    protected OperatingSystemInfo operatingSystemInfo = null;
 
     CMakeMojo()
     {
@@ -37,10 +48,17 @@ public class CMakeMojo extends ExecMojo
             getLog().error("Could not load operating system info");
         }
     }
-
+*/
     protected void init() throws IOException
     {
-        operatingSystemInfo = new OperatingSystemInfo();
+        //operatingSystemInfo = new OperatingSystemInfo();
+        cmakeDirectories = new CMakeDirectories(project);
+    }
+
+    protected CMakeDirectories getCMakeDirectories()
+    {
+        assert(cmakeDirectories != null);
+        return cmakeDirectories;
     }
 
     @Override
@@ -52,14 +70,42 @@ public class CMakeMojo extends ExecMojo
     @Override
     protected File getWorkingDirectory()
     {
-        return prepareBuildDirectory();
+        File dir = buildRoot;
+        if (dir == null)
+        {
+            try
+            {
+                dir = getCMakeDirectories().getProjectBindir(getConfig());
+            }
+            catch (IOException e)
+            {
+                return null;
+            }
+        }
+        return dir;
+    }
+
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException
+    {
+        try
+        {
+            init();
+        }
+        catch (IOException e)
+        {
+            throw new MojoExecutionException(e.getMessage());
+        }
+        
+        super.execute();
     }
 
     protected String getConfig()
     {
         return config;
     }
-    
+
+    /*
     // Generates the full build (working) directory, creating it if needed
     protected File prepareBuildDirectory()
     {
@@ -98,5 +144,5 @@ public class CMakeMojo extends ExecMojo
         buildDirectory.mkdirs();
 
         return buildDirectory;
-    }
+    }*/
 }

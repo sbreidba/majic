@@ -32,14 +32,6 @@
                 <version>@project.version@</version>
                 <executions>
                     <execution>
-                        <id>sandbox-1</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>sandbox</goal>
-                        </goals>
-                    </execution>
-
-                    <!-- <execution>
                         <id>cmake-configure</id>
                         <phase>validate</phase>
                         <goals>
@@ -60,9 +52,6 @@
                         <goals>
                             <goal>cmake-tar</goal>
                         </goals>
-                        <configuration>
-                            <tarDirectory>${basedir}/src/test/resources/toPack</tarDirectory>
-                        </configuration>
                     </execution>
                     
                     <execution>
@@ -73,13 +62,12 @@
                         </goals>
                         <configuration>
                             <dryRunMove>true</dryRunMove>
-                            <appendOSBuildSubdirectory>false</appendOSBuildSubdirectory>
                             <workingDirectory>${basedir}/src/test/resources</workingDirectory>
 
                             TODO! another place where we need to know the computed cmake build dir
                             <tarFile>${project.build.directory}/toPack.tar.bz2</tarFile>
                         </configuration>
-                    </execution> -->
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

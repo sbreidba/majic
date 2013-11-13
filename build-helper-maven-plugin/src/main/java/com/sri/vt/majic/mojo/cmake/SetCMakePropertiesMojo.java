@@ -17,8 +17,12 @@ import java.io.IOException;
 
 import static com.sri.vt.majic.mojo.util.Logging.info;
 
-@Mojo(name="sandbox", defaultPhase=LifecyclePhase.VALIDATE, requiresProject=true)
-public class SandboxMojo extends AbstractMojo implements ILoggable
+// use this mojo to proactively declare needed cmake properties in advance.
+// this can be helpful for debugging, though it's not usable for non-Windows
+// multi-config builds that use the cmake project bindir.
+
+@Mojo(name="cmake-set-properties", defaultPhase=LifecyclePhase.VALIDATE, requiresProject=true)
+public class SetCMakePropertiesMojo extends AbstractMojo implements ILoggable
 {
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     protected MavenProject project;
@@ -29,20 +33,33 @@ public class SandboxMojo extends AbstractMojo implements ILoggable
     @Component(hint = "")
     protected BuildPluginManager pluginManager;
 
+    @Parameter(defaultValue = "debug")
+    private String config;
+
+    @Parameter(defaultValue = "false")
+    private boolean verbose;
+
+    protected String getConfig()
+    {
+        return config;
+    }
+
+    protected boolean isVerbose()
+    {
+        return verbose;
+    }
+    
     public void execute() throws MojoExecutionException, MojoFailureException
     {
         CMakeDirectories cmakeDirectories = new CMakeDirectories(project);
+        if (isVerbose())
+        {
+            cmakeDirectories.log(getLog());
+        }
 
-        info(this, "cmake build root = " + cmakeDirectories.getBuildRoot().getAbsolutePath());
-        info(this, "cmake package root = " + cmakeDirectories.getPackageRoot());
-        info(this, "cmake export root = " + cmakeDirectories.getExportRoot());
-        info(this, "cmake bindir root = " + cmakeDirectories.getBindirRoot());
-        
         try
         {
-            info(this, "cmake project debug bindir = " + cmakeDirectories.getProjectBindir("debug"));
-            info(this, "cmake project release bindir = " + cmakeDirectories.getProjectBindir("release"));
-            info(this, "cmake project installdir = " + cmakeDirectories.getProjectInstalldir());
+            cmakeDirectories.setProjectProperties(getConfig());
         }
         catch (IOException e)
         {
