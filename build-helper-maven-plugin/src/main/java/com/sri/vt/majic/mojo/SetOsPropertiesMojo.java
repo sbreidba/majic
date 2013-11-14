@@ -19,20 +19,25 @@ import java.io.IOException;
 public class SetOsPropertiesMojo extends AbstractMojo
 {
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
-    private MavenProject m_project;
+    private MavenProject project;
 
     public void execute() throws MojoExecutionException, MojoFailureException
     {
         try
         {
             OperatingSystemInfo info = new OperatingSystemInfo();
-            m_project.getProperties().setProperty("os.name", info.getName());
-            m_project.getProperties().setProperty("os.arch", info.getArch());
-            m_project.getProperties().setProperty("os.distro", info.getDistro());
+            getProject().getProperties().setProperty("os.name", info.getName());
+            getProject().getProperties().setProperty("os.arch", info.getArch());
+            getProject().getProperties().setProperty("os.distro", info.getDistro());
         }
         catch (IOException e)
         {
             throw new MojoExecutionException(e.getMessage());
         }
+    }
+
+    protected MavenProject getProject()
+    {
+        return project;
     }
 }

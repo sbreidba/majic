@@ -8,11 +8,10 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProjectHelper;
+import org.apache.maven.wagon.PathUtils;
 
 import java.io.File;
 import java.io.IOException;
-
-import static com.sri.vt.majic.mojo.util.Logging.error;
 
 @Mojo(name="cmake-tar", defaultPhase = LifecyclePhase.PACKAGE, requiresProject=true)
 public class TarMojo extends CMakeCommandMojo
@@ -64,7 +63,7 @@ public class TarMojo extends CMakeCommandMojo
         }
         catch (IOException e)
         {
-            error(this, "Failed to get project packagedir");
+            getLog().error("Failed to get project packagedir");
             return null;
         }
     }
@@ -82,7 +81,7 @@ public class TarMojo extends CMakeCommandMojo
         }
         catch (IOException e)
         {
-            error(this, "Failed to get project installdir");
+            getLog().error("Failed to get project installdir");
             return null;
         }
     }
@@ -98,7 +97,7 @@ public class TarMojo extends CMakeCommandMojo
             }
             catch (IOException e)
             {
-                error(this, "Failed to get project bin dir");
+                getLog().error("Failed to get project bin dir");
                 return null;
             }
         }
@@ -114,7 +113,9 @@ public class TarMojo extends CMakeCommandMojo
         builder.append(" ");
         builder.append(getTarFile().getAbsolutePath());
         builder.append(" ");
-        builder.append(getInstallDirectory());
+
+        String relativePath = PathUtils.toRelative(getWorkingDirectory(), getInstallDirectory().getAbsolutePath());
+        builder.append(relativePath);
 
         return builder.toString();
     }

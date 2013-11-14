@@ -9,9 +9,9 @@ import org.apache.maven.plugins.annotations.Mojo;
 import java.io.IOException;
 
 /**
- * The show-info goal displays information about the current O/S.
+ * This goal displays information about the current O/S.
  */
-@Mojo(name="os-show-info")
+@Mojo(name="show-os-info")
 public class ShowOsInfoMojo extends AbstractMojo
 {
     public void execute() throws MojoExecutionException, MojoFailureException

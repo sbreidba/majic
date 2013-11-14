@@ -1,8 +1,6 @@
 package com.sri.vt.majic.mojo.util;
 
 import org.apache.commons.lang3.SystemUtils;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 
@@ -11,10 +9,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 
-import static com.sri.vt.majic.mojo.util.Logging.error;
-import static com.sri.vt.majic.mojo.util.Logging.info;
-
-public class CMakeDirectories implements ILoggable
+public class CMakeDirectories
 {
     private static String CMAKE_BUILD_ROOT_ENV = "env.cmake.build.root";
     
@@ -28,21 +23,15 @@ public class CMakeDirectories implements ILoggable
     public static final String CMAKE_PROJECT_PACKAGEDIR = "cmake.project.packagedir";
     public static final String CMAKE_PROJECT_INSTALLDIR = "cmake.project.installdir";
 
-    public CMakeDirectories(MavenProject project)
+    public CMakeDirectories(MavenProject project, Log log)
     {
         _project = project;
-        _log = null;
-
-        mapSuffixes = new HashMap<String, String>();
-        mapSuffixes.put(CMAKE_PACKAGE_ROOT_PROPERTY, "pkg");
-        mapSuffixes.put(CMAKE_EXPORT_ROOT_PROPERTY, "exports");
-        mapSuffixes.put(CMAKE_BINDIR_ROOT_PROPERTY, "binary_dirs");
-    }
-
-    public CMakeDirectories log(Log log)
-    {
         _log = log;
-        return this;
+        
+        _mapSuffixes = new HashMap<String, String>();
+        get_mapSuffixes().put(CMAKE_PACKAGE_ROOT_PROPERTY, "pkg");
+        get_mapSuffixes().put(CMAKE_EXPORT_ROOT_PROPERTY, "exports");
+        get_mapSuffixes().put(CMAKE_BINDIR_ROOT_PROPERTY, "binary_dirs");
     }
 
     // cmake.build.root: the absolute path to the top-level build directory
@@ -69,14 +58,14 @@ public class CMakeDirectories implements ILoggable
         root = getPropertyAsFile(CMAKE_BUILD_ROOT_PROPERTY);
         if (root != null)
         {
-            info(this, "discovered property " + CMAKE_BUILD_ROOT_PROPERTY);
+            getLog().debug("discovered property " + CMAKE_BUILD_ROOT_PROPERTY);
             return root;
         }
 
         root = getPropertyAsFile(CMAKE_BUILD_ROOT_ENV);
         if (root != null)
         {
-            info(this, "discovered property " + CMAKE_BUILD_ROOT_ENV);
+            getLog().debug("discovered property " + CMAKE_BUILD_ROOT_ENV);
             return root;
         }
 
@@ -100,7 +89,7 @@ public class CMakeDirectories implements ILoggable
 
         if (lastPomFound != null)
         {
-            info(this, "found a top-level parent pom " + levels + " levels up");
+            getLog().debug("found a top-level parent pom " + levels + " levels up");
 
             String path = lastPomFound.getAbsolutePath();
             path += "-build";
@@ -108,7 +97,7 @@ public class CMakeDirectories implements ILoggable
             return new File(path);
         }
 
-        error(this, "could not configure cmake.build.root");
+        getLog().error("Could not configure cmake.build.root");
         return null;
     }
 
@@ -163,7 +152,7 @@ public class CMakeDirectories implements ILoggable
         File root = getPropertyAsFile(property);
         if (root != null)
         {
-            info(this, "discovered property " + property);
+            getLog().debug("discovered property " + property);
             return root;
         }
 
@@ -201,7 +190,7 @@ public class CMakeDirectories implements ILoggable
         File root = getPropertyAsFile(property);
         if (root != null)
         {
-            info(this, "discovered property " + property);
+            getLog().debug("discovered property " + property);
             return root;
         }
 
@@ -229,7 +218,7 @@ public class CMakeDirectories implements ILoggable
         File root = getPropertyAsFile(property);
         if (root != null)
         {
-            info(this, "discovered property " + property);
+            getLog().debug("discovered property " + property);
             return root;
         }
 
@@ -248,14 +237,14 @@ public class CMakeDirectories implements ILoggable
         File root = getPropertyAsFile(property);
         if (root != null)
         {
-            info(this, "discovered property " + property);
+            getLog().debug("discovered property " + property);
             return root;
         }
 
         root = getBuildRoot();
         if (root == null) return null;
 
-        return new File(root, mapSuffixes.get(property));
+        return new File(root, get_mapSuffixes().get(property));
     }
 
     protected File getPropertyAsFile(String property)
@@ -280,7 +269,8 @@ public class CMakeDirectories implements ILoggable
 
     private MavenProject _project;
     private Log _log;
-    private HashMap<String, String> mapSuffixes;
+    private boolean _verbose;
+    private HashMap<String, String> _mapSuffixes;
 
     protected MavenProject getProject()
     {
@@ -290,5 +280,10 @@ public class CMakeDirectories implements ILoggable
     public Log getLog()
     {
         return _log;
+    }
+
+    protected HashMap<String, String> get_mapSuffixes()
+    {
+        return _mapSuffixes;
     }
 }

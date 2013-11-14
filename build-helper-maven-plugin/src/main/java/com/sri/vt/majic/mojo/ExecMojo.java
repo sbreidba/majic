@@ -1,6 +1,5 @@
 package com.sri.vt.majic.mojo;
 
-import com.sri.vt.majic.mojo.util.ILoggable;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.AbstractMojo;
@@ -8,6 +7,8 @@ import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
@@ -15,10 +16,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sri.vt.majic.mojo.util.Logging.info;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
-public class ExecMojo extends AbstractMojo implements ILoggable
+@Mojo(name="exec", requiresProject=true)
+public class ExecMojo extends AbstractMojo
 {
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     private MavenProject project;
@@ -109,7 +110,7 @@ public class ExecMojo extends AbstractMojo implements ILoggable
 
     protected void append(List<Element> elements, String name, String value)
     {
-        info(this, name + " is " + ((value == null) ? "(not set)" : "[" + value + "]"));
+        getLog().info(name + " is " + ((value == null) ? "(not set)" : "[" + value + "]"));
 		if (value != null)
 		{
 			elements.add(element(name, value));
@@ -154,18 +155,18 @@ public class ExecMojo extends AbstractMojo implements ILoggable
     {
         if (getSkip())
         {
-            info(this, "Skipping execution - skip is set.");
+            getLog().info("Skipping execution - skip is set.");
             return;
         }
 
         if (isUpToDate())
         {
-            info(this, "Skipping execution - target is up-to-date.");
+            getLog().info("Skipping execution - target is up-to-date.");
             return;
         }
 
         Plugin execPlugin = getExecPlugin(getProject());
-        info(this, "Using exec plugin version: " + execPlugin.getVersion());
+        getLog().info("Using exec plugin version: " + execPlugin.getVersion());
 
         executeMojo(
             plugin(

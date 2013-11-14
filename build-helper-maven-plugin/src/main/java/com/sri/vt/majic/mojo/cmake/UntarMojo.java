@@ -10,8 +10,6 @@ import org.apache.maven.plugins.annotations.Parameter;
 import java.io.File;
 import java.io.IOException;
 
-import static com.sri.vt.majic.mojo.util.Logging.error;
-
 @Mojo(name="cmake-untar", defaultPhase = LifecyclePhase.INITIALIZE, requiresProject = true)
 public class UntarMojo extends CMakeCommandMojo
 {
@@ -76,7 +74,7 @@ public class UntarMojo extends CMakeCommandMojo
         }
         catch (IOException e)
         {
-            error(this, "Could not determine project package directory");
+            getLog().error("Could not determine project package directory");
             return null;
         }
     }

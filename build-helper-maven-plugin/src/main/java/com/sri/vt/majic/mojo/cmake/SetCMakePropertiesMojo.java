@@ -1,7 +1,6 @@
 package com.sri.vt.majic.mojo.cmake;
 
 import com.sri.vt.majic.mojo.util.CMakeDirectories;
-import com.sri.vt.majic.mojo.util.ILoggable;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.BuildPluginManager;
@@ -22,7 +21,7 @@ import java.util.List;
 // in the form ${cmake.project.bindir}.<config> are also set.
 
 @Mojo(name="cmake-set-properties", defaultPhase=LifecyclePhase.VALIDATE, requiresProject=true)
-public class SetCMakePropertiesMojo extends AbstractMojo implements ILoggable
+public class SetCMakePropertiesMojo extends AbstractMojo
 {
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     protected MavenProject project;
@@ -44,11 +43,6 @@ public class SetCMakePropertiesMojo extends AbstractMojo implements ILoggable
         return configs;
     }
 
-    protected boolean isVerbose()
-    {
-        return verbose;
-    }
-
     protected MavenProject getProject()
     {
         return project;
@@ -56,11 +50,7 @@ public class SetCMakePropertiesMojo extends AbstractMojo implements ILoggable
 
     public void execute() throws MojoExecutionException, MojoFailureException
     {
-        CMakeDirectories cmakeDirectories = new CMakeDirectories(project);
-        if (isVerbose())
-        {
-            cmakeDirectories.log(getLog());
-        }
+        CMakeDirectories cmakeDirectories = new CMakeDirectories(getProject(), getLog());
 
         getProject().getProperties().setProperty(
                 CMakeDirectories.CMAKE_BUILD_ROOT_PROPERTY,

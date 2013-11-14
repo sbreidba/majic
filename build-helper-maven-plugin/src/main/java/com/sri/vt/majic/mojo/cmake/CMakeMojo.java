@@ -30,9 +30,10 @@ public class CMakeMojo extends ExecMojo
 
     protected CMakeDirectories getCMakeDirectories()
     {
+        // must assign on demand - getLog() isn't available in the constructor
         if (cmakeDirectories == null)
         {
-            cmakeDirectories = new CMakeDirectories(getProject());
+            cmakeDirectories = new CMakeDirectories(getProject(), getLog());
         }
 
         return cmakeDirectories;

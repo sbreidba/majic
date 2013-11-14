@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.sri.vt.majic.mojo.util.Logging.error;
-
 @Mojo(name="cmake-configure", defaultPhase=LifecyclePhase.PROCESS_SOURCES, requiresProject=true)
 public class ConfigureMojo extends CMakeMojo
 {
@@ -68,7 +66,10 @@ public class ConfigureMojo extends CMakeMojo
 
     private void appendDashD(List<String> list, String key, String value)
     {
-        list.add(new StringBuilder("-D").append(key).append("=").append(value).toString());
+        if ((value != null) && (value.length() != 0))
+        {
+            list.add(new StringBuilder("-D").append(key).append("=").append(value).toString());
+        }
     }
 
     public List<String> getArguments()
@@ -105,7 +106,7 @@ public class ConfigureMojo extends CMakeMojo
             }
             catch (IOException e)
             {
-                error(this, "Could not determine cmake project directory");
+                getLog().error("Could not determine cmake project directory");
             }
         }
 
