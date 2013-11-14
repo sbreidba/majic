@@ -1,17 +1,16 @@
-<project 
-    xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.sri.vt.clavin</groupId>
-        <artifactId>clavin-aggregator</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    </parent>
+    <!-- 
+    it is important that this pom not refer to any pom that has
+    any site information in it - that will get inherited as well,
+    which is not good -->
  
+    <!-- bob:gavc -->
     <groupId>com.sri.vt.clavin</groupId>
     <artifactId>cmake-maven-parent</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.1.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>CMake/Maven parent pom</name>
 
@@ -19,11 +18,7 @@
         <maven>3.0.0</maven>
     </prerequisites>
 
-    <organization>
-        <name>SRI International</name>
-        <url>http://www.sri.com</url>
-    </organization>
-
+    <!-- bob:properties -->
     <properties>
         <!-- 
         The CMake INSTALL_PATH. Usual form is something like 
@@ -61,13 +56,15 @@
 
         <!-- allow child projects to skip dependency extraction phase.
              this is especially useful for projects with no dependencies -
-             there appears to be a bug within the and dependencyFilesets
+             there appears to be a bug within the dependencyFilesets
              task such that if there are no deps, it will get *all* dependencies
              that just happen to be installed to the local repository -->
         <skip.dependency.extraction>false</skip.dependency.extraction>
     </properties>
+    <!-- bob:properties -->
 
     <profiles>
+        <!-- bob:profile unix -->
         <profile>
             <id>OS-Unix</id>
             <activation>
@@ -94,7 +91,9 @@
                 <package.pack.arguments>-cvjf</package.pack.arguments>
             </properties>
         </profile>
+        <!-- bob:profile unix -->
 
+        <!-- bob:profile win -->
         <profile>
             <id>OS-Windows</id>
             <activation>
@@ -121,7 +120,9 @@
                 <package.pack.arguments>-E tar cvjf</package.pack.arguments>
             </properties>
         </profile>
+        <!-- bob:profile win -->
 
+        <!-- bob:profile aggregator -->
         <profile>
             <id>aggregator-present</id>
             <activation>
@@ -142,7 +143,9 @@
                  </package.touch.directory>
             </properties>
         </profile>
+        <!-- bob:profile aggregator -->
 
+        <!-- bob:profile cmake -->
         <profile>
             <id>cmake</id>
             <activation>
@@ -156,6 +159,7 @@
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
                         <executions>
+			    <!-- the cmake configure step -->
                             <execution>
                                 <id>cmake-configure-build</id>
                                 <phase>process-sources</phase>
@@ -175,6 +179,7 @@
                                 </configuration>
                             </execution>
                             
+			    <!-- the cmake build step -->
                             <execution>
                                 <id>cmake-build</id>
                                 <phase>compile</phase>
@@ -188,6 +193,7 @@
                                 </configuration>
                             </execution>
 
+			    <!-- the cmake install step -->
                             <execution>
                                 <id>cmake-install-build</id>
                                 <phase>prepare-package</phase>
@@ -205,6 +211,9 @@
                 </plugins>
             </build>
         </profile>
+        <!-- bob:profile cmake -->
+
+        <!-- bob:profile unpack -->
         <profile>
             <id>unpack-packages</id>
             <activation>
@@ -226,23 +235,20 @@
                                     <skip>${skip.dependency.extraction}</skip>
                                     <target>
                                         <!-- Set up a fileset. -->
-                                        <dependencyfilesets scopes="compile" types="${package.file.extension}"/>
+                                        <dependencyfilesets scopes="compile" types="${package.file.extension}" />
 
-                                        <mkdir dir="${package.prefix.directory}"/>
-                                        <mkdir dir="${package.touch.directory}"/>
-                                        <mkdir dir="${package.touch.directory}/tmp"/>
+                                        <mkdir dir="${package.prefix.directory}" />
+                                        <mkdir dir="${package.touch.directory}" />
+                                        <mkdir dir="${package.touch.directory}/tmp" />
 
                                         <!-- 
                                         Unpack into the touch directory as a temp, but only if the tar 
                                         is newer than our marker. We extract to tmp to make sure we
                                         never collide with the touch file name.
                                         -->
-                                        <apply 
-                                            executable="${package.unpack.command}" 
-                                            dir="${package.touch.directory}/tmp" 
-                                            verbose="true" dest="${package.touch.directory}">
-                                            <arg line="${package.unpack.arguments}"/>
-                                            <fileset refid="maven.project.dependencies"/>
+                                        <apply executable="${package.unpack.command}" dir="${package.touch.directory}/tmp" verbose="true" dest="${package.touch.directory}">
+                                            <arg line="${package.unpack.arguments}" />
+                                            <fileset refid="maven.project.dependencies" />
                                             <regexpmapper handledirsep="true" from="^.*/(.*)" to="\1" />
                                         </apply>
 
@@ -251,10 +257,10 @@
                                         the top-level conventional tar directory and the tmp location.
                                         -->
                                         <move todir="${package.prefix.directory}" includeEmptyDirs="yes" verbose="false">
-                                            <fileset dir="${package.touch.directory}" >
-                                                <include name="**/*"/>
+                                            <fileset dir="${package.touch.directory}">
+                                                <include name="**/*" />
                                             </fileset>
-                                            <cutdirsmapper dirs="2"/>
+                                            <cutdirsmapper dirs="2" />
                                         </move>
 
                                         <!-- 
@@ -268,7 +274,7 @@
 
                                         <!-- update the marker -->
                                         <touch verbose="true" datetime="now">
-                                            <fileset refid="maven.project.dependencies"/>
+                                            <fileset refid="maven.project.dependencies" />
                                             <regexpmapper handledirsep="true" from="^.*/(.*)" to="${package.touch.canonical}/\1" />
                                         </touch>
                                     </target>
@@ -282,7 +288,9 @@
                 </plugins>
             </build>
         </profile>
+        <!-- bob:profile unpack -->
 
+        <!-- bob:profile package -->
         <profile>
             <id>create-package</id>
             <activation>
@@ -315,7 +323,9 @@
                 </plugins>
             </build>
         </profile>
+        <!-- bob:profile package -->
 
+        <!-- bob:profile attach-package -->
         <profile>
             <id>attach-package</id>
             <activation>
@@ -348,31 +358,13 @@
                 </plugins>
             </build>
         </profile>
+        <!-- bob:profile attach-package -->
     </profiles>
 
     <build>
         <!-- TODO: change this to be parallel to the project directory e.g. project-work -->
         <directory>${alt.build.directory}</directory>
-        <!--        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>unpack-source-dependencies</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${exports.directory}</outputDirectory>
-                            <includeTypes>zip</includeTypes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>-->
-
+                
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -380,19 +372,11 @@
                     <artifactId>maven-antrun-plugin</artifactId>
                     <version>1.7</version>
                 </plugin>
-
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
                     <version>1.2.1</version>
                 </plugin>
-                <!--
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven.dependency.plugin</artifactId>
-                    <version>2.8</version>
-                </plugin>
-                -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-install-plugin</artifactId>
@@ -408,7 +392,45 @@
                     <artifactId>build-helper-maven-plugin</artifactId>
                     <version>1.8</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>2.7</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>2.8</version>
+                </plugin>
+                <plugin>
+                    <!-- add support for ssh/scp -->
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.3</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.maven.wagon</groupId>
+                            <artifactId>wagon-ssh</artifactId>
+                            <version>2.5</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.maven.wagon</groupId>
+                            <artifactId>wagon-ssh-external</artifactId>
+                            <version>1.0</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
+
+    <organization>
+        <name>SRI International</name>
+        <url>http://www.sri.com</url>
+    </organization>
+
+    <description>
+      The parent pom file to use for all maven projects following the
+      Bob conventions.
+    </description>
 </project>

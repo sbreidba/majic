@@ -1,7 +1,10 @@
 target/
 build/
-doc/_build
+clavin-documentation/_build
 *~
 *.idea/
 *.swp
-
+.DS_Store
+*.prefs
+.project
+.classpath

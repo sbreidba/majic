@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.sri.vt.majic.it</groupId>
+    <artifactId>simple-it</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <description>A simple IT verifying the basic use case.</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>1.2.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>@project.groupId@</groupId>
+                <artifactId>@project.artifactId@</artifactId>
+                <version>@project.version@</version>
+                <executions>
+                    <execution>
+                        <id>cmake-configure-debug</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>cmake-configure</goal>
+                        </goals>
+                        <configuration>
+                            <config>Debug</config>
+                            <options>
+                                <SOME_ARG>value</SOME_ARG>
+                            </options>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>cmake-configure-release</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>cmake-configure</goal>
+                        </goals>
+                        <configuration>
+                            <config>Release</config>
+                            <options>
+                                <SOME_OTHER_ARG>value</SOME_OTHER_ARG>
+                            </options>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>cmake-install-debug</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>cmake-install</goal>
+                        </goals>
+                        <configuration>
+                            <config>Debug</config>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>cmake-install-release</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>cmake-install</goal>
+                        </goals>
+                        <configuration>
+                            <config>Release</config>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>cmake-tar</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>cmake-tar</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
+                        <id>cmake-set-properties</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>cmake-set-properties</goal>
+                        </goals>
+                    </execution>
+                    
+                    <execution>
+                        <id>cmake-untar</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>cmake-untar</goal>
+                        </goals>
+                        <configuration>
+                            <!-- this is not how you'd normally do this - here we're grabbing a tarball
+                                 from a fixed, project-specific location where the project is "us".
+                                 This is done in this test harness to test out cmake-set-properties
+                                 as much as anything else.
+                                 -->
+                            <tarFile>${cmake.project.bindir}/${project.artifactId}-${project.version}.tar.bz2</tarFile>
+
+                            <!-- treating this as an 'internal' dependency. externals would go to
+                                 ${cmake.pkg.root}
+                                 -->
+                            <outputDirectory>${cmake.export.root}</outputDirectory>
+                        </configuration>
+                    </execution>
+
+                    <!-- this is an intentional duplicate of the above execution. it allows us to verify
+                         (by looking at the log, for now) that the extraction didn't occur a second time
+                         -->
+                    <execution>
+                        <id>cmake-untar-second-time</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>cmake-untar</goal>
+                        </goals>
+                        <configuration>
+                            <tarFile>${cmake.project.bindir}/${project.artifactId}-${project.version}.tar.bz2</tarFile>
+                            <outputDirectory>${cmake.export.root}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <modules>
+        <module>module</module>
+    </modules>
+</project>

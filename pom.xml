@@ -1,13 +1,15 @@
-<project 
-    xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.sri.vt.clavin</groupId>
-    <artifactId>clavin-aggregator</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>clavin</artifactId>
+    <version>0.1.2-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Clavin Aggregator</name>
+    <name>Clavin</name>
+    <description>Clavin is the code name for the VT software build process using cmake, maven, jenkins, and artifactory.
+    </description>
+    <inceptionYear>2013</inceptionYear>
 
     <prerequisites>
         <maven>3.0.0</maven>
@@ -16,14 +18,65 @@
     <distributionManagement>
         <site>
             <id>clavin.website</id>
-            <name>Clavin Documentation</name>
-            <url>scp://Phil's URL</url>
+            <name>Clavin</name>
+            <url>scpexe://pmiller-aspn04.sarnoff.internal/var/www/html/clavin</url>
         </site>
     </distributionManagement>
 
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>2.7</version>
+                </plugin>
+                <plugin>
+                    <!-- add support for ssh/scp -->
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>3.3</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.apache.maven.wagon</groupId>
+                            <artifactId>wagon-ssh</artifactId>
+                            <version>2.5</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.apache.maven.wagon</groupId>
+                            <artifactId>wagon-ssh-external</artifactId>
+                            <version>1.0</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <issueManagement>
+        <url>http://jira.sarnoff.internal/secure/Dashboard.jspa?selectPageId=10900</url>
+        <system>JIRA</system>
+    </issueManagement>
+
+    <url>http://pmiller-aspn04/clavin/</url>
+
+    <organization>
+        <name>SRI Vision Technologies Lab</name>
+        <url>https://wiki.sri.com/display/VT/Home</url>
+    </organization>
+
+    <ciManagement>
+        <system>Jenkins</system>
+        <url>http://build-open/job/vt-clavin/</url>
+    </ciManagement>
+
+    <scm>
+        <connection>scm:git:ssh://git-open.sarnoff.internal/scm/vision/clavin.git</connection>
+        <url>http://git-open.sarnoff.internal/contents</url>
+    </scm>
+
     <modules>
-        <module>doc</module>
-        <module>cmake-maven-parent</module>
-        <module>distro-maven-plugin</module>
+        <module>clavin-documentation</module>
+        <module>build-helper-maven-plugin</module>
     </modules>
 </project>
