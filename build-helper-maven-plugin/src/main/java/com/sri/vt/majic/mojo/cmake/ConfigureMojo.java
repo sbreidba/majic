@@ -114,7 +114,7 @@ public class ConfigureMojo extends CMakeMojo
         {
             if (!SystemUtils.IS_OS_WINDOWS)
             {
-                appendDashD(arguments, "CMAKE_BUILD_TYPE", getConfig());
+                appendDashD(arguments, "CMAKE_BUILD_TYPE", getCurrentConfig());
             }
         }
 

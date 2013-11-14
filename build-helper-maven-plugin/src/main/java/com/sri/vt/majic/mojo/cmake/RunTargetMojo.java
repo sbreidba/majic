@@ -30,7 +30,7 @@ public class RunTargetMojo extends CMakeMojo
             builder.append(getTarget());
         }
 
-        String config = getConfig();
+        String config = getCurrentConfig();
         if ((config != null) && (config.length() != 0))
         {
             builder.append(" --config ");

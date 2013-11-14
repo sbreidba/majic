@@ -32,13 +32,16 @@
                 <version>@project.version@</version>
                 <executions>
                     <execution>
-                        <id>cmake-configure-debug</id>
+                        <id>cmake-configure</id>
                         <phase>validate</phase>
                         <goals>
                             <goal>cmake-configure</goal>
                         </goals>
                         <configuration>
-                            <config>Debug</config>
+                            <configs>
+                                <config>Debug</config>
+                                <config>Release</config>
+                            </configs>
                             <options>
                                 <SOME_ARG>value</SOME_ARG>
                             </options>
@@ -46,38 +49,16 @@
                     </execution>
 
                     <execution>
-                        <id>cmake-configure-release</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>cmake-configure</goal>
-                        </goals>
-                        <configuration>
-                            <config>Release</config>
-                            <options>
-                                <SOME_OTHER_ARG>value</SOME_OTHER_ARG>
-                            </options>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>cmake-install-debug</id>
+                        <id>cmake-install</id>
                         <phase>validate</phase>
                         <goals>
                             <goal>cmake-install</goal>
                         </goals>
                         <configuration>
-                            <config>Debug</config>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>cmake-install-release</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>cmake-install</goal>
-                        </goals>
-                        <configuration>
-                            <config>Release</config>
+                            <configs>
+                                <config>Debug</config>
+                                <config>Release</config>
+                            </configs>
                         </configuration>
                     </execution>
 
