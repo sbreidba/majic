@@ -1,4 +1,4 @@
-package com.sri.vt.majic.mojo.prototype;
+package com.sri.vt.majic.mojo;
 
 import com.sri.vt.majic.mojo.util.OperatingSystemInfo;
 import org.apache.maven.plugin.AbstractMojo;
@@ -13,27 +13,22 @@ import java.io.IOException;
 
 /**
  * The distro goal sets maven properties with information about the current O/S:
- *    ${distro.name}, ${distro.arch}, and ${distro.distro}
+ *    ${os.name}, ${os.arch}, and ${os.distro}
  */
-@Mojo(name="set-properties", defaultPhase=LifecyclePhase.INITIALIZE, requiresProject=true)
-public class SetPropertiesMojo extends AbstractMojo
+@Mojo(name="os-set-properties", defaultPhase=LifecyclePhase.INITIALIZE, requiresProject=true)
+public class SetOsPropertiesMojo extends AbstractMojo
 {
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     private MavenProject m_project;
 
     public void execute() throws MojoExecutionException, MojoFailureException
     {
-        if (m_project == null)
-        {
-            throw new MojoExecutionException("Maven project not set");
-        }
-
         try
         {
             OperatingSystemInfo info = new OperatingSystemInfo();
-            m_project.getProperties().setProperty("distro.name", info.getName());
-            m_project.getProperties().setProperty("distro.arch", info.getArch());
-            m_project.getProperties().setProperty("distro.distro", info.getDistro());
+            m_project.getProperties().setProperty("os.name", info.getName());
+            m_project.getProperties().setProperty("os.arch", info.getArch());
+            m_project.getProperties().setProperty("os.distro", info.getDistro());
         }
         catch (IOException e)
         {

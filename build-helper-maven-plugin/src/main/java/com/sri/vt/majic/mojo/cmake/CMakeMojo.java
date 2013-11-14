@@ -32,7 +32,7 @@ public class CMakeMojo extends ExecMojo
     {
         if (cmakeDirectories == null)
         {
-            cmakeDirectories = new CMakeDirectories(project);
+            cmakeDirectories = new CMakeDirectories(getProject());
         }
 
         return cmakeDirectories;

@@ -89,7 +89,7 @@ public class ConfigureMojo extends CMakeMojo
 
         if (addCPackPackageVersion)
         {
-            appendDashD(arguments, "CPACK_PACKAGE_VERSION", project.getVersion());
+            appendDashD(arguments, "CPACK_PACKAGE_VERSION", getProject().getVersion());
         }
 
         if (addCMakePrefixPath)
@@ -120,5 +120,17 @@ public class ConfigureMojo extends CMakeMojo
         arguments.add(getSourceDirectory().getAbsolutePath());
 
         return arguments;
+    }
+
+    @Override
+    protected boolean isUpToDate()
+    {
+        File cmakeCacheFile = new File(getWorkingDirectory(), "CMakeCache.txt");
+        getLog().info("Checking up-to-date: " + getProject().getFile() + " vs. " + cmakeCacheFile);
+
+        return (
+            cmakeCacheFile.exists()
+            && (getProject().getFile().lastModified() <= cmakeCacheFile.lastModified())
+        );
     }
 }

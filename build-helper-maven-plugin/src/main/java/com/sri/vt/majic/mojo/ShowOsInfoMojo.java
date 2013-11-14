@@ -1,4 +1,4 @@
-package com.sri.vt.majic.mojo.prototype;
+package com.sri.vt.majic.mojo;
 
 import com.sri.vt.majic.mojo.util.OperatingSystemInfo;
 import org.apache.maven.plugin.AbstractMojo;
@@ -11,8 +11,8 @@ import java.io.IOException;
 /**
  * The show-info goal displays information about the current O/S.
  */
-@Mojo(name="show-info")
-public class ShowInfoMojo extends AbstractMojo
+@Mojo(name="os-show-info")
+public class ShowOsInfoMojo extends AbstractMojo
 {
     public void execute() throws MojoExecutionException, MojoFailureException
     {

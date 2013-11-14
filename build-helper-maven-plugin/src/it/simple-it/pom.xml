@@ -38,9 +38,6 @@
                             <goal>cmake-configure</goal>
                         </goals>
                         <configuration>
-                            <!-- the location of the test CMakeList.txt is not in the usual place, ${basedir},
-                                 so it needs to be specified here -->
-                            <!-- <sourceDirectory>${basedir}/src/test/resources/src</sourceDirectory> -->
                             <config>Debug</config>
                             <options>
                                 <SOME_ARG>value</SOME_ARG>
@@ -55,9 +52,6 @@
                             <goal>cmake-configure</goal>
                         </goals>
                         <configuration>
-                            <!-- the location of the test CMakeList.txt is not in the usual place, ${basedir},
-                                 so it needs to be specified here -->
-                            <!--<sourceDirectory>${basedir}/src/test/resources/src</sourceDirectory>-->
                             <config>Release</config>
                             <options>
                                 <SOME_OTHER_ARG>value</SOME_OTHER_ARG>

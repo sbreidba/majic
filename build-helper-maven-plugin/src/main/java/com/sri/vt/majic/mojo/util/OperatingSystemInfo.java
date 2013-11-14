@@ -63,8 +63,9 @@ public class OperatingSystemInfo
             String versionFull = mapKeyValue.get("Release");
             if (versionFull != null)
             {
-                // TODO single digit?
-                dist.append(versionFull.replace(".", ""));
+                // include only the major version number
+                String[] versionComponents = versionFull.split("\\.");
+                dist.append(versionComponents[0]);
             }
 
             distro = dist.toString();

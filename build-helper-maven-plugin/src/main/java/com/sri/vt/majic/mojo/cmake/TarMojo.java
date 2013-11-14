@@ -1,8 +1,13 @@
 package com.sri.vt.majic.mojo.cmake;
 
+import com.sri.vt.majic.mojo.util.OperatingSystemInfo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProjectHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +17,9 @@ import static com.sri.vt.majic.mojo.util.Logging.error;
 @Mojo(name="cmake-tar", defaultPhase = LifecyclePhase.PACKAGE, requiresProject=true)
 public class TarMojo extends CMakeCommandMojo
 {
+    @Component()
+    private MavenProjectHelper projectHelper;
+    
     @Parameter(defaultValue = "tar cjf", required = true)
     private String command;
 
@@ -26,7 +34,16 @@ public class TarMojo extends CMakeCommandMojo
 
     @Parameter(defaultValue = "${cmake.project.bindir}")
     private File outputDirectory;
-    
+
+    @Parameter(defaultValue = "true")
+    private boolean attachTarArtifact;
+
+    @Parameter(defaultValue = "${os.classifier}")
+    private String classifier;
+
+    @Parameter(defaultValue = "tar.bz2")
+    private String type;
+
     protected String getCommand()
     {
         return command;
@@ -100,5 +117,45 @@ public class TarMojo extends CMakeCommandMojo
         builder.append(getInstallDirectory());
 
         return builder.toString();
+    }
+
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException
+    {
+        super.execute();
+
+        if (shouldAttachTarArtifact())
+        {
+            getProjectHelper().attachArtifact(getProject(), "tar.bz2", getClassifier(), getTarFile());
+        }
+    }
+
+    protected MavenProjectHelper getProjectHelper()
+    {
+        return projectHelper;
+    }
+
+    public boolean shouldAttachTarArtifact()
+    {
+        return attachTarArtifact;
+    }
+
+    public String getClassifier()
+    {
+        if (classifier != null)
+        {
+            return classifier;
+        }
+
+        OperatingSystemInfo operatingSystemInfo = null;
+        try
+        {
+            operatingSystemInfo = new OperatingSystemInfo();
+            return operatingSystemInfo.getDistro();
+        }
+        catch (IOException e)
+        {
+            return null;
+        }
     }
 }

@@ -21,13 +21,13 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 public class ExecMojo extends AbstractMojo implements ILoggable
 {
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
-    protected MavenProject project;
+    private MavenProject project;
 
     @Parameter(defaultValue = "${session}", readonly = true, required = true)
-    protected MavenSession session;
+    private MavenSession session;
 
     @Component(hint = "")
-    protected BuildPluginManager pluginManager;
+    private BuildPluginManager pluginManager;
 
     @Parameter(alias = "workingDirectory", defaultValue = "${project.build.directory}")
     private File workingDirectory;
@@ -47,10 +47,15 @@ public class ExecMojo extends AbstractMojo implements ILoggable
     @Parameter(defaultValue = "")
     private File outputFile;
 
+    protected MavenProject getProject()
+    {
+        return project;
+    }
+
     protected Plugin getExecPlugin(MavenProject project) throws MojoExecutionException
     {
         String execComponentKey = Plugin.constructKey("org.codehaus.mojo", "exec-maven-plugin");
-        Plugin execPlugin = project.getPluginManagement().getPluginsAsMap().get(execComponentKey);
+        Plugin execPlugin = getProject().getPluginManagement().getPluginsAsMap().get(execComponentKey);
         if (execPlugin == null)
         {
             throw new MojoExecutionException(this, "Exec-maven-plugin version missing", "Could not determine exec plugin version. Please declare exec-maven-plugin in PluginManagement");
@@ -113,8 +118,10 @@ public class ExecMojo extends AbstractMojo implements ILoggable
 
     protected void append(List<Element> elements, String elementName, String childName, List<String> values)
     {
-        if ((values == null) || (values.size() == 0)) 
+        if ((values == null) || (values.size() == 0))
+        {
         	return;
+        }
 
         List<Element> childElements = new ArrayList<Element>();
         for (String value : values)
@@ -154,9 +161,10 @@ public class ExecMojo extends AbstractMojo implements ILoggable
         if (isUpToDate())
         {
             info(this, "Skipping execution - target is up-to-date.");
+            return;
         }
 
-        Plugin execPlugin = getExecPlugin(project);
+        Plugin execPlugin = getExecPlugin(getProject());
         info(this, "Using exec plugin version: " + execPlugin.getVersion());
 
         executeMojo(
@@ -168,10 +176,20 @@ public class ExecMojo extends AbstractMojo implements ILoggable
             goal("exec"),
             configuration(getConfigurationElements()),
             executionEnvironment(
-                project,
-                session,
-                pluginManager
+                getProject(),
+                getSession(),
+                getPluginManager()
             )
         );
+    }
+
+    protected MavenSession getSession()
+    {
+        return session;
+    }
+
+    protected BuildPluginManager getPluginManager()
+    {
+        return pluginManager;
     }
 }
