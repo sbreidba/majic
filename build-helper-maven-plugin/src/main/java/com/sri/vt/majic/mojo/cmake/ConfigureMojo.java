@@ -132,12 +132,14 @@ public class ConfigureMojo extends CMakeMojo
     @Override
     protected boolean isUpToDate()
     {
+        return false;
+        /*
         File cmakeCacheFile = new File(getWorkingDirectory(), "CMakeCache.txt");
         getLog().info("Checking up-to-date: " + getProject().getFile() + " vs. " + cmakeCacheFile);
 
         return (
             cmakeCacheFile.exists()
             && (getProject().getFile().lastModified() <= cmakeCacheFile.lastModified())
-        );
+        );*/
     }
 }
