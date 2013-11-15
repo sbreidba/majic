@@ -98,7 +98,10 @@ public class ConfigureMojo extends CMakeMojo
 
         if (addCMakePrefixPath)
         {
-            appendDashD(arguments, "CMAKE_PREFIX_PATH", getCMakeDirectories().getPackageRoot().getAbsolutePath());
+            appendDashD(arguments, "CMAKE_PREFIX_PATH",
+                    getCMakeDirectories().getPackageRoot().getAbsolutePath()
+                    + ";"
+                    + getCMakeDirectories().getExportRoot().getAbsolutePath());
         }
 
         if (addCMakeInstallPrefix)

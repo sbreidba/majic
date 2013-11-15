@@ -1,6 +1,6 @@
 package com.sri.vt.majic.mojo.cmake;
 
-import com.sri.vt.majic.mojo.util.CMakeDirectories;
+import com.sri.vt.majic.util.CMakeDirectories;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.BuildPluginManager;

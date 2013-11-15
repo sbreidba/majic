@@ -1,6 +1,6 @@
 package com.sri.vt.majic.mojo.cmake;
 
-import com.sri.vt.majic.mojo.util.OperatingSystemInfo;
+import com.sri.vt.majic.util.OperatingSystemInfo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;

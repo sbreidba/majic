@@ -1,7 +1,7 @@
 package com.sri.vt.majic.mojo.cmake;
 
 import com.sri.vt.majic.mojo.ExecMojo;
-import com.sri.vt.majic.mojo.util.CMakeDirectories;
+import com.sri.vt.majic.util.CMakeDirectories;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;

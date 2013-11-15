@@ -22,6 +22,8 @@ public class UntarDependenciesMojo extends UntarMojo
     @Parameter(defaultValue = "")
     private File outputDirectory;
 
+    // TODO! select the types to be extracted!
+    
     private File currentOutputDirectory;
     
     protected void setCurrentTarFile(File file)
