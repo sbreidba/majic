@@ -83,11 +83,14 @@ public class ConfigureMojo extends CMakeMojo
             arguments.add(new StringBuilder("-G").append(getCMakeGenerator()).toString());
         }
 
-        for (String optionsKey : getCMakeOptions().keySet())
+        if (getCMakeOptions() != null)
         {
-            appendDashD(arguments, optionsKey, options.get(optionsKey));
+            for (String optionsKey : getCMakeOptions().keySet())
+            {
+                appendDashD(arguments, optionsKey, options.get(optionsKey));
+            }
         }
-
+        
         if (addCPackPackageVersion)
         {
             appendDashD(arguments, "CPACK_PACKAGE_VERSION", getProject().getVersion());

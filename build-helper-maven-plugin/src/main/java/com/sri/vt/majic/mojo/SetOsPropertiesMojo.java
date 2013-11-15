@@ -12,10 +12,10 @@ import org.apache.maven.project.MavenProject;
 import java.io.IOException;
 
 /**
- * The distro goal sets maven properties with information about the current O/S:
- *    ${os.name}, ${os.arch}, and ${os.distro}
+ * This goal sets maven properties with information about the current O/S:
+ * ${os.name}, ${os.arch}, and ${os.distro}
  */
-@Mojo(name="os-set-properties", defaultPhase=LifecyclePhase.INITIALIZE, requiresProject=true)
+@Mojo(name="set-os-properties", defaultPhase=LifecyclePhase.VALIDATE, requiresProject=true)
 public class SetOsPropertiesMojo extends AbstractMojo
 {
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
