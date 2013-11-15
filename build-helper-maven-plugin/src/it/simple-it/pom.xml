@@ -113,10 +113,28 @@
                             <outputDirectory>${cmake.export.root}</outputDirectory>
                         </configuration>
                     </execution>
+
+                    <execution>
+                        <id>cmake-untar-dependencies</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>cmake-untar-dependencies</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.sri.vt</groupId>
+            <artifactId>vtcmake</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <classifier>win7.tar</classifier>
+            <type>bz2</type>
+        </dependency>
+    </dependencies>
 
     <modules>
         <module>module</module>

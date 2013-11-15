@@ -37,6 +37,16 @@ under the License.
                         <enabled>true</enabled>
                     </snapshots>
                 </repository>
+                <repository>
+                    <id>artifactory.vt</id>
+                    <url>https://artifactory-vt.sarnoff.internal/artifactory/repo</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
             </repositories>
             <pluginRepositories>
                 <pluginRepository>
