@@ -36,6 +36,15 @@ public class ConfigureMojo extends CMakeMojo
     @Parameter(defaultValue = "true")
     private boolean addCMakeBuildTypeForSingleConfigBuilds;
 
+    @Parameter(defaultValue = "${skipCMakeConfig}")
+    private boolean skip;
+
+    @Override
+    protected boolean getSkip()
+    {
+        return skip;
+    }
+
     protected String getCMakeGenerator()
     {
         if ((generator != null) && (generator.length() != 0)) return generator;
@@ -127,19 +136,5 @@ public class ConfigureMojo extends CMakeMojo
         arguments.add(getSourceDirectory().getAbsolutePath());
 
         return arguments;
-    }
-
-    @Override
-    protected boolean isUpToDate()
-    {
-        return false;
-        /*
-        File cmakeCacheFile = new File(getWorkingDirectory(), "CMakeCache.txt");
-        getLog().info("Checking up-to-date: " + getProject().getFile() + " vs. " + cmakeCacheFile);
-
-        return (
-            cmakeCacheFile.exists()
-            && (getProject().getFile().lastModified() <= cmakeCacheFile.lastModified())
-        );*/
     }
 }
