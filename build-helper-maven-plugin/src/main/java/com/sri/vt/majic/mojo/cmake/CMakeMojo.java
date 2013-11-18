@@ -16,14 +16,6 @@ public class CMakeMojo extends ExecMojo
     @Parameter(alias = "executable", defaultValue = "cmake")
     private String cmakeExeName;
 
-    /*
-    // Append an operating-system-specific sub-directory to the workingDirectory
-    @Parameter(defaultValue = "true")
-    private boolean appendOSBuildSubdirectory;
-
-    @Parameter(defaultValue = BuildConfigDirectoryHandling.Constants.BY_OS_VALUE)
-    private BuildConfigDirectoryHandling appendConfigDirectory;
-*/
     @Parameter(defaultValue = "")
     private List<String> configs;
 
@@ -93,14 +85,26 @@ public class CMakeMojo extends ExecMojo
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
     {
-        if ((configs == null) || (configs.size() == 0))
+        if (configs == null)
         {
+            getLog().info("Executing with no config specified.");
             execute(null);
+        }
+        else if (configs.isEmpty())
+        {
+            getLog().info("Skipping execution - an empty configs list was specified.");
         }
         else
         {
             for (String config : getConfigs())
             {
+                if ((config == null) || (config.length() == 0))
+                {
+                    getLog().debug("Skipping a null/empty config.");
+                    continue;
+                }
+
+                getLog().info("Executing the " + config + " config.");
                 execute(config);
             }
         }

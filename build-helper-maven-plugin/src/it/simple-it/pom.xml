@@ -39,7 +39,7 @@
                 <artifactId>@project.artifactId@</artifactId>
                 <version>@project.version@</version>
                 <executions>
-                    <execution>
+ß                    <execution>
                         <id>cmake-configure</id>
                         <phase>validate</phase>
                         <goals>
@@ -49,6 +49,7 @@
                             <configs>
                                 <config>Debug</config>
                                 <config>Release</config>
+                                <config></config>
                             </configs>
                             <options>
                                 <SOME_ARG>value</SOME_ARG>
@@ -66,6 +67,7 @@
                             <configs>
                                 <config>Debug</config>
                                 <config>Release</config>
+                                <config></config>
                             </configs>
                         </configuration>
                     </execution>
