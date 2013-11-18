@@ -23,6 +23,7 @@ public class ShowOsInfoMojo extends AbstractMojo
             getLog().info("OS Name: " + info.getName());
             getLog().info("OS Arch: " + info.getArch());
             getLog().info("OS Distro: " + info.getDistro());
+            getLog().info("OS Classifier: " + info.getClassifier());
         }
         catch (IOException e)
         {
