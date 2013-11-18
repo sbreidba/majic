@@ -39,7 +39,7 @@
                 <artifactId>@project.artifactId@</artifactId>
                 <version>@project.version@</version>
                 <executions>
-ß                    <execution>
+                    <execution>
                         <id>cmake-configure</id>
                         <phase>validate</phase>
                         <goals>
