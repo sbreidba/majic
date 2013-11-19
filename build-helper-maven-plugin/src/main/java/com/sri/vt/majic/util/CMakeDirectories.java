@@ -29,6 +29,8 @@ public class CMakeDirectories
     //        looking for the last parent directory that contains a pom.xml and
     //        append "-build" to this directory.
 
+    public static final String CMAKE_RELATIVE_BUILD_ROOT_PROPERTY = "cmake.relative.build.root";
+
     public static final String CMAKE_BUILD_ROOT_PROPERTY = "cmake.build.root";
     public static final String CMAKE_BUILD_ROOT_DEFAULT = "${" + CMAKE_BUILD_ROOT_PROPERTY + "}";
     public static final String CMAKE_PACKAGE_ROOT_DEFAULT = CMAKE_BUILD_ROOT_DEFAULT + "/pkg";
@@ -51,23 +53,9 @@ public class CMakeDirectories
         MavenProjectHelper.setPropertyIfNotSet(project, log, CMAKE_PROJECT_BIN_DIRECTORY_PROPERTY, getProjectBindir().getAbsolutePath());
     }
 
-    public File getBuildRoot()
+    public File getBuildRoot() throws IOException
     {
-        String relativeBuildRoot = "";
-
-        if (getProject().getProperties().containsKey(CMAKE_BUILD_ROOT_PROPERTY))
-        {
-            String buildRoot = getProject().getProperties().getProperty(CMAKE_BUILD_ROOT_PROPERTY);
-            File path = new File(buildRoot);
-            if (path.isAbsolute())
-            {
-                getLog().debug("Interpreting ${" + CMAKE_BUILD_ROOT_PROPERTY + "}=" + buildRoot + " as an absolute path.");
-                return path.getAbsoluteFile();
-            }
-
-            getLog().debug("Interpreting ${" + CMAKE_BUILD_ROOT_PROPERTY + "}=" + buildRoot + " as a relative path.");
-            relativeBuildRoot = buildRoot;
-        }
+        String relativeBuildRoot = getProject().getProperties().getProperty(CMAKE_RELATIVE_BUILD_ROOT_PROPERTY, "");
 
         File currentPath = getProject().getBasedir();
         int levels = 0;
@@ -97,7 +85,7 @@ public class CMakeDirectories
                 path += "-build";
             }
 
-            return new File(path, relativeBuildRoot);
+            return new File(path, relativeBuildRoot).getCanonicalFile();
         }
 
         getLog().error("Could not configure ${" + CMAKE_BUILD_ROOT_PROPERTY + "}");
@@ -111,7 +99,7 @@ public class CMakeDirectories
         OperatingSystemInfo operatingSystemInfo = new OperatingSystemInfo();
         root = new File(root, getProject().getArtifactId() + "/" + operatingSystemInfo.getDistro());
 
-        return root;
+        return root.getCanonicalFile();
     }
 
     private MavenProject _project;

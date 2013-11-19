@@ -11,6 +11,7 @@
     <description>A simple IT verifying the basic use case.</description>
 
     <properties>
+        <cmake.relative.build.root>../out-of-source-test</cmake.relative.build.root>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
