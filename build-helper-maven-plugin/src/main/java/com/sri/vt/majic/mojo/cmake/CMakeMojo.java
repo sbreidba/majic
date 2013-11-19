@@ -8,8 +8,8 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 public class CMakeMojo extends ExecMojo
 {
@@ -19,22 +19,10 @@ public class CMakeMojo extends ExecMojo
     @Parameter(defaultValue = "")
     private List<String> configs;
 
-    @Parameter(defaultValue = "")
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_BUILD_DIRECTORY_DEFAULT)
     private File buildRoot;
 
-    private CMakeDirectories cmakeDirectories;
     private String currentConfig;
-
-    protected CMakeDirectories getCMakeDirectories()
-    {
-        // must assign on demand - getLog() isn't available in the constructor
-        if (cmakeDirectories == null)
-        {
-            cmakeDirectories = new CMakeDirectories(getProject(), getLog());
-        }
-
-        return cmakeDirectories;
-    }
 
     @Override
     protected String getExecutable()
@@ -45,29 +33,13 @@ public class CMakeMojo extends ExecMojo
     protected File getWorkingDirectory()
     {
         String config = getCurrentConfig();
-
-        if (buildRoot != null)
+        if ((config != null) && (!SystemUtils.IS_OS_WINDOWS))
         {
-            if ((config != null) && (!SystemUtils.IS_OS_WINDOWS))
-            {
-                return new File(buildRoot, getCurrentConfig());
-            }
-            else
-            {
-                return buildRoot;
-            }
+            return new File(buildRoot, getCurrentConfig().toLowerCase(Locale.ENGLISH));
         }
         else
         {
-            try
-            {
-                return getCMakeDirectories().getProjectBindir(config);
-            }
-            catch (IOException e)
-            {
-                getLog().error("Could not default to project bindir directory for config " + config);
-                return null;
-            }
+            return buildRoot;
         }
     }
 

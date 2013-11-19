@@ -1,5 +1,6 @@
 package com.sri.vt.majic.mojo.cmake;
 
+import com.sri.vt.majic.util.CMakeDirectories;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -18,9 +19,15 @@ public class UntarDependenciesMojo extends UntarMojo
     @Parameter(defaultValue = "", readonly = true)
     private File tarFile;
 
-    // Normally, this is computed, but can be overridden if desired
-    @Parameter(defaultValue = "")
+    // fallback for unknown scope
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_BUILD_DIRECTORY_DEFAULT)
     private File outputDirectory;
+
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_EXPORT_ROOT_DEFAULT)
+    private File compileScopeOutputDirectory;
+
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PACKAGE_ROOT_DEFAULT)
+    private File runtimeScopeOutputDirectory;
 
     // TODO! select the types to be extracted!
     
@@ -33,27 +40,20 @@ public class UntarDependenciesMojo extends UntarMojo
 
     protected void setCurrentOutputDirectory(String scope)
     {
-        if ((outputDirectory != null) && (outputDirectory.length() != 0))
-        {
-            currentOutputDirectory = outputDirectory;
-            return;
-        }
-
         if (scope.equalsIgnoreCase(Artifact.SCOPE_COMPILE))
         {
-            // these are internal packages
-            currentOutputDirectory = getCMakeDirectories().getExportRoot();
+            currentOutputDirectory = compileScopeOutputDirectory;
             return;
         }
 
         if (scope.equalsIgnoreCase(Artifact.SCOPE_RUNTIME))
         {
             // these are external packages
-            currentOutputDirectory = getCMakeDirectories().getPackageRoot();
+            currentOutputDirectory = runtimeScopeOutputDirectory;
             return;
         }
 
-        currentOutputDirectory = null;
+        currentOutputDirectory = outputDirectory;
     }
 
     @Override

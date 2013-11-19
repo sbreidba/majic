@@ -1,8 +1,6 @@
 package com.sri.vt.majic.util;
 
-import com.sun.tools.internal.xjc.Language;
 import org.apache.commons.lang3.SystemUtils;
-import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.logging.Logger;
 

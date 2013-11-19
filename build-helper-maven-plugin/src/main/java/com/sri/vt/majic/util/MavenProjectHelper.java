@@ -5,7 +5,7 @@ import org.codehaus.plexus.logging.Logger;
 
 public class MavenProjectHelper
 {
-    static void setPropertyIfNotSet(MavenProject project, Logger log, String key, String value)
+    public static void setPropertyIfNotSet(MavenProject project, Logger log, String key, String value)
     {
         String existing = project.getProperties().getProperty(key);
         if ((existing != null) && (existing.length() > 0))

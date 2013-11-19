@@ -1,12 +1,12 @@
 package com.sri.vt.majic.mojo.cmake;
 
+import com.sri.vt.majic.util.CMakeDirectories;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +20,16 @@ public class ConfigureMojo extends CMakeMojo
     // Left blank, this will be computed automatically
     @Parameter(defaultValue = "")
     private String generator;
-    
+
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PACKAGE_ROOT_DEFAULT)
+    private File packageRoot;
+
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_EXPORT_ROOT_DEFAULT)
+    private File exportRoot;
+
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_INSTALLDIR_DEFAULT)
+    private File projectInstallDir;
+
     @Parameter(defaultValue = "")
     private Map<String, String> options;
 
@@ -107,22 +116,12 @@ public class ConfigureMojo extends CMakeMojo
 
         if (addCMakePrefixPath)
         {
-            appendDashD(arguments, "CMAKE_PREFIX_PATH",
-                    getCMakeDirectories().getPackageRoot().getAbsolutePath()
-                    + ";"
-                    + getCMakeDirectories().getExportRoot().getAbsolutePath());
+            appendDashD(arguments, "CMAKE_PREFIX_PATH", packageRoot.getAbsolutePath() + ";" + exportRoot.getAbsolutePath());
         }
 
         if (addCMakeInstallPrefix)
         {
-            try
-            {
-                appendDashD(arguments, "CMAKE_INSTALL_PREFIX", getCMakeDirectories().getProjectInstalldir().getAbsolutePath());
-            }
-            catch (IOException e)
-            {
-                getLog().error("Could not determine cmake project directory");
-            }
+            appendDashD(arguments, "CMAKE_INSTALL_PREFIX", projectInstallDir.getAbsolutePath());
         }
 
         if (addCMakeBuildTypeForSingleConfigBuilds)

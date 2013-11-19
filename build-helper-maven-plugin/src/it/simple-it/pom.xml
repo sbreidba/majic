@@ -81,14 +81,6 @@
                     </execution>
 
                     <execution>
-                        <id>cmake-set-properties</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>cmake-set-properties</goal>
-                        </goals>
-                    </execution>
-                    
-                    <execution>
                         <id>cmake-untar</id>
                         <phase>validate</phase>
                         <goals>
@@ -100,12 +92,10 @@
                                  This is done in this test harness to test out cmake-set-properties
                                  as much as anything else.
                                  -->
-                            <tarFile>${cmake.project.bindir}/${project.artifactId}-${project.version}.tar.bz2</tarFile>
+                            <tarFile>${cmake.project.build.directory}/${project.artifactId}-${project.version}.tar.bz2</tarFile>
 
-                            <!-- treating this as an 'internal' dependency. externals would go to
-                                 ${cmake.pkg.root}
-                                 -->
-                            <outputDirectory>${cmake.export.root}</outputDirectory>
+                            <!-- testing output to an arbitrary place -->
+                            <outputDirectory>${cmake.build.root}/untar-test</outputDirectory>
                         </configuration>
                     </execution>
 
@@ -119,8 +109,8 @@
                             <goal>cmake-untar</goal>
                         </goals>
                         <configuration>
-                            <tarFile>${cmake.project.bindir}/${project.artifactId}-${project.version}.tar.bz2</tarFile>
-                            <outputDirectory>${cmake.export.root}</outputDirectory>
+                            <tarFile>${cmake.project.build.directory}/${project.artifactId}-${project.version}.tar.bz2</tarFile>
+                            <outputDirectory>${cmake.build.root}/untar-test</outputDirectory>
                         </configuration>
                     </execution>
 

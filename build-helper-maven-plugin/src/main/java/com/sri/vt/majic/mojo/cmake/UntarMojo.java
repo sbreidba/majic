@@ -1,5 +1,6 @@
 package com.sri.vt.majic.mojo.cmake;
 
+import com.sri.vt.majic.util.CMakeDirectories;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -19,8 +20,8 @@ public class UntarMojo extends CMakeCommandMojo
     @Parameter(defaultValue = "", required = true)
     private File tarFile;
 
-    @Parameter(defaultValue = "${cmake.build.root}")
-    private File unpackRoot;
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_BUILD_ROOT_DEFAULT + "/cmake-untar/markers")
+    private File markersDirectory;
 
     @Parameter(defaultValue = "true")
     private boolean stripRootDirectory;
@@ -46,42 +47,21 @@ public class UntarMojo extends CMakeCommandMojo
         return getTemporaryExtractDir();
     }
 
-    protected File getTemporaryExtractDir()
-    {
-        return new File(getUnpackRoot(), "cmake-untar/temp");
-    }
-
-    protected File getUnpackRoot()
-    {
-        if (unpackRoot != null)
-        {
-            return unpackRoot;
-        }
-
-        return getCMakeDirectories().getBuildRoot();
-    }
-    
     protected File getOutputDirectory()
     {
-        if (outputDirectory != null)
-        {
-            return outputDirectory;
-        }
+        return outputDirectory;
+    }
 
-        try
-        {
-            return getCMakeDirectories().getProjectPackagedir();
-        }
-        catch (IOException e)
-        {
-            getLog().error("Could not determine project package directory");
-            return null;
-        }
+    protected File getTemporaryExtractDir()
+    {
+        // If we do the tar enumeration approach, this will go away... if not
+        // we may want to make it a property instead of making assumptions here.
+        return new File(getMarkersDirectory(), "temp");
     }
 
     protected File getMarkersDirectory()
     {
-        return new File(getUnpackRoot(), "cmake-untar/markers");
+        return markersDirectory;
     }
 
     @Override
