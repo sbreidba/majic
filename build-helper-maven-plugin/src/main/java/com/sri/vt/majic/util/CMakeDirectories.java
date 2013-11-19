@@ -34,10 +34,10 @@ public class CMakeDirectories
     public static final String CMAKE_PACKAGE_ROOT_DEFAULT = CMAKE_BUILD_ROOT_DEFAULT + "/pkg";
     public static final String CMAKE_EXPORT_ROOT_DEFAULT = CMAKE_BUILD_ROOT_DEFAULT + "/exports";
 
-    public static final String CMAKE_PROJECT_BUILD_DIRECTORY_PROPERTY = "cmake.project.build.directory";
-    public static final String CMAKE_PROJECT_BUILD_DIRECTORY_DEFAULT = "${" + CMAKE_PROJECT_BUILD_DIRECTORY_PROPERTY + "}";
-    public static final String CMAKE_PROJECT_PACKAGEDIR_DEFAULT = CMAKE_PROJECT_BUILD_DIRECTORY_DEFAULT + "/exports";
-    public static final String CMAKE_PROJECT_INSTALLDIR_DEFAULT = CMAKE_PROJECT_BUILD_DIRECTORY_DEFAULT + "/exports/${project.artifactId}-${project.version}";
+    public static final String CMAKE_PROJECT_BIN_DIRECTORY_PROPERTY = "cmake.project.bin.directory";
+    public static final String CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT = "${" + CMAKE_PROJECT_BIN_DIRECTORY_PROPERTY + "}";
+    public static final String CMAKE_PROJECT_PACKAGEDIR_DEFAULT = CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT + "/exports";
+    public static final String CMAKE_PROJECT_INSTALLDIR_DEFAULT = CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT + "/exports/${project.artifactId}-${project.version}";
 
     public CMakeDirectories(MavenProject project, Logger log)
     {
@@ -48,7 +48,7 @@ public class CMakeDirectories
     public void setProperties(MavenProject project, Logger log) throws IOException
     {
         MavenProjectHelper.setPropertyIfNotSet(project, log, CMAKE_BUILD_ROOT_PROPERTY, getBuildRoot().getAbsolutePath());
-        MavenProjectHelper.setPropertyIfNotSet(project, log, CMAKE_PROJECT_BUILD_DIRECTORY_PROPERTY, getProjectBindir().getAbsolutePath());
+        MavenProjectHelper.setPropertyIfNotSet(project, log, CMAKE_PROJECT_BIN_DIRECTORY_PROPERTY, getProjectBindir().getAbsolutePath());
     }
 
     public File getBuildRoot()

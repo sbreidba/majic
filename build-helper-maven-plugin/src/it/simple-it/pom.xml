@@ -18,6 +18,12 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>2.5</version>
+                </plugin>
+
+                <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
                     <version>1.2.1</version>
@@ -92,7 +98,7 @@
                                  This is done in this test harness to test out cmake-set-properties
                                  as much as anything else.
                                  -->
-                            <tarFile>${cmake.project.build.directory}/${project.artifactId}-${project.version}.tar.bz2</tarFile>
+                            <tarFile>${cmake.project.bin.directory}/${project.artifactId}-${project.version}.tar.bz2</tarFile>
 
                             <!-- testing output to an arbitrary place -->
                             <outputDirectory>${cmake.build.root}/untar-test</outputDirectory>
@@ -109,7 +115,7 @@
                             <goal>cmake-untar</goal>
                         </goals>
                         <configuration>
-                            <tarFile>${cmake.project.build.directory}/${project.artifactId}-${project.version}.tar.bz2</tarFile>
+                            <tarFile>${cmake.project.bin.directory}/${project.artifactId}-${project.version}.tar.bz2</tarFile>
                             <outputDirectory>${cmake.build.root}/untar-test</outputDirectory>
                         </configuration>
                     </execution>
@@ -122,6 +128,18 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${cmake.project.bin.directory}</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
             </plugin>
         </plugins>
     </build>

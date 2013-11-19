@@ -19,7 +19,7 @@ public class CMakeMojo extends ExecMojo
     @Parameter(defaultValue = "")
     private List<String> configs;
 
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_BUILD_DIRECTORY_DEFAULT)
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT)
     private File buildRoot;
 
     private String currentConfig;

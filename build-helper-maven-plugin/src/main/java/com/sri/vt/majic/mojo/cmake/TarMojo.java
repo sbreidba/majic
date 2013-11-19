@@ -32,7 +32,7 @@ public class TarMojo extends CMakeCommandMojo
     @Parameter(defaultValue = "${project.artifactId}-${project.version}.tar.bz2")
     private String outputName;
 
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_BUILD_DIRECTORY_DEFAULT)
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT)
     private File outputDirectory;
 
     @Parameter(defaultValue = "true")

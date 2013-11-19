@@ -20,7 +20,7 @@ public class UntarDependenciesMojo extends UntarMojo
     private File tarFile;
 
     // fallback for unknown scope
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_BUILD_DIRECTORY_DEFAULT)
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT)
     private File outputDirectory;
 
     @Parameter(defaultValue = CMakeDirectories.CMAKE_EXPORT_ROOT_DEFAULT)
