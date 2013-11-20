@@ -4,6 +4,8 @@ import com.sri.vt.majic.mojo.ExecMojo;
 import com.sri.vt.majic.util.CMakeDirectories;
 import com.sri.vt.majic.util.OperatingSystemInfo;
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -74,6 +76,16 @@ public class CMakeMojo extends ExecMojo
 
     protected void execute(String config) throws MojoExecutionException, MojoFailureException
     {
+        String key = Plugin.constructKey("com.sri.vt.majic", "build-helper-maven-plugin");
+        Artifact extension = (Artifact) getProject().getExtensionArtifactMap().get(key);
+        if (extension == null)
+        {
+            throw new MojoExecutionException(this,
+                    "Majic build extension missing",
+                    "The Majic build extension could not be found - have you added it to <extensions>?");
+        }
+        //getProject().getExtensionArtifactMap().containsKey()
+
         setCurrentConfig(config);
         super.execute();
     }
