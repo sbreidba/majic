@@ -1,6 +1,8 @@
 package com.sri.vt.majic.mojo.cmake;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
@@ -76,6 +78,12 @@ public class RunTargetMojo extends CMakeMojo
     protected String getTarget()
     {
         return target;
+    }
+
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException
+    {
+        execute(ExecutionMode.ExecutionPerConfig);
     }
 }
 

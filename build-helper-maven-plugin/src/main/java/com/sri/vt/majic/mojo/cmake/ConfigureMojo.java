@@ -2,6 +2,8 @@ package com.sri.vt.majic.mojo.cmake;
 
 import com.sri.vt.majic.util.CMakeDirectories;
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -43,7 +45,7 @@ public class ConfigureMojo extends CMakeMojo
     private boolean addCMakeInstallPrefix;
 
     @Parameter(defaultValue = "true")
-    private boolean addCMakeBuildTypeForSingleConfigBuilds;
+    private boolean addCMakeBuildType;
 
     @Parameter(defaultValue = "${skipCMakeConfig}")
     private boolean skip;
@@ -124,16 +126,25 @@ public class ConfigureMojo extends CMakeMojo
             appendDashD(arguments, "CMAKE_INSTALL_PREFIX", projectInstallDir.getAbsolutePath());
         }
 
-        if (addCMakeBuildTypeForSingleConfigBuilds)
+        if (addCMakeBuildType)
         {
-            if (!SystemUtils.IS_OS_WINDOWS)
-            {
-                appendDashD(arguments, "CMAKE_BUILD_TYPE", getCurrentConfig());
-            }
+            appendDashD(arguments, "CMAKE_BUILD_TYPE", getCurrentConfig());
         }
 
         arguments.add(getSourceDirectory().getAbsolutePath());
 
         return arguments;
+    }
+
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException
+    {
+        ExecutionMode mode = ExecutionMode.ExecutionPerConfig;
+        if (SystemUtils.IS_OS_WINDOWS)
+        {
+            mode = ExecutionMode.ExecutionAsSemicolonSeparatedList;
+        }
+
+        execute(mode);
     }
 }

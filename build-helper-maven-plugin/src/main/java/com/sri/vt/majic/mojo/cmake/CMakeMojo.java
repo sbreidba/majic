@@ -2,12 +2,14 @@ package com.sri.vt.majic.mojo.cmake;
 
 import com.sri.vt.majic.mojo.ExecMojo;
 import com.sri.vt.majic.util.CMakeDirectories;
+import com.sri.vt.majic.util.OperatingSystemInfo;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -23,6 +25,12 @@ public class CMakeMojo extends ExecMojo
     private File buildRoot;
 
     private String currentConfig;
+
+    protected enum ExecutionMode
+    {
+        ExecutionPerConfig,
+        ExecutionAsSemicolonSeparatedList
+    }
 
     @Override
     protected String getExecutable()
@@ -45,7 +53,23 @@ public class CMakeMojo extends ExecMojo
 
     protected List<String> getConfigs()
     {
-        return configs;
+        if (configs != null)
+        {
+            return configs;
+        }
+
+        ArrayList<String> defaultConfigs = new ArrayList<String>();
+        if (SystemUtils.IS_OS_WINDOWS)
+        {
+            defaultConfigs.add("Debug");
+            defaultConfigs.add("Release");
+        }
+        else
+        {
+            defaultConfigs.add("Release");
+        }
+
+        return defaultConfigs;
     }
 
     protected void execute(String config) throws MojoExecutionException, MojoFailureException
@@ -53,21 +77,19 @@ public class CMakeMojo extends ExecMojo
         setCurrentConfig(config);
         super.execute();
     }
-    
-    @Override
-    public void execute() throws MojoExecutionException, MojoFailureException
+
+    protected void execute(ExecutionMode mode) throws MojoExecutionException, MojoFailureException
     {
-        if (configs == null)
-        {
-            getLog().info("Executing with no config specified.");
-            execute(null);
-        }
-        else if (configs.isEmpty())
+        List<String> configs = getConfigs();
+        assert(configs != null);
+
+        if (configs.isEmpty())
         {
             getLog().info("Skipping execution - an empty configs list was specified.");
         }
         else
         {
+            String allConfigs = "";
             for (String config : getConfigs())
             {
                 if ((config == null) || (config.length() == 0))
@@ -76,8 +98,26 @@ public class CMakeMojo extends ExecMojo
                     continue;
                 }
 
-                getLog().info("Executing the " + config + " config.");
-                execute(config);
+                if (mode == ExecutionMode.ExecutionAsSemicolonSeparatedList)
+                {
+                    if (allConfigs.length() > 0)
+                    {
+                        allConfigs += ";";
+                    }
+
+                    allConfigs += config;
+                }
+                else
+                {
+                    getLog().info("Executing the " + config + " config (per config mode).");
+                    execute(config);
+                }
+            }
+
+            if (mode == ExecutionMode.ExecutionAsSemicolonSeparatedList)
+            {
+                getLog().info("Executing the " + allConfigs + " config (list mode).");
+                execute(allConfigs);
             }
         }
     }
