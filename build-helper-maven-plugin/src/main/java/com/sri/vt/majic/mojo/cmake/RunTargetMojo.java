@@ -32,11 +32,14 @@ public class RunTargetMojo extends CMakeMojo
             builder.append(getTarget());
         }
 
-        String config = getCurrentConfig();
-        if ((config != null) && (config.length() != 0))
+        if (SystemUtils.IS_OS_WINDOWS)
         {
-            builder.append(" --config ");
-            builder.append(config);
+            String config = getCurrentConfig();
+            if ((config != null) && (config.length() != 0))
+            {
+                builder.append(" --config ");
+                builder.append(config);
+            }
         }
 
         String extra = getExtraArgs();
