@@ -94,7 +94,7 @@ public class CMakeDirectories
 
     public File getProjectBindir() throws IOException
     {
-        File root = new File(getBuildRoot(), "binary_dirs");
+        File root = getBuildRoot();
 
         OperatingSystemInfo operatingSystemInfo = new OperatingSystemInfo();
         root = new File(root, getProject().getArtifactId() + "/" + operatingSystemInfo.getDistro());
