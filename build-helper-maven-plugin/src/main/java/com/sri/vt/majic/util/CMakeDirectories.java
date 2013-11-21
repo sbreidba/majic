@@ -102,10 +102,12 @@ public class CMakeDirectories
         {
             levels--;
             getLog().debug("found a top-level parent pom " + levels + " levels up");
+            getLog().info("Setting " + CMAKE_TOPLEVEL_PROJECT_DIRECTORY_PROPERTY + " to " + lastPomFound.getAbsolutePath());
             getProperties().setProperty(CMAKE_TOPLEVEL_PROJECT_DIRECTORY_PROPERTY, lastPomFound.getAbsolutePath());
             return lastPomFound.getAbsoluteFile();
         }
 
+        getLog().error("Could not determine " + CMAKE_TOPLEVEL_PROJECT_DIRECTORY_PROPERTY);
         return null;
     }
 
@@ -130,9 +132,9 @@ public class CMakeDirectories
             // empty build root, set defaults
             String path = topLevel.getAbsolutePath() + "-build";
             updatedBuildRoot = new File(path, distro);
-
         }
 
+        getLog().info("Setting " + CMAKE_BUILD_ROOT_PROPERTY + " to " + updatedBuildRoot.getAbsolutePath());
         getProperties().setProperty(CMAKE_BUILD_ROOT_PROPERTY, updatedBuildRoot.getAbsolutePath());
         return updatedBuildRoot.getAbsoluteFile();
     }
@@ -140,11 +142,11 @@ public class CMakeDirectories
     public File updateProjectBindir(File buildRoot) throws IOException
     {
         File projectBin = new File(buildRoot, getProject().getArtifactId());
+        getLog().info("Setting " + CMAKE_PROJECT_BIN_DIRECTORY_PROPERTY + " to " + projectBin.getAbsolutePath());
         getProperties().setProperty(CMAKE_PROJECT_BIN_DIRECTORY_PROPERTY, projectBin.getAbsolutePath());
         return projectBin.getAbsoluteFile();
     }
 
-    private Properties _properties;
     private Logger _log;
     private MavenProject _project;
 

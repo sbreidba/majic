@@ -26,6 +26,8 @@ public class MajicExtension extends AbstractMavenLifecycleParticipant
     @Override
     public void afterProjectsRead(MavenSession session) throws MavenExecutionException
     {
+        getLogger().info("Building with Majic.");
+
         try
         {
             OperatingSystemInfo info = new OperatingSystemInfo();
