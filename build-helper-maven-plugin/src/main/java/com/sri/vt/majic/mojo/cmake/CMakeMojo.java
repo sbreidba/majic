@@ -2,7 +2,6 @@ package com.sri.vt.majic.mojo.cmake;
 
 import com.sri.vt.majic.mojo.ExecMojo;
 import com.sri.vt.majic.util.CMakeDirectories;
-import com.sri.vt.majic.util.OperatingSystemInfo;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Plugin;

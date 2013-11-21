@@ -1,6 +1,5 @@
 package com.sri.vt.majic.mojo.cmake;
 
-import com.sri.vt.majic.util.CMakeDirectories;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -20,7 +19,7 @@ public class UntarMojo extends CMakeCommandMojo
     @Parameter(defaultValue = "", required = true)
     private File tarFile;
 
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_BUILD_ROOT_DEFAULT + "/cmake-untar/markers")
+    @Parameter(defaultValue = "${cmake.build.root}/cmake-untar/markers")
     private File markersDirectory;
 
     @Parameter(defaultValue = "true")

@@ -11,7 +11,39 @@
     <description>A simple IT verifying the basic use case.</description>
 
     <properties>
-        <cmake.relative.build.root>../out-of-source-test</cmake.relative.build.root>
+        <!-- Default style:
+                <toplevelproject>/
+                    <operating_system>/
+                    agg/
+                       target
+                       a/target
+                       b/target
+                    .. etc.
+
+            Don't specifify cmake.build.root to get this.
+        -->
+                        
+        <!-- Maven style: Everything in a project specific target dir, e.g.
+                agg/
+                   target
+                   a/target
+                   b/target
+             Won't work for multi module builds, since pkg root and export root are all over the place!
+             But it's simple to clean (no clean customizations required)
+         -->
+        <!--<cmake.build.root>${project.build.directory}</cmake.build.root>-->
+
+        <!-- Phil style!
+                Just like the default, except renamed and no OS dir
+        -->
+        <!--<cmake.build.root>../phil-style</cmake.build.root>-->
+
+        <!-- Bad style!
+                If you do this, you'll get dirs all over the dang place since every module will interpolate
+                ${artifactId} over again
+        -->
+        <!--<cmake.build.root>../${artifactId}-foo</cmake.build.root>-->
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
