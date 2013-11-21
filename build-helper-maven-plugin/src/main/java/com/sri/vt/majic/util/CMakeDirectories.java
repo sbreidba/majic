@@ -35,8 +35,6 @@ public class CMakeDirectories
     // This variable is determined automatically (no override) and can be used in plugins.
     public static final String CMAKE_TOPLEVEL_PROJECT_DIRECTORY_PROPERTY = "toplevel.project.directory";
 
-//    public static final String CMAKE_TOPLEVEL_RELATIVE_BUILD_ROOT_PROPERTY = "cmake.toplevel-relative.build.root";
-
     // This variable is set by default by setting it to look like:
     //      ${toplevel.project.directory}-build/${os.classifier}
     // If you are Phil, and don't like that, override this value. If you specify a relative path,
@@ -45,13 +43,11 @@ public class CMakeDirectories
     // ... careful with mvn clean!
     public static final String CMAKE_BUILD_ROOT_PROPERTY = "cmake.build.root";
 
-    public static final String CMAKE_PACKAGE_ROOT_PROPERTY = "cmake.pkg.root";
-    public static final String CMAKE_PACKAGE_ROOT_DEFAULT = "${" + CMAKE_PACKAGE_ROOT_PROPERTY + "}";
-    public static final String CMAKE_EXPORT_ROOT_PROPERTY = "cmake.export.root";
-    public static final String CMAKE_EXPORT_ROOT_DEFAULT = "${" + CMAKE_EXPORT_ROOT_PROPERTY + "}";
+    public static final String CMAKE_PACKAGE_ROOT_DEFAULT = "${" + CMAKE_BUILD_ROOT_PROPERTY + "}/pkg";
+    public static final String CMAKE_EXPORT_ROOT_DEFAULT = "${" + CMAKE_BUILD_ROOT_PROPERTY + "}/exports";
 
     public static final String CMAKE_PROJECT_BIN_DIRECTORY_PROPERTY = "cmake.project.bin.directory";
-    public static final String CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT = "${cmake.build.root}/${project.artifactId}";
+    public static final String CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT = "${" + CMAKE_BUILD_ROOT_PROPERTY + "}/${project.artifactId}";
     public static final String CMAKE_PROJECT_PACKAGEDIR_DEFAULT = CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT + "/exports";
     public static final String CMAKE_PROJECT_INSTALLDIR_DEFAULT = CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT + "/exports/${project.artifactId}-${project.version}";
 
@@ -70,17 +66,6 @@ public class CMakeDirectories
         if (topLevel != null)
         {
             File buildRoot = updateBuildRoot(topLevel, distro);
-
-            if (!getProperties().containsKey(CMAKE_PACKAGE_ROOT_PROPERTY))
-            {
-                getProperties().setProperty(CMAKE_PACKAGE_ROOT_PROPERTY, new File(buildRoot,  "pkg").getAbsolutePath());
-            }
-
-            if (!getProperties().containsKey(CMAKE_EXPORT_ROOT_PROPERTY))
-            {
-                getProperties().setProperty(CMAKE_EXPORT_ROOT_PROPERTY, new File(buildRoot,  "exports").getAbsolutePath());
-            }
-
             if (buildRoot != null)
             {
                 updateProjectBindir(buildRoot);

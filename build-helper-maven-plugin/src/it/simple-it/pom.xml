@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.sri.vt.majic.it</groupId>
@@ -10,7 +10,18 @@
 
     <description>A simple IT verifying the basic use case.</description>
 
+    <profiles>
+        <profile>
+            <id>realClean</id>
+            <properties>
+                <mostlyCleanExclude/>
+            </properties>
+        </profile>
+    </profiles>
+
     <properties>
+        <mostlyCleanExclude>pkg/**</mostlyCleanExclude>
+
         <!-- Default style:
                 <toplevelproject>/
                     <operating_system>/
@@ -22,15 +33,15 @@
 
             Don't specifify cmake.build.root to get this.
         -->
-                        
+
         <!-- Maven style: Everything in a project specific target dir, e.g.
-                agg/
-                   target
-                   a/target
-                   b/target
-             Won't work for multi module builds, since pkg root and export root are all over the place!
-             But it's simple to clean (no clean customizations required)
-         -->
+               agg/
+                  target
+                  a/target
+                  b/target
+            Won't work for multi module builds, since pkg root and export root are all over the place!
+            But it's simple to clean (no clean customizations required)
+        -->
         <!--<cmake.build.root>${project.build.directory}</cmake.build.root>-->
 
         <!-- Phil style!
@@ -131,7 +142,8 @@
                                  This is done in this test harness to test out cmake-set-properties
                                  as much as anything else.
                                  -->
-                            <tarFile>${cmake.project.bin.directory}/${project.artifactId}-${project.version}.tar.bz2</tarFile>
+                            <tarFile>${cmake.project.bin.directory}/${project.artifactId}-${project.version}.tar.bz2
+                            </tarFile>
 
                             <!-- testing output to an arbitrary place -->
                             <outputDirectory>${cmake.build.root}/untar-test</outputDirectory>
@@ -148,7 +160,8 @@
                             <goal>cmake-untar</goal>
                         </goals>
                         <configuration>
-                            <tarFile>${cmake.project.bin.directory}/${project.artifactId}-${project.version}.tar.bz2</tarFile>
+                            <tarFile>${cmake.project.bin.directory}/${project.artifactId}-${project.version}.tar.bz2
+                            </tarFile>
                             <outputDirectory>${cmake.build.root}/untar-test</outputDirectory>
                         </configuration>
                     </execution>
@@ -168,6 +181,12 @@
                 <artifactId>maven-clean-plugin</artifactId>
                 <configuration>
                     <filesets>
+                        <fileset>
+                            <directory>${cmake.build.root}</directory>
+                            <excludes>
+                                <exclude>${mostlyCleanExclude}</exclude>
+                            </excludes>
+                        </fileset>
                         <fileset>
                             <directory>${cmake.project.bin.directory}</directory>
                         </fileset>
