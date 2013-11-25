@@ -44,8 +44,13 @@ public class ConfigureMojo extends CMakeMojo
     @Parameter(defaultValue = "true")
     private boolean addCMakeInstallPrefix;
 
+    // For single-config builds, this will add CMAKE_BUILD_TYPE="<config>"
     @Parameter(defaultValue = "true")
     private boolean addCMakeBuildType;
+
+    // For multi-config builds, this will add CMAKE_CONFIGURATION_TYPES="<semi-colon separated configs>"
+    @Parameter(defaultValue = "true")
+    private boolean addCMakeConfigurationTypes;
 
     @Parameter(defaultValue = "${skipCMakeConfig}")
     private boolean skip;
@@ -126,9 +131,9 @@ public class ConfigureMojo extends CMakeMojo
             appendDashD(arguments, "CMAKE_INSTALL_PREFIX", projectInstallDir.getAbsolutePath());
         }
 
-        if (addCMakeBuildType)
+        if (addCMakeConfigurationTypes && SystemUtils.IS_OS_WINDOWS)
         {
-            appendDashD(arguments, "CMAKE_BUILD_TYPE", getCurrentConfig());
+            appendDashD(arguments, "CMAKE_CONFIGURATION_TYPES", getCurrentConfig());
         }
 
         arguments.add(getSourceDirectory().getAbsolutePath());

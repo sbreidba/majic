@@ -88,7 +88,7 @@ public class TarMojo extends CMakeCommandMojo
 
         if (shouldAttachTarArtifact())
         {
-            getProjectHelper().attachArtifact(getProject(), "tar.bz2", getClassifier(), getTarFile());
+            getProjectHelper().attachArtifact(getProject(), getType(), getClassifier(), getTarFile());
         }
     }
 
@@ -119,5 +119,10 @@ public class TarMojo extends CMakeCommandMojo
         {
             return null;
         }
+    }
+
+    public String getType()
+    {
+        return type;
     }
 }

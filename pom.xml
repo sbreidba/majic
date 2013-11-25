@@ -2,12 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.sri.vt.clavin</groupId>
-    <artifactId>clavin</artifactId>
+    <groupId>com.sri.vt.majic</groupId>
+    <artifactId>majic</artifactId>
     <version>0.1.3-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Clavin</name>
-    <description>Clavin is the code name for the VT software build process using cmake, maven, jenkins, and artifactory.
+    <name>Majic</name>
+    <description>
+        Majic is the code name for the VT software build process using cmake, maven, jenkins, and artifactory.
+        It stands for Maven, Artifactory, Jenkins, Integrated with CMake.
     </description>
     <inceptionYear>2013</inceptionYear>
 
@@ -17,12 +19,18 @@
 
     <distributionManagement>
         <site>
-            <id>clavin.website</id>
-            <name>Clavin</name>
-            <url>scpexe://pmiller-aspn04.sarnoff.internal/var/www/html/clavin</url>
+            <id>majic.website</id>
+            <name>Majic</name>
+            <url>scpexe://pmiller-aspn04.sarnoff.internal/var/www/html/majic</url>
         </site>
     </distributionManagement>
 
+    <properties>
+        <!-- reporting doesn't honor pluginManagement, so we use a property for these -->
+        <maven.javadoc.plugin.version>2.9.1</maven.javadoc.plugin.version>
+        <maven.plugin.plugin.version>3.2</maven.plugin.plugin.version>
+    </properties>
+    
     <build>
         <pluginManagement>
             <plugins>
@@ -34,12 +42,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.9.1</version>
+                    <version>${maven.javadoc.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-plugin-plugin</artifactId>
-                    <version>3.2</version>
+                    <version>${maven.plugin.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <!-- add support for ssh/scp -->
@@ -86,7 +94,7 @@
     </scm>
 
     <modules>
-        <module>clavin-documentation</module>
+        <module>majic-documentation</module>
         <module>build-helper-maven-plugin</module>
     </modules>
 </project>

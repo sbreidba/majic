@@ -4,14 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.sri.vt.clavin</groupId>
-        <artifactId>clavin</artifactId>
+        <groupId>com.sri.vt.majic</groupId>
+        <artifactId>majic</artifactId>
         <version>0.1.3-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.sri.vt.majic</groupId>
     <artifactId>build-helper-maven-plugin</artifactId>
-    <version>0.1.3-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
     <name>Majic Build Helper Maven Plugin</name>
     <description>Goals to make packaging and cmake builds simpler.</description>
@@ -71,11 +69,6 @@
             <version>2.0.9</version>
         </dependency>
         <dependency>
-            <groupId>com.github.jponge</groupId>
-            <artifactId>lzma-java</artifactId>
-            <version>1.2</version>
-        </dependency>
-        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>1.4</version>
@@ -93,12 +86,12 @@
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.9.1</version>
+            <version>${maven.javadoc.plugin.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-plugin-plugin</artifactId>
-            <version>3.2</version>
+            <version>${maven.plugin.plugin.version}</version>
         </dependency>
     </dependencies>
 
@@ -107,7 +100,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.2</version>
                 <configuration>
                     <goalPrefix>build-helper</goalPrefix>
                     <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
@@ -172,6 +164,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
                 <reportSets>
                     <reportSet>
                         <configuration combine.children="append">
@@ -187,6 +180,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
+                <version>3.2</version>
             </plugin>
         </plugins>
     </reporting>
