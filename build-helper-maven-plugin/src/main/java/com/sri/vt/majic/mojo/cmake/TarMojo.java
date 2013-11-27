@@ -26,9 +26,6 @@ public class TarMojo extends CMakeCommandMojo
     @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_PACKAGEDIR_DEFAULT)
     private File workingDirectory;
 
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_INSTALLDIR_DEFAULT)
-    private File installDirectory;
-
     @Parameter(defaultValue = "${project.artifactId}-${project.version}.tar.bz2")
     private String outputName;
 
@@ -56,11 +53,6 @@ public class TarMojo extends CMakeCommandMojo
         return workingDirectory;
     }
 
-    protected File getInstallDirectory()
-    {
-        return installDirectory;
-    }
-
     protected File getTarFile()
     {
         return new File(outputDirectory, outputName);
@@ -75,8 +67,14 @@ public class TarMojo extends CMakeCommandMojo
         builder.append(getTarFile().getAbsolutePath());
         builder.append(" ");
 
-        String relativePath = PathUtils.toRelative(getWorkingDirectory(), getInstallDirectory().getAbsolutePath());
-        builder.append(relativePath);
+        for (File file : getWorkingDirectory().listFiles())
+        {
+            if (file.isDirectory())
+            {
+                String relativePath = PathUtils.toRelative(getWorkingDirectory(), file.getAbsolutePath());
+                builder.append(relativePath);
+            }
+        }
 
         return builder.toString();
     }
