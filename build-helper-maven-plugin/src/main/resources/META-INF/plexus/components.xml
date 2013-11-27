@@ -13,12 +13,14 @@
                         <prepare-package>com.sri.vt.majic:build-helper-maven-plugin:cmake-install</prepare-package>
                         <package>com.sri.vt.majic:build-helper-maven-plugin:cmake-tar</package>
                         <clean>com.sri.vt.majic:build-helper-maven-plugin:cmake-clean</clean>
+                        <install>org.apache.maven.plugins:maven-install-plugin:install</install>
+                        <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
                     </phases>
                 </configuration>
             </component>
             <component>
                 <role>org.apache.maven.artifact.handler.ArtifactHandler</role>
-                <role-hint>majic</role-hint>
+                <role-hint>majic-cmake</role-hint>
                 <implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler</implementation>
                 <configuration>
                     <!--the extension used by Maven in the repository-->
