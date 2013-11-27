@@ -119,6 +119,23 @@ public class ConfigureMojo extends CMakeMojo
         if (addCPackPackageVersion)
         {
             appendDashD(arguments, "CPACK_PACKAGE_VERSION", getProject().getVersion());
+
+            String[] versionComponents = getProject().getVersion().split("\\.");
+
+            if (versionComponents.length > 0)
+            {
+                appendDashD(arguments, "CPACK_PACKAGE_VERSION_MAJOR", versionComponents[0]);
+            }
+
+            if (versionComponents.length > 1)
+            {
+                appendDashD(arguments, "CPACK_PACKAGE_VERSION_MINOR", versionComponents[1]);
+            }
+            
+            if (versionComponents.length > 2)
+            {
+                appendDashD(arguments, "CPACK_PACKAGE_VERSION_PATCH", versionComponents[2]);
+            }
         }
 
         if (addCMakePrefixPath)
