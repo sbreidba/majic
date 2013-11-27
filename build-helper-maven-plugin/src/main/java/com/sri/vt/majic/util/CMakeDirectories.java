@@ -42,6 +42,7 @@ public class CMakeDirectories
     // If you specify an absolute path, then you are the master of your own destiny.
     // ... careful with mvn clean!
     public static final String CMAKE_BUILD_ROOT_PROPERTY = "cmake.build.root";
+    public static final String CMAKE_BUILD_ROOT_DEFAULT = "${" + CMAKE_BUILD_ROOT_PROPERTY + "}";
 
     public static final String CMAKE_PACKAGE_ROOT_DEFAULT = "${" + CMAKE_BUILD_ROOT_PROPERTY + "}/pkg";
     public static final String CMAKE_EXPORT_ROOT_DEFAULT = "${" + CMAKE_BUILD_ROOT_PROPERTY + "}/exports";

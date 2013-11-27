@@ -23,6 +23,9 @@ public class UntarDependenciesMojo extends UntarMojo
     @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT)
     private File outputDirectory;
 
+    @Parameter(defaultValue = "${project.build.directory}/temp-sources")
+    private File sourceOutputDirectory;
+
     @Parameter(defaultValue = CMakeDirectories.CMAKE_EXPORT_ROOT_DEFAULT)
     private File compileScopeOutputDirectory;
 
@@ -38,15 +41,21 @@ public class UntarDependenciesMojo extends UntarMojo
         tarFile = file;
     }
 
-    protected void setCurrentOutputDirectory(String scope)
+    protected void setCurrentOutputDirectory(Artifact artifact)
     {
-        if (scope.equalsIgnoreCase(Artifact.SCOPE_COMPILE))
+        if (artifact.getClassifier().equalsIgnoreCase("sources"))
+        {
+            currentOutputDirectory = sourceOutputDirectory;
+            return;
+        }
+        
+        if (artifact.getScope().equalsIgnoreCase(Artifact.SCOPE_COMPILE))
         {
             currentOutputDirectory = compileScopeOutputDirectory;
             return;
         }
 
-        if (scope.equalsIgnoreCase(Artifact.SCOPE_RUNTIME))
+        if (artifact.getScope().equalsIgnoreCase(Artifact.SCOPE_RUNTIME))
         {
             // these are external packages
             currentOutputDirectory = runtimeScopeOutputDirectory;
@@ -77,7 +86,7 @@ public class UntarDependenciesMojo extends UntarMojo
             for (Object object : artifacts)
             {
                 Artifact artifact = (Artifact)object;
-                setCurrentOutputDirectory(artifact.getScope());
+                setCurrentOutputDirectory(artifact);
                 if (getOutputDirectory() == null)
                 {
                     getLog().info("Ignoring dependency " + artifact.toString() + " with scope " + artifact.getScope());

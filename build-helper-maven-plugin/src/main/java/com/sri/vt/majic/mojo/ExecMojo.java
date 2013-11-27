@@ -18,17 +18,8 @@ import java.util.List;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
 @Mojo(name="exec", requiresProject=true)
-public class ExecMojo extends AbstractMojo
+public class ExecMojo extends AbstractExecutorMojo
 {
-    @Parameter(defaultValue = "${project}", readonly = true, required = true)
-    private MavenProject project;
-
-    @Parameter(defaultValue = "${session}", readonly = true, required = true)
-    private MavenSession session;
-
-    @Component(hint = "")
-    private BuildPluginManager pluginManager;
-
     @Parameter(alias = "workingDirectory", defaultValue = "${project.build.directory}")
     private File workingDirectory;
 
@@ -47,21 +38,28 @@ public class ExecMojo extends AbstractMojo
     @Parameter(defaultValue = "")
     private File outputFile;
 
-    protected MavenProject getProject()
+    @Override
+    protected boolean shouldFailIfPluginNotFound()
     {
-        return project;
+        return true;
     }
 
-    protected Plugin getExecPlugin(MavenProject project) throws MojoExecutionException
+    @Override
+    protected String getPluginGroupId()
     {
-        String execComponentKey = Plugin.constructKey("org.codehaus.mojo", "exec-maven-plugin");
-        Plugin execPlugin = getProject().getPluginManagement().getPluginsAsMap().get(execComponentKey);
-        if (execPlugin == null)
-        {
-            throw new MojoExecutionException(this, "Exec-maven-plugin version missing", "Could not determine exec plugin version. Please declare exec-maven-plugin in PluginManagement");
-        }
+        return "org.codehaus.mojo";
+    }
 
-        return execPlugin;
+    @Override
+    protected String getPluginArtifactId()
+    {
+        return "exec-maven-plugin";
+    }
+
+    @Override
+    protected String getGoal()
+    {
+        return "exec";
     }
 
     protected List<String> getArguments()
@@ -99,42 +97,6 @@ public class ExecMojo extends AbstractMojo
         return false;
     }
 
-    protected void append(List<Element> elements, String name, File value)
-    {
-        if (value != null)
-        {
-        	append(elements, name, value.getAbsolutePath());
-        }
-    }
-
-    protected void append(List<Element> elements, String name, String value)
-    {
-        getLog().info(name + " is " + ((value == null) ? "(not set)" : "[" + value + "]"));
-		if (value != null)
-		{
-			elements.add(element(name, value));
-		}
-    }
-
-    protected void append(List<Element> elements, String elementName, String childName, List<String> values)
-    {
-        if ((values == null) || (values.size() == 0))
-        {
-        	return;
-        }
-
-        List<Element> childElements = new ArrayList<Element>();
-        for (String value : values)
-        {
-            append(childElements, childName, value);
-        }
-
-        Element[] childArray = new Element[childElements.size()];
-        childElements.toArray(childArray);
-
-        elements.add(new Element(elementName, childArray));
-    }
-
     protected Element[] getConfigurationElements()
     {
         List<Element> elements = new ArrayList<Element>();
@@ -164,32 +126,6 @@ public class ExecMojo extends AbstractMojo
             return;
         }
 
-        Plugin execPlugin = getExecPlugin(getProject());
-        getLog().info("Using exec plugin version: " + execPlugin.getVersion());
-
-        executeMojo(
-            plugin(
-                groupId("org.codehaus.mojo"),
-                artifactId("exec-maven-plugin"),
-                version(execPlugin.getVersion())
-            ),
-            goal("exec"),
-            configuration(getConfigurationElements()),
-            executionEnvironment(
-                getProject(),
-                getSession(),
-                getPluginManager()
-            )
-        );
-    }
-
-    protected MavenSession getSession()
-    {
-        return session;
-    }
-
-    protected BuildPluginManager getPluginManager()
-    {
-        return pluginManager;
+        super.execute();
     }
 }

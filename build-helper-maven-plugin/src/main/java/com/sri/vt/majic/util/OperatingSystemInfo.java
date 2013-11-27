@@ -96,6 +96,7 @@ public class OperatingSystemInfo
         MavenProjectHelper.setPropertyIfNotSet(project, log, "os.distro", getDistro());
         MavenProjectHelper.setPropertyIfNotSet(project, log, "os.classifier", getClassifier());
     }
+    
     public String getName()
     {
         return name;

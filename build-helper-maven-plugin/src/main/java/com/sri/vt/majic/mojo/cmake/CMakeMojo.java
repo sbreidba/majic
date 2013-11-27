@@ -75,16 +75,6 @@ public class CMakeMojo extends ExecMojo
 
     protected void execute(String config) throws MojoExecutionException, MojoFailureException
     {
-        String key = Plugin.constructKey("com.sri.vt.majic", "build-helper-maven-plugin");
-        Artifact extension = (Artifact) getProject().getExtensionArtifactMap().get(key);
-        if (extension == null)
-        {
-            throw new MojoExecutionException(this,
-                    "Majic build extension missing",
-                    "The Majic build extension could not be found - have you added it to <extensions>?");
-        }
-        //getProject().getExtensionArtifactMap().containsKey()
-
         setCurrentConfig(config);
         super.execute();
     }
@@ -96,7 +86,8 @@ public class CMakeMojo extends ExecMojo
 
         if (configs.isEmpty())
         {
-            getLog().info("Skipping execution - an empty configs list was specified.");
+            getLog().info("An empty configs list was specified. Executing with no config.");
+            execute("");
         }
         else
         {
