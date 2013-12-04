@@ -14,6 +14,7 @@ import org.apache.maven.project.MavenProject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
@@ -38,6 +39,9 @@ public class ExecMojo extends AbstractExecutorMojo
     @Parameter(defaultValue = "")
     private File outputFile;
 
+    @Parameter()
+    private Map<String, String> environmentVariables;
+    
     @Override
     protected boolean shouldFailIfPluginNotFound()
     {
@@ -84,7 +88,7 @@ public class ExecMojo extends AbstractExecutorMojo
 
     protected File getOutputFile()
     {
-        return null;
+        return outputFile;
     }
 
     protected boolean getSkip()
@@ -106,6 +110,7 @@ public class ExecMojo extends AbstractExecutorMojo
         append(elements, "arguments", "argument", getArguments());
         append(elements, "skip", Boolean.toString(getSkip()));
         append(elements, "outputFile", getOutputFile());
+        append(elements, "environmentVariables", environmentVariables);
 
         Element[] elementArray = new Element[elements.size()];
         elements.toArray(elementArray);

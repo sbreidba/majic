@@ -10,6 +10,7 @@
                         <initialize>com.sri.vt.majic:build-helper-maven-plugin:cmake-untar-dependencies</initialize>
                         <process-resources>com.sri.vt.majic:build-helper-maven-plugin:cmake-configure</process-resources>
                         <compile>com.sri.vt.majic:build-helper-maven-plugin:cmake-compile</compile>
+                        <test>com.sri.vt.majic:build-helper-maven-plugin:cmake-test</test>
                         <prepare-package>com.sri.vt.majic:build-helper-maven-plugin:cmake-install</prepare-package>
                         <package>com.sri.vt.majic:build-helper-maven-plugin:cmake-tar</package>
                         <clean>com.sri.vt.majic:build-helper-maven-plugin:cmake-clean</clean>

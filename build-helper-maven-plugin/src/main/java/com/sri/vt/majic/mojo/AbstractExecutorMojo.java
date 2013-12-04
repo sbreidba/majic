@@ -14,6 +14,7 @@ import org.apache.maven.project.MavenProject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
@@ -72,6 +73,23 @@ public abstract class AbstractExecutorMojo extends AbstractMojo
         Element[] childArray = new Element[children.size()];
         children.toArray(childArray);
         elements.add(new Element(elementName, childArray));
+    }
+
+
+    protected void append(List<Element> elements, String elementName, Map<String, String> values)
+    {
+        if ((values == null) || (values.size() == 0))
+        {
+        	return;
+        }
+
+        List<Element> childElements = new ArrayList<Element>();
+        for (String key : values.keySet())
+        {
+            append(childElements, key, values.get(key));
+        }
+
+        append(elements, elementName, childElements);
     }
 
     abstract protected boolean shouldFailIfPluginNotFound();
