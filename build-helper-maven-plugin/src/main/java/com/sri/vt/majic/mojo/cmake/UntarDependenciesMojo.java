@@ -23,8 +23,8 @@ public class UntarDependenciesMojo extends UntarMojo
     @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT)
     private File outputDirectory;
 
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT + "/sources")
-    private File sourceOutputDirectory;
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PACKAGE_ROOT_DEFAULT)
+    private File testScopeOutputDirectory;
 
     @Parameter(defaultValue = CMakeDirectories.CMAKE_EXPORT_ROOT_DEFAULT)
     private File compileScopeOutputDirectory;
@@ -55,6 +55,11 @@ public class UntarDependenciesMojo extends UntarMojo
 
     protected File getOutputDirectory()
     {
+        if (currentArtifact.getScope().equalsIgnoreCase(Artifact.SCOPE_TEST))
+        {
+            return testScopeOutputDirectory;
+        }
+
         if (currentArtifact.getScope().equalsIgnoreCase(Artifact.SCOPE_COMPILE))
         {
             return compileScopeOutputDirectory;
