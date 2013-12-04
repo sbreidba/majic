@@ -12,7 +12,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import java.io.File;
 import java.util.Set;
 
-@Mojo(name="cmake-untar-dependencies", defaultPhase = LifecyclePhase.INITIALIZE, requiresProject = true, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
+@Mojo(name="cmake-untar-dependencies", defaultPhase = LifecyclePhase.INITIALIZE, requiresProject = true, requiresDependencyResolution = ResolutionScope.TEST)
 public class UntarDependenciesMojo extends UntarMojo
 {
     // Not used - computed instead.
@@ -23,7 +23,7 @@ public class UntarDependenciesMojo extends UntarMojo
     @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT)
     private File outputDirectory;
 
-    @Parameter(defaultValue = "${project.build.directory}/temp-sources")
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT + "/sources")
     private File sourceOutputDirectory;
 
     @Parameter(defaultValue = CMakeDirectories.CMAKE_EXPORT_ROOT_DEFAULT)
@@ -33,48 +33,52 @@ public class UntarDependenciesMojo extends UntarMojo
     private File runtimeScopeOutputDirectory;
 
     // TODO! select the types to be extracted!
-    
-    private File currentOutputDirectory;
-    
-    protected void setCurrentTarFile(File file)
-    {
-        tarFile = file;
-    }
 
-    protected void setCurrentOutputDirectory(Artifact artifact)
+    private Artifact currentArtifact;
+
+    @Override
+    protected boolean shouldStripRootDirectory()
     {
-        if (artifact.getClassifier().equalsIgnoreCase("sources"))
+        // For source artifacts, we keep the directory
+        if (currentArtifact.getClassifier().equalsIgnoreCase("sources"))
         {
-            currentOutputDirectory = sourceOutputDirectory;
-            return;
+            return false;
         }
         
-        if (artifact.getScope().equalsIgnoreCase(Artifact.SCOPE_COMPILE))
+        return super.shouldStripRootDirectory();
+    }
+
+    protected void setCurrentArtifact(Artifact artifact)
+    {
+        currentArtifact = artifact;
+    }
+
+    protected File getOutputDirectory()
+    {
+        if (currentArtifact.getScope().equalsIgnoreCase(Artifact.SCOPE_COMPILE))
         {
-            currentOutputDirectory = compileScopeOutputDirectory;
-            return;
+            return compileScopeOutputDirectory;
         }
 
-        if (artifact.getScope().equalsIgnoreCase(Artifact.SCOPE_RUNTIME))
+        if (currentArtifact.getScope().equalsIgnoreCase(Artifact.SCOPE_RUNTIME))
         {
             // these are external packages
-            currentOutputDirectory = runtimeScopeOutputDirectory;
-            return;
+            return runtimeScopeOutputDirectory;
         }
 
-        currentOutputDirectory = outputDirectory;
+        return outputDirectory;
     }
 
     @Override
-    protected File getOutputDirectory()
+    protected File getMarkersDirectory()
     {
-        return currentOutputDirectory;
+        return new File(getOutputDirectory(), "cmake-untar-dependencies/markers");
     }
-    
+
     @Override
     protected File getTarFile()
     {
-        return tarFile;
+        return currentArtifact.getFile();
     }
 
     @Override
@@ -86,7 +90,7 @@ public class UntarDependenciesMojo extends UntarMojo
             for (Object object : artifacts)
             {
                 Artifact artifact = (Artifact)object;
-                setCurrentOutputDirectory(artifact);
+                setCurrentArtifact(artifact);
                 if (getOutputDirectory() == null)
                 {
                     getLog().info("Ignoring dependency " + artifact.toString() + " with scope " + artifact.getScope());
@@ -94,7 +98,6 @@ public class UntarDependenciesMojo extends UntarMojo
                 }
 
                 getLog().info("Extracting dependency " + artifact.toString() + " with scope " + artifact.getScope() + " to " + getOutputDirectory());
-                setCurrentTarFile(artifact.getFile());
                 super.execute();
             }
         }

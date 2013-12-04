@@ -81,7 +81,7 @@ public class UntarMojo extends CMakeCommandMojo
 
     protected void moveFiles() throws IOException
     {
-        if (stripRootDirectory)
+        if (shouldStripRootDirectory())
         {
             for (File subDir : getTemporaryExtractDir().listFiles())
             {
@@ -90,9 +90,13 @@ public class UntarMojo extends CMakeCommandMojo
                     moveContents(subDir);
                 }
 
-                if (!subDir.delete())
+                try
                 {
-                    getLog().warn("Could not clean up directory " + subDir);
+                    FileUtils.deleteDirectory(subDir);
+                }
+                catch(IOException e)
+                {
+                    getLog().warn("Could not clean up directory " + subDir + ": " + e.getMessage());
                 }
             }
         }
@@ -162,5 +166,10 @@ public class UntarMojo extends CMakeCommandMojo
         {
             throw new MojoExecutionException(e.getMessage());
         }
+    }
+
+    protected boolean shouldStripRootDirectory()
+    {
+        return stripRootDirectory;
     }
 }
