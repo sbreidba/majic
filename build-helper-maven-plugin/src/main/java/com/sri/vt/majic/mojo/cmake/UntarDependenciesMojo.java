@@ -40,7 +40,8 @@ public class UntarDependenciesMojo extends UntarMojo
     protected boolean shouldStripRootDirectory()
     {
         // For source artifacts, we keep the directory
-        if (currentArtifact.getClassifier().equalsIgnoreCase("sources"))
+        String classifier = currentArtifact.getClassifier();
+        if ((classifier != null) && classifier.equalsIgnoreCase("sources"))
         {
             return false;
         }

@@ -25,6 +25,12 @@ public class CMakeMojo extends ExecMojo
     @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT)
     private File buildRoot;
 
+    @Parameter(defaultValue = "false")
+    private boolean skipRelease;
+
+    @Parameter(defaultValue = "false")
+    private boolean skipDebug;
+
     private String currentConfig;
 
     protected enum ExecutionMode
@@ -62,12 +68,12 @@ public class CMakeMojo extends ExecMojo
         ArrayList<String> defaultConfigs = new ArrayList<String>();
         if (SystemUtils.IS_OS_WINDOWS)
         {
-            defaultConfigs.add("Debug");
-            defaultConfigs.add("Release");
+            if (!skipDebug) defaultConfigs.add("Debug");
+            if (!skipRelease) defaultConfigs.add("Release");
         }
         else
         {
-            defaultConfigs.add("Release");
+            if (!skipRelease) defaultConfigs.add("Release");
         }
 
         return defaultConfigs;
