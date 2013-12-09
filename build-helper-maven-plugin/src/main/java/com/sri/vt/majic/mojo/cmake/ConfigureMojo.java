@@ -20,7 +20,7 @@ public class ConfigureMojo extends CMakeMojo
     private File sourceDirectory;
 
     // Left blank, this will be computed automatically
-    @Parameter(defaultValue = "")
+    @Parameter(defaultValue = "", property = "cmake.generator")
     private String generator;
 
     @Parameter(defaultValue = CMakeDirectories.CMAKE_PACKAGE_ROOT_DEFAULT)
