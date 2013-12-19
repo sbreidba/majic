@@ -1,27 +1,17 @@
 package com.sri.vt.majic.mojo.cmake;
 
 import com.sri.vt.majic.mojo.AbstractExecutorMojo;
-import com.sri.vt.majic.mojo.ExecMojo;
 import com.sri.vt.majic.util.CMakeDirectories;
-import org.apache.commons.lang3.SystemUtils;
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.model.Plugin;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
 import org.apache.maven.wagon.PathUtils;
-import org.twdata.maven.mojoexecutor.MojoExecutor;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 
 @Mojo(name="cmake-clean", defaultPhase= LifecyclePhase.CLEAN, requiresProject=true)
 public class CleanMojo extends AbstractExecutorMojo

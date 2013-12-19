@@ -91,10 +91,10 @@ public class OperatingSystemInfo
 
     public void setProperties(MavenProject project, Logger log)
     {
-        MavenProjectHelper.setPropertyIfNotSet(project, log, "os.name", getName());
-        MavenProjectHelper.setPropertyIfNotSet(project, log, "os.arch", getArch());
-        MavenProjectHelper.setPropertyIfNotSet(project, log, "os.distro", getDistro());
-        MavenProjectHelper.setPropertyIfNotSet(project, log, "os.classifier", getClassifier());
+        PropertyUtils.setPropertyIfNotSet(project, log, "os.name", getName());
+        PropertyUtils.setPropertyIfNotSet(project, log, "os.arch", getArch());
+        PropertyUtils.setPropertyIfNotSet(project, log, "os.distro", getDistro());
+        PropertyUtils.setPropertyIfNotSet(project, log, "os.classifier", getClassifier());
     }
     
     public String getName()

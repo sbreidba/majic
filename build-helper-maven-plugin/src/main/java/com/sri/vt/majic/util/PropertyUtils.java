@@ -1,9 +1,10 @@
 package com.sri.vt.majic.util;
 
+import org.apache.maven.plugin.MavenPluginValidator;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.logging.Logger;
 
-public class MavenProjectHelper
+public class PropertyUtils
 {
     public static void setPropertyIfNotSet(MavenProject project, Logger log, String key, String value)
     {
