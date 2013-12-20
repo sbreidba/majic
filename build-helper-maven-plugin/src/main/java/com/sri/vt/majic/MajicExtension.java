@@ -34,8 +34,10 @@ public class MajicExtension extends AbstractMavenLifecycleParticipant
 
             for (MavenProject project : session.getProjects())
             {
+                getLogger().info("Configuring project " + project.getArtifact());
+
                 info.setProperties(project, getLogger());
-                
+
                 CMakeDirectories directories = new CMakeDirectories(project, getLogger());
                 directories.setProperties();
             }
