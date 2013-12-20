@@ -99,11 +99,11 @@ public class UntarDependenciesMojo extends UntarMojo
                 setCurrentArtifact(artifact);
                 if (getOutputDirectory() == null)
                 {
-                    getLog().info("Ignoring dependency " + artifact.toString() + " with scope " + artifact.getScope());
+                    getLog().info("Ignoring dependency " + artifact.toString());
                     continue;
                 }
 
-                getLog().info("Extracting dependency " + artifact.toString() + " with scope " + artifact.getScope() + " to " + getOutputDirectory());
+                getLog().info("Extracting dependency " + artifact.toString() + " to " + getOutputDirectory());
                 super.execute();
             }
         }
