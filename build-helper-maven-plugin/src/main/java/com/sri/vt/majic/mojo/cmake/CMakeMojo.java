@@ -23,10 +23,10 @@ public class CMakeMojo extends ExecMojo
     @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT)
     private File buildRoot;
 
-    @Parameter(defaultValue = "false")
+    @Parameter(defaultValue = "false", property="skipRelease")
     private boolean skipRelease;
 
-    @Parameter(defaultValue = "false")
+    @Parameter(defaultValue = "false", property="skipDebug")
     private boolean skipDebug;
 
     private String currentConfig;
