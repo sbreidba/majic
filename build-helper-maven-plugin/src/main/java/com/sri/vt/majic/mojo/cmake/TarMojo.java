@@ -67,12 +67,17 @@ public class TarMojo extends CMakeCommandMojo
         builder.append(getTarFile().getAbsolutePath());
         builder.append(" ");
 
+        boolean bFirst = true;
         for (File file : getWorkingDirectory().listFiles())
         {
             if (file.isDirectory())
             {
                 String relativePath = PathUtils.toRelative(getWorkingDirectory(), file.getAbsolutePath());
+
+                if (!bFirst) builder.append(" ");
                 builder.append(relativePath);
+
+                bFirst = false;
             }
         }
 
