@@ -18,10 +18,10 @@ public class CompileMojo extends RunTargetMojo
     private String compileTarget;
 
     @Parameter(defaultValue = "true")
-    private boolean cleanInstallDirBeforeBuilding;
+    private boolean cleanPackageDirBeforeBuilding;
     
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_INSTALLDIR_DEFAULT)
-    private File projectInstallDir;
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_PACKAGEDIR_DEFAULT)
+    private File projectPackageDir;
 
     protected String getTarget()
     {
@@ -31,16 +31,16 @@ public class CompileMojo extends RunTargetMojo
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
     {
-        if (cleanInstallDirBeforeBuilding)
+        if (cleanPackageDirBeforeBuilding)
         {
-            getLog().info("Deleting " + projectInstallDir);
+            getLog().info("Cleaning " + projectPackageDir);
             try
             {
-                FileUtils.deleteDirectory(projectInstallDir);
+                FileUtils.deleteDirectory(projectPackageDir);
             }
             catch (IOException e)
             {
-                getLog().warn("Could not delete " + projectInstallDir + ": " + e.getMessage());
+                getLog().warn("Could not clean " + projectPackageDir + ": " + e.getMessage());
             }
         }
 
