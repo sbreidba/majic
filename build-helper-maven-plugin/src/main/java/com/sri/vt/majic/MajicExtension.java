@@ -43,9 +43,7 @@ public class MajicExtension extends AbstractMavenLifecycleParticipant
                 CMakeDirectories directories = new CMakeDirectories(project, getLogger());
                 directories.setProperties();
 
-                PropertyUtils.setPropertyIfNotSet(
-                        project, getLogger(),
-                        BuildEnvironment.Properties.PACKAGE_CLASSIFIER, BuildEnvironment.getClassifier(project));
+                BuildEnvironment.setProperties(project, getLogger());
             }
         }
         catch (IOException e)

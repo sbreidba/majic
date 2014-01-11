@@ -2,7 +2,6 @@ package com.sri.vt.majic.mojo.cmake;
 
 import com.sri.vt.majic.util.BuildEnvironment;
 import com.sri.vt.majic.util.CMakeDirectories;
-import com.sri.vt.majic.util.OperatingSystemInfo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
@@ -27,6 +26,9 @@ public class TarMojo extends CMakeCommandMojo
     @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_PACKAGEDIR_DEFAULT)
     private File workingDirectory;
 
+    // Note: tar.bz2 is not replaced here or in type with ${package.extension}
+    // After all, this is the TarMojo. A future ZipMojo would set defaults differently.
+
     @Parameter(defaultValue = "${project.artifactId}-${project.version}.tar.bz2")
     private String outputName;
 
@@ -34,10 +36,7 @@ public class TarMojo extends CMakeCommandMojo
     private File outputDirectory;
 
     @Parameter(defaultValue = "true")
-    private boolean attachTarArtifact;
-
-    @Parameter(defaultValue = "${os.classifier}")
-    private String classifier;
+    private boolean attachArtifact;
 
     @Parameter(defaultValue = "tar.bz2")
     private String type;
@@ -90,7 +89,7 @@ public class TarMojo extends CMakeCommandMojo
     {
         super.execute();
 
-        if (shouldAttachTarArtifact())
+        if (shouldAttachArtifact())
         {
             try
             {
@@ -108,9 +107,9 @@ public class TarMojo extends CMakeCommandMojo
         return projectHelper;
     }
 
-    public boolean shouldAttachTarArtifact()
+    public boolean shouldAttachArtifact()
     {
-        return attachTarArtifact;
+        return attachArtifact;
     }
 
     public String getType()

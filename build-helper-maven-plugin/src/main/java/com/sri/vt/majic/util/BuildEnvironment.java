@@ -2,6 +2,7 @@ package com.sri.vt.majic.util;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.logging.Logger;
 
 import java.io.IOException;
 import java.util.Map;
@@ -51,10 +52,14 @@ public class BuildEnvironment
         // The Arch enum lists the possible values.
         public static final String CMAKE_ARCH = "cmake.arch";
 
-        // The package classifier is ${majic.os.classifier}-${cmake.compiler}-${cmake.arch}.
+        // The package classifier is set by default to ${majic.os.classifier}-${cmake.compiler}-${cmake.arch}.
         // Note that for dependencies, this property must be used as it is the only one that is interpolated
         // at build time.
         public static final String PACKAGE_CLASSIFIER = "package.classifier";
+
+        // The package extension is the maven "type", e.g. tar.bz2 or zip
+        // This variable is set by default to "tar.bz2".
+        public static final String PACKAGE_EXTENSION = "tar.bz2";
 
         // The OS name is a human-readable/friendly display name
         public static final String OPERATING_SYSTEM_NAME = "majic.os.name";
@@ -183,5 +188,18 @@ public class BuildEnvironment
         }
 
         return Arch.bits64;
+    }
+
+    public static void setProperties(MavenProject project, Logger log) throws IOException
+    {
+        // If this is changed, be sure to update components.xml too. This is just the default expected
+        // extension. TarMojo controls the extension itself, as will a future ZipMojo.
+        PropertyUtils.setPropertyIfNotSet(
+                project, log,
+                BuildEnvironment.Properties.PACKAGE_EXTENSION, "tar.bz2");
+
+        PropertyUtils.setPropertyIfNotSet(
+                project, log,
+                BuildEnvironment.Properties.PACKAGE_CLASSIFIER, getClassifier(project));
     }
 }
