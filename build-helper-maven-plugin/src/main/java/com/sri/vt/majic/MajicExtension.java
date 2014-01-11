@@ -1,7 +1,9 @@
 package com.sri.vt.majic;
 
+import com.sri.vt.majic.util.BuildEnvironment;
 import com.sri.vt.majic.util.CMakeDirectories;
 import com.sri.vt.majic.util.OperatingSystemInfo;
+import com.sri.vt.majic.util.PropertyUtils;
 import org.apache.maven.AbstractMavenLifecycleParticipant;
 import org.apache.maven.MavenExecutionException;
 import org.apache.maven.execution.MavenSession;
@@ -28,18 +30,22 @@ public class MajicExtension extends AbstractMavenLifecycleParticipant
     {
         getLogger().info("Building with Majic.");
 
+        // TODO: loop through dependencies and replaces PACKAGE_CLASSIFIER macros with actual value.
+        
         try
         {
-            OperatingSystemInfo info = new OperatingSystemInfo();
+            OperatingSystemInfo operatingSystemInfo = new OperatingSystemInfo();
 
             for (MavenProject project : session.getProjects())
             {
-                getLogger().info("Configuring project " + project.getArtifact());
-
-                info.setProperties(project, getLogger());
+                operatingSystemInfo.setProperties(project, getLogger());
 
                 CMakeDirectories directories = new CMakeDirectories(project, getLogger());
                 directories.setProperties();
+
+                PropertyUtils.setPropertyIfNotSet(
+                        project, getLogger(),
+                        BuildEnvironment.Properties.PACKAGE_CLASSIFIER, BuildEnvironment.getClassifier(project));
             }
         }
         catch (IOException e)

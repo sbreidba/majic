@@ -1,5 +1,6 @@
 package com.sri.vt.majic.mojo.cmake;
 
+import com.sri.vt.majic.util.BuildEnvironment;
 import com.sri.vt.majic.util.CMakeDirectories;
 import com.sri.vt.majic.util.OperatingSystemInfo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -91,7 +92,14 @@ public class TarMojo extends CMakeCommandMojo
 
         if (shouldAttachTarArtifact())
         {
-            getProjectHelper().attachArtifact(getProject(), getType(), getClassifier(), getTarFile());
+            try
+            {
+                getProjectHelper().attachArtifact(getProject(), getType(), BuildEnvironment.getClassifier(getProject()), getTarFile());
+            }
+            catch (IOException e)
+            {
+                throw new MojoExecutionException("Could not determine classifier: " + e.getMessage());
+            }
         }
     }
 
@@ -103,25 +111,6 @@ public class TarMojo extends CMakeCommandMojo
     public boolean shouldAttachTarArtifact()
     {
         return attachTarArtifact;
-    }
-
-    public String getClassifier()
-    {
-        if (classifier != null)
-        {
-            return classifier;
-        }
-
-        OperatingSystemInfo operatingSystemInfo = null;
-        try
-        {
-            operatingSystemInfo = new OperatingSystemInfo();
-            return operatingSystemInfo.getDistro();
-        }
-        catch (IOException e)
-        {
-            return null;
-        }
     }
 
     public String getType()

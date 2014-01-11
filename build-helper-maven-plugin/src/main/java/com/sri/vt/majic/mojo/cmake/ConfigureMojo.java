@@ -1,5 +1,7 @@
 package com.sri.vt.majic.mojo.cmake;
 
+import com.google.common.collect.ImmutableMap;
+import com.sri.vt.majic.util.BuildEnvironment;
 import com.sri.vt.majic.util.CMakeDirectories;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -19,7 +21,8 @@ public class ConfigureMojo extends CMakeMojo
     @Parameter(defaultValue = "${basedir}")
     private File sourceDirectory;
 
-    // Left blank, this will be computed automatically
+    // Left blank, this will be computed automatically from cmake.generator and cmake.arch.
+    // Set, it will override the use of those variables.
     @Parameter(defaultValue = "", property = "cmake.generator")
     private String generator;
 
@@ -55,6 +58,15 @@ public class ConfigureMojo extends CMakeMojo
     @Parameter(defaultValue = "${skipCMakeConfig}")
     private boolean skip;
 
+    static final Map<BuildEnvironment.Compiler, String> mapCompilerToGeneratorPrefix =
+            ImmutableMap.<BuildEnvironment.Compiler, String>builder()
+            .put(BuildEnvironment.Compiler.gcc, "Unix Makefiles")
+            .put(BuildEnvironment.Compiler.vc2008, "Visual Studio 8")
+            .put(BuildEnvironment.Compiler.vc2009, "Visual Studio 9")
+            .put(BuildEnvironment.Compiler.vc2010, "Visual Studio 10")
+            .put(BuildEnvironment.Compiler.vc2012, "Visual Studio 12")
+            .build();
+
     @Override
     protected boolean getSkip()
     {
@@ -63,17 +75,24 @@ public class ConfigureMojo extends CMakeMojo
 
     protected String getCMakeGenerator()
     {
-        if ((generator != null) && (generator.length() != 0)) return generator;
+        BuildEnvironment.Compiler compiler = BuildEnvironment.getCompiler(getProject());
+        if (compiler == null)
+        {
+            getLog().error("Could not determine compiler type");
+            return null;
+        }
 
-        String cmakeGenerator;
+        BuildEnvironment.Arch arch = BuildEnvironment.getArchitecture(getProject());
+        if (arch == null)
+        {
+            getLog().error("Could not determine compiler architecture");
+            return null;
+        }
+
+        String cmakeGenerator = mapCompilerToGeneratorPrefix.get(compiler);
         if (SystemUtils.IS_OS_WINDOWS)
         {
-            // TODO: this should be more sophisticated - check the arch, etc.
-            cmakeGenerator = "Visual Studio 10 Win64";
-        }
-        else
-        {
-            cmakeGenerator = "Unix Makefiles";
+            cmakeGenerator += " Win" + arch.toString();
         }
 
         return cmakeGenerator;

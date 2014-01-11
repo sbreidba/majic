@@ -9,46 +9,12 @@ import java.util.Properties;
 
 public class CMakeDirectories
 {
+    public static final String CMAKE_BUILD_ROOT_DEFAULT = "${" + BuildEnvironment.Properties.CMAKE_BUILD_ROOT + "}";
 
-    // TODO! docs in the paragraph below are out of date!
-    // cmake build root is an oddity to maven - it's a path that's relative to some fixed point
-    // in the tree. This is computed automatically by following the directory chain up and looking
-    // for the highest-level parent. It can also be set directly via a pom file (though care
-    // must be taken when doing so!)
-    //
-    // Rules for setting this are as follows:
-    //     1. If it is already set and absolute, do nothing. Projects that wish a nested structure
-    //        can define:
-    //          <properties>
-    //             <cmake.build.root>${basedir}</cmake.build.root>
-    //          </properties>
-    //        Projects are also welcome to use an environment variable here:
-    //          <properties>
-    //             <cmake.build.root>${env.MY_PROJECT_ROOT}</cmake.build.root>
-    //          </properties>
-    //     2. If it is already set, *and relative*, append it to the auto-computed path. Note that many (most?)
-    //        Maven file properties automatically expand to their absolute paths.
-    //     3. Auto-computed path: Starting from ${basedir}, traverse the directory structure upwards,
-    //        looking for the last parent directory that contains a pom.xml and
-    //        append "-build" to this directory.
+    public static final String CMAKE_PACKAGE_ROOT_DEFAULT = "${" + BuildEnvironment.Properties.CMAKE_BUILD_ROOT + "}/pkg";
+    public static final String CMAKE_EXPORT_ROOT_DEFAULT = "${" + BuildEnvironment.Properties.CMAKE_BUILD_ROOT + "}/exports";
 
-    // This variable is determined automatically (no override) and can be used in plugins.
-    public static final String CMAKE_TOPLEVEL_PROJECT_DIRECTORY_PROPERTY = "toplevel.project.directory";
-
-    // This variable is set by default by setting it to look like:
-    //      ${toplevel.project.directory}-build/${os.classifier}
-    // If you are Phil, and don't like that, override this value. If you specify a relative path,
-    // it will always be relative to ${toplevel.project.directory}.
-    // If you specify an absolute path, then you are the master of your own destiny.
-    // ... careful with mvn clean!
-    public static final String CMAKE_BUILD_ROOT_PROPERTY = "cmake.build.root";
-    public static final String CMAKE_BUILD_ROOT_DEFAULT = "${" + CMAKE_BUILD_ROOT_PROPERTY + "}";
-
-    public static final String CMAKE_PACKAGE_ROOT_DEFAULT = "${" + CMAKE_BUILD_ROOT_PROPERTY + "}/pkg";
-    public static final String CMAKE_EXPORT_ROOT_DEFAULT = "${" + CMAKE_BUILD_ROOT_PROPERTY + "}/exports";
-
-    public static final String CMAKE_PROJECT_BIN_DIRECTORY_PROPERTY = "cmake.project.bin.directory";
-    public static final String CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT = "${" + CMAKE_BUILD_ROOT_PROPERTY + "}/${project.artifactId}";
+    public static final String CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT = "${" + BuildEnvironment.Properties.CMAKE_BUILD_ROOT + "}/${project.artifactId}";
     public static final String CMAKE_PROJECT_PACKAGEDIR_DEFAULT = CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT + "/exports";
     public static final String CMAKE_PROJECT_INSTALLDIR_DEFAULT = CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT + "/exports/${project.artifactId}-${project.version}";
 
@@ -60,13 +26,10 @@ public class CMakeDirectories
 
     public void setProperties() throws IOException
     {
-        OperatingSystemInfo operatingSystemInfo = new OperatingSystemInfo();
-        String distro = operatingSystemInfo.getDistro();
-
         File topLevel = updateTopLevel();
         if (topLevel != null)
         {
-            File buildRoot = updateBuildRoot(topLevel, distro);
+            File buildRoot = updateBuildRoot(topLevel);
             if (buildRoot != null)
             {
                 updateProjectBindir(buildRoot);
@@ -76,10 +39,10 @@ public class CMakeDirectories
 
     public File updateTopLevel() throws IOException
     {
-        if (getProperties().contains(CMAKE_TOPLEVEL_PROJECT_DIRECTORY_PROPERTY))
+        if (getProperties().contains(BuildEnvironment.Properties.CMAKE_TOPLEVEL_PROJECT_DIRECTORY))
         {
             getLog().debug("Found existing toplevel directory property");
-            return new File(getProperties().getProperty(CMAKE_TOPLEVEL_PROJECT_DIRECTORY_PROPERTY));
+            return new File(getProperties().getProperty(BuildEnvironment.Properties.CMAKE_TOPLEVEL_PROJECT_DIRECTORY));
         }
 
         File currentPath = getProject().getBasedir();
@@ -103,22 +66,22 @@ public class CMakeDirectories
         {
             levels--;
             getLog().debug("found a top-level parent pom " + levels + " levels up");
-            getLog().info("Setting " + CMAKE_TOPLEVEL_PROJECT_DIRECTORY_PROPERTY + " to " + lastPomFound.getAbsolutePath());
-            getProperties().setProperty(CMAKE_TOPLEVEL_PROJECT_DIRECTORY_PROPERTY, lastPomFound.getAbsolutePath());
+            getLog().debug("Setting " + BuildEnvironment.Properties.CMAKE_TOPLEVEL_PROJECT_DIRECTORY + " to " + lastPomFound.getAbsolutePath());
+            getProperties().setProperty(BuildEnvironment.Properties.CMAKE_TOPLEVEL_PROJECT_DIRECTORY, lastPomFound.getAbsolutePath());
             return lastPomFound.getAbsoluteFile();
         }
 
-        getLog().error("Could not determine " + CMAKE_TOPLEVEL_PROJECT_DIRECTORY_PROPERTY);
+        getLog().error("Could not determine " + BuildEnvironment.Properties.CMAKE_TOPLEVEL_PROJECT_DIRECTORY);
         return null;
     }
 
-    public File updateBuildRoot(File topLevel, String distro) throws IOException
+    public File updateBuildRoot(File topLevel) throws IOException
     {
         File updatedBuildRoot = null;
-        String userBuildRootString = getProperties().getProperty(CMAKE_BUILD_ROOT_PROPERTY, "");
+        String userBuildRootString = getProperties().getProperty(BuildEnvironment.Properties.CMAKE_BUILD_ROOT, "");
         if (userBuildRootString.length() != 0)
         {
-            File userBuildRoot = new File(getProperties().getProperty(CMAKE_BUILD_ROOT_PROPERTY));
+            File userBuildRoot = new File(getProperties().getProperty(BuildEnvironment.Properties.CMAKE_BUILD_ROOT));
             if (userBuildRoot.isAbsolute())
             {
                 // nothing to set - already there
@@ -132,19 +95,23 @@ public class CMakeDirectories
         {
             // empty build root, set defaults
             String path = topLevel.getAbsolutePath() + "-build";
-            updatedBuildRoot = new File(path, distro);
+            updatedBuildRoot = new File(path, BuildEnvironment.getClassifier(getProject()));
         }
 
-        getLog().info("Setting " + CMAKE_BUILD_ROOT_PROPERTY + " to " + updatedBuildRoot.getAbsolutePath());
-        getProperties().setProperty(CMAKE_BUILD_ROOT_PROPERTY, updatedBuildRoot.getAbsolutePath());
+        getLog().debug("Setting " + BuildEnvironment.Properties.CMAKE_BUILD_ROOT + " to " + updatedBuildRoot.getAbsolutePath());
+        getProperties().setProperty(
+                BuildEnvironment.Properties.CMAKE_BUILD_ROOT,
+                updatedBuildRoot.getAbsolutePath());
         return updatedBuildRoot.getAbsoluteFile();
     }
 
     public File updateProjectBindir(File buildRoot) throws IOException
     {
         File projectBin = new File(buildRoot, getProject().getArtifactId());
-        getLog().info("Setting " + CMAKE_PROJECT_BIN_DIRECTORY_PROPERTY + " to " + projectBin.getAbsolutePath());
-        getProperties().setProperty(CMAKE_PROJECT_BIN_DIRECTORY_PROPERTY, projectBin.getAbsolutePath());
+        getLog().debug("Setting " + BuildEnvironment.Properties.CMAKE_PROJECT_BIN_DIRECTORY + " to " + projectBin.getAbsolutePath());
+        getProperties().setProperty(
+                BuildEnvironment.Properties.CMAKE_PROJECT_BIN_DIRECTORY,
+                projectBin.getAbsolutePath());
         return projectBin.getAbsoluteFile();
     }
 
@@ -159,7 +126,6 @@ public class CMakeDirectories
     protected Properties getProperties()
     {
         return getProject().getProperties();
-
     }
 
     public Logger getLog()

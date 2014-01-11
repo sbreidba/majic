@@ -91,10 +91,10 @@ public class OperatingSystemInfo
 
     public void setProperties(MavenProject project, Logger log)
     {
-        PropertyUtils.setPropertyIfNotSet(project, log, "os.name", getName());
-        PropertyUtils.setPropertyIfNotSet(project, log, "os.arch", getArch());
-        PropertyUtils.setPropertyIfNotSet(project, log, "os.distro", getDistro());
-        PropertyUtils.setPropertyIfNotSet(project, log, "os.classifier", getClassifier());
+        PropertyUtils.setPropertyIfNotSet(project, log, BuildEnvironment.Properties.OPERATING_SYSTEM_NAME, getName());
+        PropertyUtils.setPropertyIfNotSet(project, log, BuildEnvironment.Properties.OPERATING_SYSTEM_ARCHITECTURE, getArch());
+        PropertyUtils.setPropertyIfNotSet(project, log, BuildEnvironment.Properties.OPERATING_SYSTEM_DISTRIBUTION, getDistro());
+        PropertyUtils.setPropertyIfNotSet(project, log, BuildEnvironment.Properties.OPERATING_SYSTEM_CLASSIFIER, getClassifier());
     }
     
     public String getName()
@@ -115,8 +115,7 @@ public class OperatingSystemInfo
     public String getClassifier()
     {
         // In general, we can default to this being the same as the distro,
-        // but for centos/rhel it's good to default to what the build machine
-        // is going to create.
+        // but for simplicity's sake we map RHEL to Centos.
         String classifier = getDistro();
         if (getDistro().startsWith(DISTRO_RED_HAT_ENTERPRISE))
         {
