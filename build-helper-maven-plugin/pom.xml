@@ -171,7 +171,7 @@
                 <version>2.9.1</version>
                 <reportSets>
                     <reportSet>
-                        <configuration combine.children="append">
+                        <configuration>
                             <show>private</show>
                         </configuration>
                         <reports>
