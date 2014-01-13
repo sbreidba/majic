@@ -4,7 +4,7 @@
 
     <groupId>com.sri.vt.majic</groupId>
     <artifactId>majic</artifactId>
-    <version>0.1.7-SNAPSHOT</version>
+    <version>0.1.8-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Majic</name>
     <description>
@@ -89,7 +89,7 @@
     </ciManagement>
 
     <scm>
-        <connection>scm:git:ssh://git-open.sarnoff.internal/scm/vision/clavin.git</connection>
+        <connection>scm:git:ssh://git-open.sarnoff.internal/scm/vision/majic.git</connection>
         <url>http://git-open.sarnoff.internal/contents</url>
     </scm>
 

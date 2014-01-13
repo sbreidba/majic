@@ -10,7 +10,7 @@
     <parent>
         <groupId>com.sri.vt.majic</groupId>
         <artifactId>majic</artifactId>
-        <version>0.1.7-SNAPSHOT</version>
+        <version>0.1.8-SNAPSHOT</version>
     </parent>
 
     <artifactId>majic-documentation</artifactId>
