@@ -21,7 +21,7 @@ public class BuildEnvironment
         //       baz/pom.xml
         // Then the toplevel project directory will be ~/Devel/foo for foo, as well as the bar and baz modules.
         // This is computed by walking the directory tree up from any given module until no more pom files are found.
-        public static final String CMAKE_TOPLEVEL_PROJECT_DIRECTORY = "toplevel.project.directory";
+        public static final String CMAKE_TOPLEVEL_PROJECT_DIRECTORY = "majic.toplevel.project.directory";
 
         // The CMake build root is set by default by to:
         //      ${toplevel.project.directory}-build/${package.classifier}
@@ -55,11 +55,11 @@ public class BuildEnvironment
         // The package classifier is set by default to ${majic.os.classifier}-${cmake.compiler}-${cmake.arch}.
         // Note that for dependencies, this property must be used as it is the only one that is interpolated
         // at build time.
-        public static final String PACKAGE_CLASSIFIER = "package.classifier";
+        public static final String PACKAGE_CLASSIFIER = "majic.package.classifier";
 
         // The package extension is the maven "type", e.g. tar.bz2 or zip
         // This variable is set by default to "tar.bz2".
-        public static final String PACKAGE_EXTENSION = "tar.bz2";
+        public static final String PACKAGE_EXTENSION = "majic.package.extension";
 
         // The OS name is a human-readable/friendly display name
         public static final String OPERATING_SYSTEM_NAME = "majic.os.name";
