@@ -1,8 +1,6 @@
 package com.sri.vt.majic.util;
 
 import org.apache.commons.lang3.SystemUtils;
-import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.logging.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -89,14 +87,14 @@ public class OperatingSystemInfo
         }
     }
 
-    public void setProperties(MavenProject project, Logger log)
+    public void updateProperties(PropertyCache updatedProperties)
     {
-        PropertyUtils.setPropertyIfNotSet(project, log, BuildEnvironment.Properties.OPERATING_SYSTEM_NAME, getName());
-        PropertyUtils.setPropertyIfNotSet(project, log, BuildEnvironment.Properties.OPERATING_SYSTEM_ARCHITECTURE, getArch());
-        PropertyUtils.setPropertyIfNotSet(project, log, BuildEnvironment.Properties.OPERATING_SYSTEM_DISTRIBUTION, getDistro());
-        PropertyUtils.setPropertyIfNotSet(project, log, BuildEnvironment.Properties.OPERATING_SYSTEM_CLASSIFIER, getClassifier());
+        updatedProperties.setProperty(BuildEnvironment.Properties.OPERATING_SYSTEM_NAME, getName());
+        updatedProperties.setProperty(BuildEnvironment.Properties.OPERATING_SYSTEM_ARCHITECTURE, getArch());
+        updatedProperties.setProperty(BuildEnvironment.Properties.OPERATING_SYSTEM_DISTRIBUTION, getDistro());
+        updatedProperties.setProperty(BuildEnvironment.Properties.OPERATING_SYSTEM_CLASSIFIER, getClassifier());
     }
-    
+
     public String getName()
     {
         return name;

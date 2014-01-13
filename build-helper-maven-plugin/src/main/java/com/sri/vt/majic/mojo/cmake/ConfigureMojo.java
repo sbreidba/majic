@@ -55,7 +55,7 @@ public class ConfigureMojo extends CMakeMojo
     @Parameter(defaultValue = "true")
     private boolean addCMakeConfigurationTypes;
 
-    @Parameter(defaultValue = "${skipCMakeConfig}")
+    @Parameter(defaultValue = "false", property = "skipCMakeConfig")
     private boolean skip;
 
     static final Map<BuildEnvironment.Compiler, String> mapCompilerToGeneratorPrefix =

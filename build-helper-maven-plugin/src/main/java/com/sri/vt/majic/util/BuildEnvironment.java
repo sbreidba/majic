@@ -2,7 +2,6 @@ package com.sri.vt.majic.util;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.logging.Logger;
 
 import java.io.IOException;
 import java.util.Map;
@@ -58,7 +57,8 @@ public class BuildEnvironment
         public static final String PACKAGE_CLASSIFIER = "majic.package.classifier";
 
         // The package extension is the maven "type", e.g. tar.bz2 or zip
-        // This variable is set by default to "tar.bz2".
+        // This variable is set by default to "tar.bz2". Note that this is just a convenience for pom file usage.
+        // Changing it does not alter plugin behavior.
         public static final String PACKAGE_EXTENSION = "majic.package.extension";
 
         // The OS name is a human-readable/friendly display name
@@ -135,71 +135,67 @@ public class BuildEnvironment
     
     public static String getClassifier(MavenProject project) throws IOException
     {
-        OperatingSystemInfo info = new OperatingSystemInfo();
-        return info.getClassifier() + "-" + getCompiler(project) + "-" + getArchitecture(project);
+        return project.getProperties().getProperty(Properties.PACKAGE_CLASSIFIER);
     }
 
     public static Compiler getCompiler(MavenProject project)
     {
-        String compiler = (String)project.getProjectReferences().get(Properties.CMAKE_COMPILER);
-
-        // default to property
-        if ((compiler != null) && (compiler.length() != 0))
-        {
-            return Compiler.fromString(compiler);
-        }
-
-        if (SystemUtils.IS_OS_WINDOWS)
-        {
-            Map<String, String> env = System.getenv();
-            if (env.containsKey("VS120COMNTOOLS"))
-            {
-                return Compiler.vc2012;
-            }
-            else if (env.containsKey("VS100COMNTOOLS"))
-            {
-                return Compiler.vc2010;
-            }
-            else if (env.containsKey("VS90COMNTOOLS"))
-            {
-                return Compiler.vc2009;
-            }
-            else if (env.containsKey("VS80COMNTOOLS"))
-            {
-                return Compiler.vc2008;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        return Compiler.gcc;
+        String compiler = project.getProperties().getProperty(Properties.CMAKE_COMPILER);
+        return Compiler.fromString(compiler);
     }
 
     public static Arch getArchitecture(MavenProject project)
     {
-        String arch = (String)project.getProjectReferences().get(Properties.CMAKE_ARCH);
-
-        // default to property
-        if ((arch != null) && (arch.length() != 0))
-        {
-            return Arch.fromString(arch);
-        }
-
-        return Arch.bits64;
+        String arch = project.getProperties().getProperty(Properties.CMAKE_ARCH);
+        return Arch.fromString(arch);
     }
 
-    public static void setProperties(MavenProject project, Logger log) throws IOException
+    public static void updateProperties(PropertyCache properties) throws IOException
     {
+        String arch = properties.getProject().getProperties().getProperty(Properties.CMAKE_ARCH, Arch.bits64.toString());
+        properties.setProperty(Properties.CMAKE_ARCH, arch);
+
+        String compiler = properties.getProject().getProperties().getProperty(Properties.CMAKE_COMPILER);
+        if ((compiler == null) || (compiler.length() == 0))
+        {
+            if (SystemUtils.IS_OS_WINDOWS)
+            {
+                Map<String, String> env = System.getenv();
+                if (env.containsKey("VS120COMNTOOLS"))
+                {
+                    compiler = Compiler.vc2012.toString();
+                }
+                else if (env.containsKey("VS100COMNTOOLS"))
+                {
+                    compiler = Compiler.vc2010.toString();
+                }
+                else if (env.containsKey("VS90COMNTOOLS"))
+                {
+                    compiler = Compiler.vc2009.toString();
+                }
+                else if (env.containsKey("VS80COMNTOOLS"))
+                {
+                    compiler = Compiler.vc2008.toString();
+                }
+            }
+            else
+            {
+                compiler = Compiler.gcc.toString();
+            }
+            properties.setProperty(Properties.CMAKE_COMPILER, compiler);
+        }
+        
         // If this is changed, be sure to update components.xml too. This is just the default expected
         // extension. TarMojo controls the extension itself, as will a future ZipMojo.
-        PropertyUtils.setPropertyIfNotSet(
-                project, log,
-                BuildEnvironment.Properties.PACKAGE_EXTENSION, "tar.bz2");
+        properties.setProperty(Properties.PACKAGE_EXTENSION, "tar.bz2");
 
-        PropertyUtils.setPropertyIfNotSet(
-                project, log,
-                BuildEnvironment.Properties.PACKAGE_CLASSIFIER, getClassifier(project));
+        String classifier = properties.getProject().getProperties().getProperty(Properties.PACKAGE_CLASSIFIER);
+        if ((classifier == null) || (classifier.length() == 0))
+        {
+            OperatingSystemInfo info = new OperatingSystemInfo();
+            classifier = info.getClassifier() + "-" + compiler + "-" + arch;
+
+            properties.setProperty(Properties.PACKAGE_CLASSIFIER, classifier);
+        }
     }
 }
