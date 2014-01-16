@@ -16,7 +16,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Mojo(name="export-artifacts", defaultPhase= LifecyclePhase.VERIFY)
+@Mojo(name="export-artifacts", defaultPhase = LifecyclePhase.VERIFY)
 public class ExportArtifactsMojo extends AbstractMojo
 {
     @Parameter(defaultValue = "false", property = "exportArtifacts.skip")

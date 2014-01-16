@@ -1,10 +1,9 @@
 package com.sri.vt.majic.util;
 
-import org.apache.commons.lang3.SystemUtils;
+import org.apache.maven.MavenExecutionException;
 import org.apache.maven.project.MavenProject;
 
 import java.io.IOException;
-import java.util.Map;
 
 public class BuildEnvironment
 {
@@ -58,7 +57,8 @@ public class BuildEnvironment
 
         // The package extension is the maven "type", e.g. tar.bz2 or zip
         // This variable is set by default to "tar.bz2". Note that this is just a convenience for pom file usage.
-        // Changing it does not alter plugin behavior.
+        // Changing it does not alter plugin behavior. It's not used in this code base, but it's defined in
+        // the Majic parent pom, so it's here for documentation purposes.
         public static final String PACKAGE_EXTENSION = "majic.package.extension";
 
         // The OS name is a human-readable/friendly display name
@@ -133,9 +133,29 @@ public class BuildEnvironment
         }
     }
     
-    public static String getClassifier(MavenProject project) throws IOException
+    public static String getPackageClassifier(MavenProject project) throws IOException
     {
-        return project.getProperties().getProperty(Properties.PACKAGE_CLASSIFIER);
+        String classifier = project.getProperties().getProperty(Properties.PACKAGE_CLASSIFIER);
+        if ((classifier != null) && (classifier.length() > 0))
+        {
+            return classifier;
+        }
+
+        String osClassifier = getOperatingSystemClassifier(project);
+        if (osClassifier == null) return null;
+
+        Compiler compiler = getCompiler(project);
+        if (compiler == null) return null;
+
+        Arch arch = getArchitecture(project);
+        if (arch == null) return null;
+
+        return arch + "-" + compiler.toString() + "-" + arch.toString();
+    }
+
+    public static String getOperatingSystemClassifier(MavenProject project)
+    {
+        return project.getProperties().getProperty(Properties.OPERATING_SYSTEM_CLASSIFIER);
     }
 
     public static Compiler getCompiler(MavenProject project)
@@ -150,52 +170,23 @@ public class BuildEnvironment
         return Arch.fromString(arch);
     }
 
-    public static void updateProperties(PropertyCache properties) throws IOException
+    public static void checkSanity(MavenProject project) throws MavenExecutionException
     {
-        String arch = properties.getProject().getProperties().getProperty(Properties.CMAKE_ARCH, Arch.bits64.toString());
-        properties.setProperty(Properties.CMAKE_ARCH, arch);
-
-        String compiler = properties.getProject().getProperties().getProperty(Properties.CMAKE_COMPILER);
-        if ((compiler == null) || (compiler.length() == 0))
+        try
         {
-            if (SystemUtils.IS_OS_WINDOWS)
+            if (getPackageClassifier(project) == null)
             {
-                Map<String, String> env = System.getenv();
-                if (env.containsKey("VS120COMNTOOLS"))
-                {
-                    compiler = Compiler.vc2012.toString();
-                }
-                else if (env.containsKey("VS100COMNTOOLS"))
-                {
-                    compiler = Compiler.vc2010.toString();
-                }
-                else if (env.containsKey("VS90COMNTOOLS"))
-                {
-                    compiler = Compiler.vc2009.toString();
-                }
-                else if (env.containsKey("VS80COMNTOOLS"))
-                {
-                    compiler = Compiler.vc2008.toString();
-                }
+                throw new MavenExecutionException(
+                        "Could not determine the classifier for the output.\n"
+                        + "Are you using the majic parent pom? (It will try to set that property for you.)\n"
+                        + "Alternatively, you can manually set " + Properties.PACKAGE_CLASSIFIER + "."
+                        , project.getFile()
+                );
             }
-            else
-            {
-                compiler = Compiler.gcc.toString();
-            }
-            properties.setProperty(Properties.CMAKE_COMPILER, compiler);
         }
-        
-        // If this is changed, be sure to update components.xml too. This is just the default expected
-        // extension. TarMojo controls the extension itself, as will a future ZipMojo.
-        properties.setProperty(Properties.PACKAGE_EXTENSION, "tar.bz2");
-
-        String classifier = properties.getProject().getProperties().getProperty(Properties.PACKAGE_CLASSIFIER);
-        if ((classifier == null) || (classifier.length() == 0))
+        catch (IOException e)
         {
-            OperatingSystemInfo info = new OperatingSystemInfo();
-            classifier = info.getClassifier() + "-" + compiler + "-" + arch;
-
-            properties.setProperty(Properties.PACKAGE_CLASSIFIER, classifier);
+            throw new MavenExecutionException(e.getMessage(), project.getFile());
         }
     }
 }

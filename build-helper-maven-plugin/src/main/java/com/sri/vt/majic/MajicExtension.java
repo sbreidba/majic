@@ -2,7 +2,6 @@ package com.sri.vt.majic;
 
 import com.sri.vt.majic.util.BuildEnvironment;
 import com.sri.vt.majic.util.CMakeDirectories;
-import com.sri.vt.majic.util.OperatingSystemInfo;
 import com.sri.vt.majic.util.PropertyCache;
 import org.apache.maven.AbstractMavenLifecycleParticipant;
 import org.apache.maven.MavenExecutionException;
@@ -33,11 +32,10 @@ public class MajicExtension extends AbstractMavenLifecycleParticipant
 
         try
         {
-            OperatingSystemInfo operatingSystemInfo = new OperatingSystemInfo();
-
             for (MavenProject project : session.getProjects())
             {
-                UpdateProperties(operatingSystemInfo, project);
+                BuildEnvironment.checkSanity(project);
+                UpdateProperties(project);
             }
         }
         catch (IOException e)
@@ -52,13 +50,9 @@ public class MajicExtension extends AbstractMavenLifecycleParticipant
         super.afterProjectsRead(session);
     }
 
-    private void UpdateProperties(OperatingSystemInfo operatingSystemInfo, MavenProject project) throws IOException, InterpolationException
+    private void UpdateProperties(MavenProject project) throws IOException, InterpolationException
     {
         PropertyCache propertyCache = new PropertyCache(project, getLogger());
-
-        operatingSystemInfo.updateProperties(propertyCache);
-
-        BuildEnvironment.updateProperties(propertyCache);
 
         CMakeDirectories directories = new CMakeDirectories();
         directories.updateProperties(propertyCache);

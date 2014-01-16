@@ -10,7 +10,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import java.io.File;
 import java.io.IOException;
 
-@Mojo(name="cmake-untar", defaultPhase = LifecyclePhase.INITIALIZE, requiresProject = true)
+@Mojo(name="cmake-untar", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresProject = true)
 public class UntarMojo extends CMakeCommandMojo
 {
     @Parameter(defaultValue = "tar xjf", required = true)

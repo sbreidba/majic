@@ -1,8 +1,5 @@
 package com.sri.vt.majic.util;
 
-import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.logging.Logger;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -87,7 +84,7 @@ public class CMakeDirectories
         {
             // empty build root, set defaults
             String path = topLevel.getAbsolutePath() + "-build";
-            updatedBuildRoot = new File(path, BuildEnvironment.getClassifier(propertyCache.getProject()));
+            updatedBuildRoot = new File(path, BuildEnvironment.getPackageClassifier(propertyCache.getProject()));
         }
 
         propertyCache.setProperty(BuildEnvironment.Properties.CMAKE_BUILD_ROOT, updatedBuildRoot.getAbsolutePath());
