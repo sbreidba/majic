@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- do not specify a parent here - that causes problems with the site plugin -->
+
+    <groupId>com.sri.vt.majic</groupId>
+    <artifactId>majic-parent</artifactId>
+    <version>0.1.8-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Majic Parent POM</name>
+    <description>
+        This pom file contains properties and settings common to all Majic projects.
+    </description>
+    <organization>
+        <name>SRI Vision Technologies Lab</name>
+        <url>https://wiki.sri.com/display/VT/Home</url>
+    </organization>
+
+    <prerequisites>
+        <maven>3.0.5</maven>
+    </prerequisites>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>artifactory-vt</id>
+            <name>SRI VT Repository</name>
+            <url>https://artifactory-vt.sarnoff.internal/artifactory/repo</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <majic.os.classifier>unknown</majic.os.classifier>
+        <cmake.compiler>unknown</cmake.compiler>
+        <cmake.arch>64</cmake.arch>
+
+        <!--
+        This is the default classifier. Projects are free to override this as required (e.g.
+        vtcmake doesn't use the compiler or architecture in it's classifier.
+        -->
+        <majic.package.classifier>${majic.os.classifier}-${cmake.compiler}-${cmake.arch}</majic.package.classifier>
+        <majic.package.extension>tar.bz2</majic.package.extension>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>os-win7</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                    <name>windows 7</name>
+                </os>
+            </activation>
+            <properties>
+                <majic.os.classifier>win7</majic.os.classifier>
+            </properties>
+        </profile>
+
+        <profile>
+            <!--
+            the activation here is clearly too simple, but there are few options.
+            it's possible that the <version> could be used to distinguish variants/major versions
+            but I don't know how to map 2.6.32-358.18.1.el6.x86_64 to "centos6". (obviously
+            -->
+            <id>os-centos6</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                    <name>linux</name>
+                </os>
+            </activation>
+            <properties>
+                <majic.os.classifier>centos6</majic.os.classifier>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>compiler-gcc</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                    <name>linux</name>
+                </os>
+            </activation>
+            <properties>
+                <cmake.compiler>gcc</cmake.compiler>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>compiler-vc2008</id>
+            <activation>
+                <property>
+                    <name>env.VS80COMNTOOLS</name>
+                </property>
+            </activation>
+            <properties>
+                <cmake.compiler>vc2008</cmake.compiler>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>compiler-vc2009</id>
+            <activation>
+                <property>
+                    <name>env.VS90COMNTOOLS</name>
+                </property>
+            </activation>
+            <properties>
+                <cmake.compiler>vc2009</cmake.compiler>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>compiler-vc2010</id>
+            <activation>
+                <property>
+                    <name>env.VS100COMNTOOLS</name>
+                </property>
+            </activation>
+            <properties>
+                <cmake.compiler>vc2010</cmake.compiler>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>compiler-vc2012</id>
+            <activation>
+                <property>
+                    <name>env.VS120COMNTOOLS</name>
+                </property>
+            </activation>
+            <properties>
+                <cmake.compiler>vc2012</cmake.compiler>
+            </properties>
+        </profile>
+    </profiles>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.sri.vt.majic</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>0.1.8-SNAPSHOT</version>
+                    <extensions>true</extensions>
+                </plugin>
+
+                <!-- exec and clean are needed for the majic build-helper -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>2.5</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>1.2.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>
