@@ -1,36 +1,35 @@
+<component-set>
+    <components>
+        <component>
+            <role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
+            <role-hint>majic-cmake</role-hint>
+            <implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping</implementation>
+            <configuration>
+                <phases>
+                    <generate-sources>com.sri.vt.majic:build-helper-maven-plugin:cmake-untar-dependencies</generate-sources>
+                    <process-resources>com.sri.vt.majic:build-helper-maven-plugin:cmake-configure</process-resources>
+                    <compile>com.sri.vt.majic:build-helper-maven-plugin:cmake-compile</compile>
+                    <test>com.sri.vt.majic:build-helper-maven-plugin:cmake-test</test>
+                    <prepare-package>com.sri.vt.majic:build-helper-maven-plugin:cmake-install</prepare-package>
+                    <package>com.sri.vt.majic:build-helper-maven-plugin:cmake-tar</package>
+                    <clean>com.sri.vt.majic:build-helper-maven-plugin:cmake-clean</clean>
+                    <install>org.apache.maven.plugins:maven-install-plugin:install</install>
+                    <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
+                </phases>
+            </configuration>
+        </component>
 
-    <component-set>
-        <components>
-            <component>
-                <role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
-                <role-hint>majic-cmake</role-hint>
-                <implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping</implementation>
-                <configuration>
-                    <phases>
-                        <initialize>com.sri.vt.majic:build-helper-maven-plugin:cmake-untar-dependencies</initialize>
-                        <process-resources>com.sri.vt.majic:build-helper-maven-plugin:cmake-configure</process-resources>
-                        <compile>com.sri.vt.majic:build-helper-maven-plugin:cmake-compile</compile>
-                        <test>com.sri.vt.majic:build-helper-maven-plugin:cmake-test</test>
-                        <prepare-package>com.sri.vt.majic:build-helper-maven-plugin:cmake-install</prepare-package>
-                        <package>com.sri.vt.majic:build-helper-maven-plugin:cmake-tar</package>
-                        <clean>com.sri.vt.majic:build-helper-maven-plugin:cmake-clean</clean>
-                        <install>org.apache.maven.plugins:maven-install-plugin:install</install>
-                        <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
-                    </phases>
-                </configuration>
-            </component>
-            <component>
-                <role>org.apache.maven.artifact.handler.ArtifactHandler</role>
-                <role-hint>majic-cmake</role-hint>
-                <implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler</implementation>
-                <configuration>
-                    <!--the extension used by Maven in the repository-->
-                    <extension>tar.bz2</extension>
-                    <!--the type used when specifying dependencies etc.-->
-                    <type>tar.bz2</type>
-                    <!--the packaging used when declaring an implementation of the packaging-->
-                    <packaging>majic-cmake</packaging>
-                </configuration>
-            </component>
-        </components>
-    </component-set>
+        <component>
+            <role>org.apache.maven.artifact.handler.ArtifactHandler</role>
+            <role-hint>majic-cmake</role-hint>
+            <implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler</implementation>
+            <configuration>
+                <type>majic-cmake</type>
+                <extension>tar.bz2</extension>
+                <packaging>majic-cmake</packaging>
+                <addedToClasspath>false</addedToClasspath>
+            </configuration>
+        </component>
+    </components>
+</component-set>
+

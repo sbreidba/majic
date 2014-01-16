@@ -93,7 +93,7 @@ public class TarMojo extends CMakeCommandMojo
         {
             try
             {
-                getProjectHelper().attachArtifact(getProject(), getType(), BuildEnvironment.getClassifier(getProject()), getTarFile());
+                getProjectHelper().attachArtifact(getProject(), getType(), BuildEnvironment.getPackageClassifier(getProject()), getTarFile());
             }
             catch (IOException e)
             {

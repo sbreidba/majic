@@ -3,7 +3,7 @@ package com.sri.vt.majic.util;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.interpolation.InterpolationException;
 import org.codehaus.plexus.interpolation.Interpolator;
-import org.codehaus.plexus.interpolation.StringSearchInterpolator;
+import org.codehaus.plexus.interpolation.RegexBasedInterpolator;
 import org.codehaus.plexus.logging.Logger;
 
 import java.io.IOException;
@@ -14,10 +14,10 @@ import java.util.Map;
 // of setting it directly. This allows values to be reinterpolated as required.
 public class PropertyCache
 {
-    public PropertyCache(MavenProject project, Logger logger)
+    public PropertyCache(MavenProject project, Logger log)
     {
         this.project = project;
-        this.log = logger;
+        this.log = log;
     }
 
     private MavenProject project;
@@ -55,20 +55,13 @@ public class PropertyCache
 
     public void interpolate() throws IOException, InterpolationException
     {
-        Interpolator interpolator = new StringSearchInterpolator();
+        Interpolator interpolator = new RegexBasedInterpolator();
         interpolator.addValueSource(new PropertiesValueSource(getChangedProperties()));
 
         for (Object objPropertyKey : getProject().getProperties().keySet())
         {
             String property = getProject().getProperties().getProperty((String)objPropertyKey);
             getProject().getProperties().setProperty((String)objPropertyKey, interpolator.interpolate(property));
-        }
-
-        for (org.apache.maven.model.Dependency dependency : getProject().getModel().getDependencies())
-        {
-            // Could interpolate other values here if needed
-            dependency.setType(interpolator.interpolate(dependency.getType()));
-            dependency.setClassifier(interpolator.interpolate(dependency.getClassifier()));
         }
     }
 }

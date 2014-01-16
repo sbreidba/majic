@@ -13,10 +13,6 @@
     </description>
     <inceptionYear>2013</inceptionYear>
 
-    <prerequisites>
-        <maven>3.0.0</maven>
-    </prerequisites>
-
     <distributionManagement>
         <site>
             <id>majic.website</id>
@@ -30,7 +26,7 @@
         <maven.javadoc.plugin.version>2.9.1</maven.javadoc.plugin.version>
         <maven.plugin.plugin.version>3.2</maven.plugin.plugin.version>
     </properties>
-    
+
     <build>
         <pluginManagement>
             <plugins>
@@ -85,7 +81,7 @@
 
     <ciManagement>
         <system>Jenkins</system>
-        <url>http://build-open/job/vt-clavin/</url>
+        <url>http://build-open/job/vt-majic/</url>
     </ciManagement>
 
     <scm>
@@ -96,5 +92,6 @@
     <modules>
         <module>majic-documentation</module>
         <module>build-helper-maven-plugin</module>
+        <module>majic-parent</module>
     </modules>
 </project>
