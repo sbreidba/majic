@@ -135,22 +135,7 @@ public class BuildEnvironment
     
     public static String getPackageClassifier(MavenProject project) throws IOException
     {
-        String classifier = project.getProperties().getProperty(Properties.PACKAGE_CLASSIFIER);
-        if ((classifier != null) && (classifier.length() > 0))
-        {
-            return classifier;
-        }
-
-        String osClassifier = getOperatingSystemClassifier(project);
-        if (osClassifier == null) return null;
-
-        Compiler compiler = getCompiler(project);
-        if (compiler == null) return null;
-
-        Arch arch = getArchitecture(project);
-        if (arch == null) return null;
-
-        return arch + "-" + compiler.toString() + "-" + arch.toString();
+        return project.getProperties().getProperty(Properties.PACKAGE_CLASSIFIER);
     }
 
     public static String getOperatingSystemClassifier(MavenProject project)
@@ -172,21 +157,9 @@ public class BuildEnvironment
 
     public static void checkSanity(MavenProject project) throws MavenExecutionException
     {
-        try
+        if (getCompiler(project) == null)
         {
-            if (getPackageClassifier(project) == null)
-            {
-                throw new MavenExecutionException(
-                        "Could not determine the classifier for the output.\n"
-                        + "Are you using the majic parent pom? (It will try to set that property for you.)\n"
-                        + "Alternatively, you can manually set " + Properties.PACKAGE_CLASSIFIER + "."
-                        , project.getFile()
-                );
-            }
-        }
-        catch (IOException e)
-        {
-            throw new MavenExecutionException(e.getMessage(), project.getFile());
+            throw new MavenExecutionException("Could not determine the compiler to use.", project.getFile());
         }
     }
 }
