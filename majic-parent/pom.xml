@@ -36,6 +36,7 @@
 
         <majic.os.classifier>unknown</majic.os.classifier>
         <cmake.compiler>unknown</cmake.compiler>
+
         <cmake.arch>64</cmake.arch>
 
         <!--
@@ -47,6 +48,20 @@
     </properties>
 
     <profiles>
+        <profile>
+            <id>arch-64</id>
+            <activation>
+                <property>
+                    <name>cmake.arch</name>
+                    <value>64</value>
+                </property>
+            </activation>
+            <properties>
+                <!-- when launching vcvarsall.bat -->
+                <majic.vcvars.arch>x64</majic.vcvars.arch>
+            </properties>
+        </profile>
+
         <profile>
             <id>os-win7</id>
             <activation>
@@ -100,6 +115,7 @@
             </activation>
             <properties>
                 <cmake.compiler>vc2008</cmake.compiler>
+                <nmake.msvcver>1400</nmake.msvcver>
             </properties>
         </profile>
 
@@ -112,6 +128,7 @@
             </activation>
             <properties>
                 <cmake.compiler>vc2009</cmake.compiler>
+                <nmake.msvcver>1500</nmake.msvcver>
             </properties>
         </profile>
 
@@ -124,6 +141,7 @@
             </activation>
             <properties>
                 <cmake.compiler>vc2010</cmake.compiler>
+                <nmake.msvcver>1600</nmake.msvcver>
             </properties>
         </profile>
 
@@ -136,6 +154,7 @@
             </activation>
             <properties>
                 <cmake.compiler>vc2012</cmake.compiler>
+                <nmake.msvcver>1700</nmake.msvcver>
             </properties>
         </profile>
     </profiles>
