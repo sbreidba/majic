@@ -17,7 +17,7 @@
         <site>
             <id>majic.website</id>
             <name>Majic</name>
-            <url>scpexe://pmiller-aspn04.sarnoff.internal/var/www/html/majic</url>
+            <!--<url>scpexe://pmiller-aspn04.sarnoff.internal/var/www/html/majic</url>-->
         </site>
     </distributionManagement>
 

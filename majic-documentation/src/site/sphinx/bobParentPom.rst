@@ -1,19 +1,19 @@
-==================
-The Bob Parent POM
-==================
+====================
+The Majic Parent POM
+====================
 
-The Bob pom file at :download:`/cmake-maven-parent/pom.xml` should be
+The Majic pom file at :download:`/majic-parent/pom.xml` should be
 used as the parent pom file for all pom files conforming to the Bob
 conventions for building cmake based C++ projects. You make this the
 parent pom by using the following lines in your :file:`pom.xml`
 
-Using the Bob Parent POM
-========================
+Using the Majic Parent POM
+==========================
 
-.. literalinclude:: /cmake-maven-parent/pom.xml
+.. literalinclude:: /majic-parent/pom.xml
    :language: xml
    :linenos:
-   :start-after: <!-- bob:gavc -->
+   :start-after: <!-- majic:gavc -->
    :end-before: <packaging>
    :prepend: <parent>
    :append: </parent>
@@ -32,11 +32,11 @@ package.prefix.directory
    the directory to which :term:`external package`'s will be
    installed. In cmake terms, this is the :term:`CMAKE_INSTALL_PREFIX`.
 
-.. literalinclude:: /cmake-maven-parent/pom.xml
+.. literalinclude:: /majic-parent/pom.xml
    :language: xml
    :linenos:
-   :start-after: <!-- bob:properties -->
-   :end-before: <!-- bob:properties -->
+   :start-after: <!-- majic:properties -->
+   :end-before: <!-- majic:properties -->
 
 Profiles
 ========
@@ -51,20 +51,20 @@ OS-Unix and OS-Windows
 
 The profile used on Unix/Linux.
 
-.. literalinclude:: /cmake-maven-parent/pom.xml
+.. literalinclude:: /majic-parent/pom.xml
    :language: xml
    :linenos:
-   :start-after: <!-- bob:profile unix -->
-   :end-before: <!-- bob:profile unix -->
+   :start-after: <!-- majic:profile unix -->
+   :end-before: <!-- majic:profile unix -->
 
 
 The profile used on Windows
 
-.. literalinclude:: /cmake-maven-parent/pom.xml
+.. literalinclude:: /majic-parent/pom.xml
    :language: xml
    :linenos:
-   :start-after: <!-- bob:profile win -->
-   :end-before: <!-- bob:profile win -->
+   :start-after: <!-- majic:profile win -->
+   :end-before: <!-- majic:profile win -->
 
 Aggregator Present
 ------------------
@@ -73,11 +73,11 @@ The profile activated when a pom file is in the presence of an
 *aggregator* pom. This is simply a recognition that the parent folder
 of the pom file also has a pom file.
 
-.. literalinclude:: /cmake-maven-parent/pom.xml
+.. literalinclude:: /majic-parent/pom.xml
    :language: xml
    :linenos:
-   :start-after: <!-- bob:profile aggregator -->
-   :end-before: <!-- bob:profile aggregator -->
+   :start-after: <!-- majic:profile aggregator -->
+   :end-before: <!-- majic:profile aggregator -->
 
 cmake
 -----
@@ -91,11 +91,11 @@ invocations into the :index:`process-sources`, :index:`compile`, and
 
    Skip, why is the cmake test step not also in this profile?
 
-.. literalinclude:: /cmake-maven-parent/pom.xml
+.. literalinclude:: /majic-parent/pom.xml
    :language: xml
    :linenos:
-   :start-after: <!-- bob:profile cmake -->
-   :end-before: <!-- bob:profile cmake -->
+   :start-after: <!-- majic:profile cmake -->
+   :end-before: <!-- majic:profile cmake -->
 
 Unpack Packages
 ---------------
@@ -108,11 +108,11 @@ hooks into the :index:`validate` phase of the lifecycle.
    Skip, shouldn't this hook into the *initialize* phase that comes
    between validate and initialize?
 
-.. literalinclude:: /cmake-maven-parent/pom.xml
+.. literalinclude:: /majic-parent/pom.xml
    :language: xml
    :linenos:
-   :start-after: <!-- bob:profile unpack -->
-   :end-before: <!-- bob:profile unpack -->
+   :start-after: <!-- majic:profile unpack -->
+   :end-before: <!-- majic:profile unpack -->
 
 Create Package Tarballs
 -----------------------
@@ -120,11 +120,11 @@ Create Package Tarballs
 The profile that defines how to make package tarballs. This profile
 hooks into the :term:`package` phase of the lifecycle.
 
-.. literalinclude:: /cmake-maven-parent/pom.xml
+.. literalinclude:: /majic-parent/pom.xml
    :language: xml
    :linenos:
-   :start-after: <!-- bob:profile package -->
-   :end-before: <!-- bob:profile package -->
+   :start-after: <!-- majic:profile package -->
+   :end-before: <!-- majic:profile package -->
 
 Attach Package
 --------------
@@ -133,11 +133,11 @@ Attach Package
    
    What does this profile do?
 
-.. literalinclude:: /cmake-maven-parent/pom.xml
+.. literalinclude:: /majic-parent/pom.xml
    :language: xml
    :linenos:
-   :start-after: <!-- bob:profile attach-package -->
-   :end-before: <!-- bob:profile attach-package -->
+   :start-after: <!-- majic:profile attach-package -->
+   :end-before: <!-- majic:profile attach-package -->
 
 Build Element
 -------------
@@ -147,7 +147,7 @@ be the value of the property :index:`alt.build.directory`. The
 remaining major sections are for build plugin management, and the
 definition of the organization and description metadata values.
 
-.. literalinclude:: /cmake-maven-parent/pom.xml
+.. literalinclude:: /majic-parent/pom.xml
    :language: xml
    :linenos:
    :start-after: </profiles>

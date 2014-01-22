@@ -37,7 +37,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'clavin'
+project = u'Majic'
 copyright = u'2013, SRI International'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -61,7 +61,7 @@ release = '0.1'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['clavin-documentation/src/_build', 'README.rst', 'clavin-documentation/target']
+#exclude_patterns = ['_build', 'README.rst']
 
 # The reST default role (used for this markup: `text`) to use for all documents.
 #default_role = None
@@ -99,7 +99,7 @@ html_theme = 'sphinx13'
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
-html_theme_path = ['clavin-documentation/src/site/sphinx/_themes']
+html_theme_path = ['_themes']
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -111,7 +111,7 @@ html_theme_path = ['clavin-documentation/src/site/sphinx/_themes']
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
 #html_logo = None
-html_logo = 'clavin-documentation/src/site/sphinx/_static/clavin.jpg'
+html_logo = '_static/majic.jpg'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -121,7 +121,7 @@ html_logo = 'clavin-documentation/src/site/sphinx/_static/clavin.jpg'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['clavin-documentation/src/site/sphinx/_static']
+html_static_path = ['_static']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -165,7 +165,7 @@ html_use_smartypants = True
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'clavin'
+htmlhelp_basename = 'majic'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -187,14 +187,14 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'clavin.tex', u'clavin User Guide',
+  ('index', 'majic.tex', u'Majic User Guide',
    u'Philip Miller, Skip Breidbach', 'manual', True),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
 #latex_logo = None
-latex_logo = 'clavin-documentation/src/site/sphinx/_static/clavin.jpg'
+latex_logo = '_static/majic.jpg'
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
@@ -232,8 +232,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'clavin', u'clavin Documentation',
-   u'Philip Miller, Skip Breidbach', 'clavin', 'One line description of project.',
+  ('index', 'majic', u'Majic Documentation',
+   u'Philip Miller, Skip Breidbach', 'majic', 'One line description of project.',
    'Miscellaneous'),
 ]
 
