@@ -49,20 +49,6 @@
 
     <profiles>
         <profile>
-            <id>arch-64</id>
-            <activation>
-                <property>
-                    <name>cmake.arch</name>
-                    <value>64</value>
-                </property>
-            </activation>
-            <properties>
-                <!-- when launching vcvarsall.bat -->
-                <majic.vcvars.arch>x64</majic.vcvars.arch>
-            </properties>
-        </profile>
-
-        <profile>
             <id>os-win7</id>
             <activation>
                 <os>
