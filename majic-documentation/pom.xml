@@ -46,6 +46,10 @@
                <outputDirectory>${project.reporting.outputDirectory}/sphinx</outputDirectory>
                <outputName>sphinx/index</outputName>
                -->
+                    <!--<builder>pdf</builder>-->
+                    <!--<outputDirectory>${project.reporting.outputDirectory}/pdf</outputDirectory>-->
+                    <fork>true</fork>
+                    <argLine>-Xmx256m -XX:MaxPermSize=128m</argLine>
                 </configuration>
             </plugin>
         </plugins>

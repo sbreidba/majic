@@ -30,9 +30,10 @@ body {
 }
 
 .pageheader {
-    background-image: url(headerbg.png);
+    /*background-image: url(headerbg.png);*/
+    background-color: black;
     text-align: left;
-    padding: 10px 15px;
+    padding: 0px 0px;
 }
 
 .pageheader ul {
