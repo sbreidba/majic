@@ -12,27 +12,51 @@ import java.util.Map;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 
+/**
+ * An extension of the maven exec plugin with extended logging capabilities.
+ */
 @Mojo(name="exec", requiresProject=true)
 public class ExecMojo extends AbstractExecutorMojo
 {
+    /**
+     * See the maven exec plugin for details on this parameter.
+     */
     @Parameter(alias = "workingDirectory", defaultValue = "${project.build.directory}")
     private File workingDirectory;
 
+    /**
+     * See the maven exec plugin for details on this parameter.
+     */
     @Parameter(defaultValue = "")
     private String executable;
 
+    /**
+     * See the maven exec plugin for details on this parameter.
+     */
     @Parameter(defaultValue = "")
     private String commandlineArgs;
 
+    /**
+     * See the maven exec plugin for details on this parameter.
+     */
     @Parameter(defaultValue = "")
     private List<String> arguments;
 
+    /**
+     * See the maven exec plugin for details on this parameter.
+     */
     @Parameter(defaultValue = "false")
     private boolean skip;
 
+    /**
+     * See the maven exec plugin for details on this parameter.
+     */
     @Parameter(defaultValue = "")
     private File outputFile;
 
+    /**
+     * See the maven exec plugin for details on this parameter.
+     */
     @Parameter()
     private Map<String, String> environmentVariables;
     
