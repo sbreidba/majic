@@ -3,6 +3,9 @@ package com.sri.vt.majic.mojo.cmake;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
+/**
+ * Executes arbitary CMake commands, i.e <code>cmake -E.</code>
+ */
 @Mojo(name="cmake-command", requiresProject=true)
 public class CMakeCommandMojo extends CMakeMojo
 {

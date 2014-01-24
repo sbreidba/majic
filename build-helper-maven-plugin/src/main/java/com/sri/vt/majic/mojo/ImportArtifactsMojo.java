@@ -15,6 +15,10 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import java.io.*;
 
+/**
+ * Imports a list of currently attached artifacts from XML files. This mojo is generally
+ * only used by the build system for multi-os build coordination.
+ */
 @Mojo(name="import-artifacts", defaultPhase = LifecyclePhase.PREPARE_PACKAGE)
 public class ImportArtifactsMojo extends AbstractMojo
 {

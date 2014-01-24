@@ -5,10 +5,12 @@
 
     <!-- do not specify a parent here - that causes problems with the site plugin -->
 
+    <!-- majic-documentation:gavc -->
     <groupId>com.sri.vt.majic</groupId>
     <artifactId>majic-parent</artifactId>
     <version>0.1.8-SNAPSHOT</version>
     <packaging>pom</packaging>
+    <!-- majic-documentation:gavc -->
 
     <name>Majic Parent POM</name>
     <description>
@@ -39,12 +41,17 @@
 
         <cmake.arch>64</cmake.arch>
 
-        <!--
-        This is the default classifier. Projects are free to override this as required (e.g.
-        vtcmake doesn't use the compiler or architecture in it's classifier.
+        <!-- majic-documentation:properties -->
+        <!-- The package classifier is the default classifier for the detected platform.
+             For example: 'win7-vc2010-64'. Some artifacts (vtcmake, for example) are built
+             with other classifiers; see the individual artifact definition for more information.
         -->
         <majic.package.classifier>${majic.os.classifier}-${cmake.compiler}-${cmake.arch}</majic.package.classifier>
+
+        <!-- The package extension is the default extension for Majic artifacts. Using this
+             property is encouraged as the default extension may change in the future. -->
         <majic.package.extension>tar.bz2</majic.package.extension>
+        <!-- majic-documentation:properties -->
     </properties>
 
     <profiles>
@@ -118,6 +125,7 @@
             </properties>
         </profile>
 
+        <!-- majic-documentation:compiler-profile-example -->
         <profile>
             <id>compiler-vc2010</id>
             <activation>
@@ -130,6 +138,7 @@
                 <nmake.msvcver>1600</nmake.msvcver>
             </properties>
         </profile>
+        <!-- majic-documentation:compiler-profile-example -->
 
         <profile>
             <id>compiler-vc2012</id>
@@ -168,5 +177,17 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <skip>true</skip>
+                    <skipDeploy>true</skipDeploy>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>

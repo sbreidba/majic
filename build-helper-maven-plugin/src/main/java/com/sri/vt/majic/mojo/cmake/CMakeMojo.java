@@ -14,18 +14,39 @@ import java.util.Locale;
 
 public class CMakeMojo extends ExecMojo
 {
+    /**
+     * The executable to run to perform cmake commands.
+     */
     @Parameter(alias = "executable", defaultValue = "cmake")
     private String cmakeExeName;
 
+    /**
+     * A list of configurations to use. By default, this is effectively:
+     * &lt;configs&gt;
+     * &nbsp;&nbsp;&lt;config&gt;Debug&lt;/config&gt;
+     * &nbsp;&nbsp;&lt;config&gt;Release&lt;/config&gt;
+     * &lt;/configs&gt;
+     */
     @Parameter(defaultValue = "")
     private List<String> configs;
 
+    /**
+     * The build directory, aka the CMake binary directory.
+     */
     @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT)
     private File buildRoot;
 
+    /**
+     * If set, and <code>&lt;configs&gt;</code> is left to its default,
+     * skips the execution of the Release configuration.
+     */
     @Parameter(defaultValue = "false", property="skipRelease")
     private boolean skipRelease;
 
+    /**
+     * If set, and <code>&lt;configs&gt;</code> is left to its default,
+     * skips the execution of the Debug configuration.
+     */
     @Parameter(defaultValue = "false", property="skipDebug")
     private boolean skipDebug;
 

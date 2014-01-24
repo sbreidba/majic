@@ -14,6 +14,9 @@ import org.apache.maven.wagon.PathUtils;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Creates a tar file from the contents of a given directory.
+ */
 @Mojo(name="cmake-tar", defaultPhase = LifecyclePhase.PACKAGE, requiresProject=true)
 public class TarMojo extends CMakeCommandMojo
 {
@@ -26,7 +29,7 @@ public class TarMojo extends CMakeCommandMojo
     @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_PACKAGEDIR_DEFAULT)
     private File workingDirectory;
 
-    // Note: tar.bz2 is not replaced here or in type with ${package.extension}
+    // Note: tar.bz2 is not replaced here or in 'type' with ${majic.package.extension}
     // After all, this is the TarMojo. A future ZipMojo would set defaults differently.
 
     @Parameter(defaultValue = "${project.artifactId}-${project.version}.tar.bz2")

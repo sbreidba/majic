@@ -13,6 +13,9 @@ import java.util.List;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.Element;
 
+/**
+ * Removes temporary build outputs.
+ */
 @Mojo(name="cmake-clean", defaultPhase= LifecyclePhase.CLEAN, requiresProject=true)
 public class CleanMojo extends AbstractExecutorMojo
 {

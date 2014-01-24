@@ -8,6 +8,9 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 
+/**
+ * Executes CTest to run unit tests.
+ */
 @Mojo(name="cmake-test", defaultPhase= LifecyclePhase.TEST, requiresProject=true)
 public class CTestMojo extends CMakeMojo
 {

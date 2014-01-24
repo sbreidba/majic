@@ -16,6 +16,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * Exports a list of currently attached artifacts to an XML file. This mojo is generally
+ * only used by the build system for multi-os build coordination.
+ */
 @Mojo(name="export-artifacts", defaultPhase = LifecyclePhase.VERIFY)
 public class ExportArtifactsMojo extends AbstractMojo
 {

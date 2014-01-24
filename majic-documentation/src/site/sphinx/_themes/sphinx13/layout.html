@@ -57,21 +57,16 @@
 {% endblock %}
 
 {% block rootrellink %}
-        <li><a href="{{ pathto('index') }}">Clavin Home</a>&nbsp;|</li>
-        <li><a href="{{ pathto('contents') }}">Documentation</a> &raquo;</li>
+    <li><a href="https://wiki.sri.com/display/VT">VT Wiki</a>{{ reldelim1 }}</li>
+    <li><a href="{{ pathto('_static') }}/../../index.html">Majic Project Home</a>{{ reldelim1 }}</li>
+    {{ super() }}
 {% endblock %}
 
 {% block header %}
 <div class="pageheader">
-  <ul>
-    <li><a href="{{ pathto('index') }}">TOC</a></li>
-    <!--<li><a href="{{ pathto('contents') }}">Docs</a></li>-->
-    <li><a href="https://wiki.sri.com/display/VT">Wiki</a></li>
-    <li><a href="{{ pathto('_static') }}/../../index.html">Project</a></li>
-  </ul>
   <div>
     <a href="{{ pathto('index') }}">
-      <img src="{{ pathto('_static/clavin.jpg', 1) }}" alt="Clavin" />
+        <img src="{{ pathto('_static/majic.jpg', 1) }}" alt="Majic" />
     </a>
   </div>
 </div>

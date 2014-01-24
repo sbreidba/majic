@@ -7,13 +7,13 @@ git and ssh
 Installing git
 ==============
 
-:linux: 
+:Linux:
 
    On linux installing :command:`git` is most easily done using ``sudo
    apt-get install git`` or ``sudo yum install git`` for either Ubuntu
    or CentOS.
    
-:windows:
+:Windows:
 
    On windows `Git Extensions
    <http://sourceforge.net/projects/gitextensions/files/latest/download>`_
@@ -21,13 +21,20 @@ Installing git
    :command:`bash` command interpreter and all of the required
    :command:`putty` utilities.
 
-:smartgit gui client:
+:SmartGit GUI (Linux):
 
    I (pwm) cannot effectively use git via command line only. I have to have
    a gui client. I use `smartgit
    <http://www.syntevo.com/smartgithg/download>`_, which has nominal
    (about $80) license fee but is portable across and linux and may be
    installed on ALL the computers you use.
+
+:SourceTree GUI (Windows and Mac):
+
+   The `SourceTree <http://www.sourcetreeapp.com/>`_ client is free and works with Git and Mercurial
+   and has support for `git-flow <http://nvie.com/posts/a-successful-git-branching-model/>`_
+   and hg-flow out of the box.
+
 
 Configuring ssh
 ===============

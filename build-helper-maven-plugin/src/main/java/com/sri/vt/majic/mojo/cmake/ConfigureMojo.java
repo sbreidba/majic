@@ -15,46 +15,86 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Executes the CMake configuration step.
+ */
 @Mojo(name="cmake-configure", defaultPhase=LifecyclePhase.PROCESS_SOURCES, requiresProject=true)
 public class ConfigureMojo extends CMakeMojo
 {
     @Parameter(defaultValue = "${basedir}")
     private File sourceDirectory;
 
-    // Left blank, this will be computed automatically from cmake.generator and cmake.arch.
-    // Set, it will override the use of those variables.
+    /**
+     * The CMake generator to use (i.e. <code>cmake -G generator</code>)
+     * Left blank, this will be computed automatically from cmake.generator and cmake.arch.
+     * If set, it will override the use of those variables.
+     */
     @Parameter(defaultValue = "", property = "cmake.generator")
     private String generator;
 
+    /**
+     * The package dir is the location that "external" packages are unpacked to.
+     * It is only used if addCMakePrefixPath is enabled.
+     */
     @Parameter(defaultValue = CMakeDirectories.CMAKE_PACKAGE_ROOT_DEFAULT)
     private File packageRoot;
 
+    /**
+     * The export dir is the location that "internal" packages are unpacked to.
+     * It is only used if addCMakePrefixPath is enabled.
+     */
     @Parameter(defaultValue = CMakeDirectories.CMAKE_EXPORT_ROOT_DEFAULT)
     private File exportRoot;
 
+    /**
+     * The project install dir defines where CMake INSTALL(...) commands copy files to.
+     * It is only used if addCMakeInstallPrefix is enabled.
+     */
     @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_INSTALLDIR_DEFAULT)
     private File projectInstallDir;
 
+    /**
+     * A map of options to pass to CMake, in the form <code>-Dkey=value</code>
+     */
     @Parameter(defaultValue = "")
     private Map<String, String> options;
 
+    /**
+     * If enabled, automatically adds <code>-DCPACK_PACKAGE_VERSION(_MAJOR|_MINOR|_PATCH)</code> to the configuration.
+     */
     @Parameter(defaultValue = "true")
     private boolean addCPackPackageVersion;
 
+    /**
+     * If enabled, automatically adds <code>-DCMAKE_PREFIX_PATH</code> to the configuration. The package root
+     * and export root are both included.
+     */
     @Parameter(defaultValue = "true")
     private boolean addCMakePrefixPath;
-    
+
+    /**
+     * If enabled, automatically adds <code>-DCMAKE_INSTALL_PREFIX=projectInstallDir</code> to the configuration.
+     */
     @Parameter(defaultValue = "true")
     private boolean addCMakeInstallPrefix;
 
-    // For single-config builds, this will add CMAKE_BUILD_TYPE="<config>"
+    /**
+     * If enabled, for single-config (e.g. not Windows) builds, this will add <code>-DCMAKE_BUILD_TYPE="..."</code>
+     * to the configuration.
+     */
     @Parameter(defaultValue = "true")
     private boolean addCMakeBuildType;
 
-    // For multi-config builds, this will add CMAKE_CONFIGURATION_TYPES="<semi-colon separated configs>"
+    /**
+     * If enabled, for multi-config builds, this will add <code>-DCMAKE_CONFIGURATION_TYPES="..."</code>
+     * to the configuration.
+     */
     @Parameter(defaultValue = "true")
     private boolean addCMakeConfigurationTypes;
 
+    /**
+     * If set, the configuration step will be skipped.
+     */
     @Parameter(defaultValue = "false", property = "skipCMakeConfig")
     private boolean skip;
 

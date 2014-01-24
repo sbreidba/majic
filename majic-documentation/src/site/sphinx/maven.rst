@@ -2,13 +2,14 @@
 Maven Overview
 ==============
 
-Maven Settings File
-===================
+Terms
+=====
+Lifecycle
+Plugin
+Goal
+Phase
 
-A sample maven settings file is shown in :ref:`maven-settings`. If you
-do not have one, copy this file to :file:`~/.m2/settings.xml`. This
-file is used by maven to hold user specific settings such as
-repository URLs, private key files, etc.
+Reference here: http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
 
 Lifecycle
 =========
@@ -16,6 +17,9 @@ Lifecycle
 The correspondence between conventional cmake steps and maven steps
 are:
 
+.. todo:: validate this against current components.xml, possibly merge this information
+   with the majicCMakeLifecycle file.
+   
 #. **generate-sources**: is the cmake configure step; ``cmake
    -D... pathToSource``
 
@@ -86,13 +90,18 @@ Active Profiles
 
       mvn help:active-profiles
 
-Starting a new projcect
+Starting a new project
    validate a project's pom::
       mvn validate
 
 Show environment::
 
    mvn help:env
+
+mvn validate (with dep convergence added to parent pom)
+mvn help:system
+mvn dependency:tree -Dverbose=true
+
 
 .. todo::
 
@@ -103,5 +112,4 @@ Listings
 
 .. toctree::
 
-   maven-settings
 
