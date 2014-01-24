@@ -2,12 +2,24 @@
 Maven Overview
 ==============
 
+Terms
+=====
+Lifecycle
+Plugin
+Goal
+Phase
+
+Reference here: http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html
+
 Lifecycle
 =========
 
 The correspondence between conventional cmake steps and maven steps
 are:
 
+.. todo:: validate this against current components.xml, possibly merge this information
+   with the majicCMakeLifecycle file.
+   
 #. **generate-sources**: is the cmake configure step; ``cmake
    -D... pathToSource``
 
@@ -78,13 +90,18 @@ Active Profiles
 
       mvn help:active-profiles
 
-Starting a new projcect
+Starting a new project
    validate a project's pom::
       mvn validate
 
 Show environment::
 
    mvn help:env
+
+mvn validate (with dep convergence added to parent pom)
+mvn help:system
+mvn dependency:tree -Dverbose=true
+
 
 .. todo::
 

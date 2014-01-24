@@ -21,25 +21,6 @@ at least git version 1.7.2. So I added the RepoForge `EL 6 x86_64
 <http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm>`__
 repository and got 1.7.11.3.
 
-boost
-=====
-
-Before building install::
-
-   sudo yum install bzip2-devel
-   sudo yum install zlib-devel
-
-Build using::
- 
-   ./bootstrap.sh --prefix=$HOME/projects/aspn-pkg
-   ./b2 --build-type=complete --layout=tagged -j4 address-model=64 link=static,shared install
-
-.. todo:: 
-
-   installation/building of boost become part of the general
-   documentation of clavin and should not be mentioned in this CentOs
-   section. 
-
 7zip
 ====
 
@@ -53,21 +34,6 @@ xerces-c-dev
 Install using::
 
    sudo yum install xerces-c-devel
-
-gdal
-====
-
-There are various versions of gdal available from several
-repositories. At the current time (October 14, 2013), the choices are: 
-
-EPEL
-   1.7.3 (Nov, 2010)
-
-`EL GIS <http://elgis.argeo.org/repos/6/elgis-release-6-6_0.noarch.rpm>`__
-   1.9.2 (Oct, 2012), 1.9.1, 1.8.1, 1.8.0, 1.7.3, and 1.7.2
-
-`osgeo <http://download.osgeo.org/gdal>`__ source distribution:
-   1.10.1 (Aug, 2013)
 
 doxygen (and graphviz)
 ======================

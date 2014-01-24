@@ -10,6 +10,8 @@ Majic User Guide
    :maxdepth: 2
 
    gettingStarted
+   majicCMakeLifecycle
+   examples
    buildHelperPlugin
    parentPom
    maven

@@ -19,10 +19,6 @@ component.
 Jenkins is the tool providing a continuous integration (CI)
 build and test system.
 
-.. image:: _static/majic.jpg
-   :align: center
-
-
 Developing a Majic-Based Project
 ================================
 
@@ -142,14 +138,6 @@ Unix-based Operating Systems (Linux, Solaris and Mac OS X)
       is in your PATH environment variable.
 
    #. Run ``mvn --version`` to verify that it is correctly installed.
-
-.. note:: Maven and Jenkins
-
-   The Jenkins master will automatically install/use :command:`maven`
-   from its configuration. So a manual installation of maven is not
-   needed (and probably not wanted) on a slave. Developers will need
-   to have maven (and the prerequisite jdk) on their development
-   computers.
 
 
 cmake Installation

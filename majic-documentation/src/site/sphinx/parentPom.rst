@@ -45,14 +45,12 @@ used is detected by Majic and the "best available" compiler is selected:
 
 .. literalinclude:: ../../../majic-parent/pom.xml
    :language: xml
-   :linenos:
-   :cssclass: foo
    :start-after: <!-- majic-documentation:compiler-profile-example -->
    :end-before: <!-- majic-documentation:compiler-profile-example -->
 
 Note that variables set in profiles are lower priority than those specified by the user. For example,
 the following command-line would override the detection of the compiler (which is used during the CMake
-configuration phase).
+configuration phase):
 
 .. code-block::
     mvn install -Dcmake.compiler=vc2008
@@ -67,7 +65,6 @@ definition of the organization and description metadata values.
 
 .. literalinclude:: ../../../majic-parent/pom.xml
    :language: xml
-   :linenos:
    :start-after: </profiles>
 
 

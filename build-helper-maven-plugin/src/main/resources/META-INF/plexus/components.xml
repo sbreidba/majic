@@ -1,6 +1,7 @@
 <component-set>
     <components>
         <component>
+            <!-- majic-documentation:lifecyclemapping -->
             <role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
             <role-hint>majic-cmake</role-hint>
             <implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping</implementation>
@@ -17,6 +18,7 @@
                     <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
                 </phases>
             </configuration>
+            <!-- majic-documentation:lifecyclemapping -->
         </component>
 
         <component>
