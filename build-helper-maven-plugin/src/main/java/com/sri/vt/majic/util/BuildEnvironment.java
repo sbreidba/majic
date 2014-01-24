@@ -154,12 +154,4 @@ public class BuildEnvironment
         String arch = project.getProperties().getProperty(Properties.CMAKE_ARCH);
         return Arch.fromString(arch);
     }
-
-    public static void checkSanity(MavenProject project) throws MavenExecutionException
-    {
-        if (getCompiler(project) == null)
-        {
-            throw new MavenExecutionException("Could not determine the compiler to use.", project.getFile());
-        }
-    }
 }

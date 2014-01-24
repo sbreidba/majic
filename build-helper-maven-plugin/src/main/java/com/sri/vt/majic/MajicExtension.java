@@ -34,7 +34,6 @@ public class MajicExtension extends AbstractMavenLifecycleParticipant
         {
             for (MavenProject project : session.getProjects())
             {
-                BuildEnvironment.checkSanity(project);
                 UpdateProperties(project);
             }
         }
