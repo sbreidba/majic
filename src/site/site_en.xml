@@ -14,14 +14,14 @@
     </custom>
 
     <bannerRight>
-      <name>Clavin</name>
-      <title>The Clavin Project</title>
-      <src>images/clavin.jpg</src>
+      <name>Majic</name>
+      <title>The Majic Project</title>
+      <src>images/majic-logo-white.jpg</src>
     </bannerRight>
 
     <body>
         <menu ref="parent" inherit="top"/>
-        <menu ref="modules" inherit="bottom"/>
         <menu ref="reports" inherit="bottom"/>
+        <menu ref="modules" inherit="bottom"/>
     </body>
 </project>
