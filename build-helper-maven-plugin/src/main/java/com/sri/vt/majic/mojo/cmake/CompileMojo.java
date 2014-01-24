@@ -11,6 +11,9 @@ import org.apache.maven.plugins.annotations.Parameter;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Executes the CMake build step.
+ */
 @Mojo(name="cmake-compile", defaultPhase=LifecyclePhase.COMPILE, requiresProject=true)
 public class CompileMojo extends RunTargetMojo
 {

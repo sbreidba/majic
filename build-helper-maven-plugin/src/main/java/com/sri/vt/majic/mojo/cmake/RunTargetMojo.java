@@ -6,17 +6,31 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
+/**
+ * The RunTarget mojo allows arbitrary --build --target {target} commands to be executed.<br/>
+ * Several convenience mojos (doc, install, etc) are also defined for the sake of simplicity
+ * and readability.
+ */
 @Mojo(name="cmake-runtarget", requiresProject=true)
 public class RunTargetMojo extends CMakeMojo
 {
+    /**
+     * The target to run, i.e. --target {target}
+     */
     @Parameter(defaultValue = "")
     private String target;
 
-    // Note: it is up to the caller to pass the -- if desired.
+    /**
+     * Any extra arguments that should be added to the command line can be specified here.
+     * Note: it is up to the caller to pass the -- if desired.
+     */
     @Parameter(defaultValue = "")
     private String extraArgs;
 
-    @Parameter(defaultValue = "4")
+    /**
+     * The number of jobs to execute simultaneously, i.e. the value passed via -j.
+     */
+    @Parameter(defaultValue = "4", property = "cmake.jobs")
     private Integer jobs;
 
     @Override

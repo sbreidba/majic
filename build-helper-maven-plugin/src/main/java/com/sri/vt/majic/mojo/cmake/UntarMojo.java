@@ -10,21 +10,40 @@ import org.apache.maven.plugins.annotations.Parameter;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Unpacks the specified tar file.
+ */
 @Mojo(name="cmake-untar", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresProject = true)
 public class UntarMojo extends CMakeCommandMojo
 {
+    /**
+     * The command to pass to <code>cmake -E</code>
+     */
     @Parameter(defaultValue = "tar xjf", required = true)
     private String command;
 
+    /**
+     * The file to untar.
+     */
     @Parameter(defaultValue = "", required = true)
     private File tarFile;
 
+    /**
+     * The directory that contains small marker files used to determine when tarballs need to be unpacked.
+     */
     @Parameter(defaultValue = "${cmake.build.root}/cmake-untar/markers")
     private File markersDirectory;
 
+    /**
+     * If set, moves the contents of the first directory found up one level. Often useful for
+     * dealing with standard tarballs where the root directory recapitulates the tar file name.
+     */
     @Parameter(defaultValue = "true")
     private boolean stripRootDirectory;
 
+    /**
+     * The directory to extract the tar's contents to.
+     */
     @Parameter(defaultValue = "", required = true)
     private File outputDirectory;
     
