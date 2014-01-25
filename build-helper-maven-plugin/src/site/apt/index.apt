@@ -1,0 +1,30 @@
+ ------
+ Introduction
+ ------
+ Author
+ ------
+ YYYY-MM-DD
+ ------
+
+
+Build Helper Maven Plugin
+
+  Plugin introduction, description, and other relevant information.
+
+* Usage
+
+  General instructions on how to use the Build Helper Maven Plugin can be found on the {{{usage.html}usage page}}. Some more
+  specific use cases are described in the examples given below.
+
+* Examples
+
+  To provide you with better understanding of some usages of the Build Helper Maven Plugin,
+  you can take a look into the following examples:
+
+  * {{{./examples/vp.html}VP}}
+
+  * {{{./examples/vtcmake.html}VTCMake}}
+
+  * {{{./examples/opencv.html}OpenCV}}
+
+  * {{{./examples/boost.html}Boost}}

@@ -7,21 +7,21 @@
     </skin>
 
     <custom>
-      <fluidoSkin>
-	<topBarEnabled>true</topBarEnabled>
-	<sideBarEnabled>true</sideBarEnabled>
-      </fluidoSkin>
+        <fluidoSkin>
+            <topBarEnabled>true</topBarEnabled>
+            <sideBarEnabled>true</sideBarEnabled>
+        </fluidoSkin>
     </custom>
 
     <bannerRight>
-      <name>Majic</name>
-      <title>The Majic Project</title>
-      <src>images/majic-logo-white.jpg</src>
+        <name>Majic</name>
+        <title>The Majic Project</title>
+        <src>images/majic-logo-white.jpg</src>
     </bannerRight>
 
     <body>
         <menu ref="parent" inherit="top"/>
+        <menu ref="modules" inherit="top"/>
         <menu ref="reports" inherit="bottom"/>
-        <menu ref="modules" inherit="bottom"/>
     </body>
 </project>

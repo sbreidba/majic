@@ -55,20 +55,12 @@ configuration phase):
 .. code-block::
     mvn install -Dcmake.compiler=vc2008
 
-Build Element
--------------
+Build
+=====
 
-The first thing done here is to define the maven build directory to
-be the value of the property :index:`alt.build.directory`. The
-remaining major sections are for build plugin management, and the
-definition of the organization and description metadata values.
-
-.. literalinclude:: ../../../majic-parent/pom.xml
-   :language: xml
-   :start-after: </profiles>
-
-
-
-
-
+No actions are taken in the build - only basic definitions, including
+plugin management for the required plugins, and the
+definition of the organization and description metadata values. Build steps are
+added either by the pom file author if a packaging type of ``pom`` is used, or
+injected by declaring the packaging type to be ``maven-cmake``.
 

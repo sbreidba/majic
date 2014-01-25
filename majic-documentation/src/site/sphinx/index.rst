@@ -11,7 +11,6 @@ Majic User Guide
 
    gettingStarted
    majicCMakeLifecycle
-   examples
    buildHelperPlugin
    parentPom
    maven
