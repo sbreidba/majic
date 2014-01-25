@@ -144,7 +144,7 @@
             <id>compiler-vc2012</id>
             <activation>
                 <property>
-                    <name>env.VS120COMNTOOLS</name>
+                    <name>env.VS110COMNTOOLS</name>
                 </property>
             </activation>
             <properties>
