@@ -37,9 +37,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <majic.os.classifier>unknown</majic.os.classifier>
-        <cmake.compiler>UNKNOWN</cmake.compiler>
-        <detected.cmake.compiler>UNKNOWN</detected.cmake.compiler>
-
+        <cmake.compiler>${cmake.compiler}</cmake.compiler>
+        <nmake.msvcver>${nmake.msvcver}</nmake.msvcver>
+        <bjam.toolset>${bjam.toolset}</bjam.toolset>
+        
         <cmake.arch>64</cmake.arch>
 
         <!-- majic-documentation:properties -->
@@ -88,7 +89,7 @@
         </profile>
 
         <profile>
-            <id>compiler-gcc</id>
+            <id>detected-compiler-gcc</id>
             <activation>
                 <os>
                     <family>unix</family>
@@ -97,11 +98,12 @@
             </activation>
             <properties>
                 <detected.cmake.compiler>gcc</detected.cmake.compiler>
+                <detected.bjam.toolset>gcc</detected.bjam.toolset>
             </properties>
         </profile>
 
         <profile>
-            <id>compiler-vc2008</id>
+            <id>detected-compiler-vc2008</id>
             <activation>
                 <property>
                     <name>env.VS80COMNTOOLS</name>
@@ -109,12 +111,13 @@
             </activation>
             <properties>
                 <detected.cmake.compiler>vc2008</detected.cmake.compiler>
-                <nmake.msvcver>1400</nmake.msvcver>
+                <detected.nmake.msvcver>1400</detected.nmake.msvcver>
+                <detected.bjam.toolset>msvc-8.0</detected.bjam.toolset>
             </properties>
         </profile>
 
         <profile>
-            <id>compiler-vc2009</id>
+            <id>detected-compiler-vc2009</id>
             <activation>
                 <property>
                     <name>env.VS90COMNTOOLS</name>
@@ -122,13 +125,14 @@
             </activation>
             <properties>
                 <detected.cmake.compiler>vc2009</detected.cmake.compiler>
-                <nmake.msvcver>1500</nmake.msvcver>
+                <detected.nmake.msvcver>1500</detected.nmake.msvcver>
+                <detected.bjam.toolset>msvc-9.0</detected.bjam.toolset>
             </properties>
         </profile>
 
         <!-- majic-documentation:compiler-profile-example -->
         <profile>
-            <id>compiler-vc2010</id>
+            <id>detected-compiler-vc2010</id>
             <activation>
                 <property>
                     <name>env.VS100COMNTOOLS</name>
@@ -136,13 +140,14 @@
             </activation>
             <properties>
                 <detected.cmake.compiler>vc2010</detected.cmake.compiler>
-                <nmake.msvcver>1600</nmake.msvcver>
+                <detected.nmake.msvcver>1600</detected.nmake.msvcver>
+                <detected.bjam.toolset>msvc-10.0</detected.bjam.toolset>
             </properties>
         </profile>
         <!-- majic-documentation:compiler-profile-example -->
 
         <profile>
-            <id>compiler-vc2012</id>
+            <id>detected-compiler-vc2012</id>
             <activation>
                 <property>
                     <name>env.VS110COMNTOOLS</name>
@@ -150,26 +155,14 @@
             </activation>
             <properties>
                 <detected.cmake.compiler>vc2012</detected.cmake.compiler>
-                <nmake.msvcver>1700</nmake.msvcver>
+                <detected.nmake.msvcver>1700</detected.nmake.msvcver>
+                <detected.bjam.toolset>msvc-11.0</detected.bjam.toolset>
             </properties>
         </profile>
 
-        <!-- if the user specified the compiler on the command-line, use that value -->
+        <!-- cmake.compiler: if no command-line property was set, use the auto-detected value -->
         <profile>
-            <id>compiler-user-specified</id>
-            <activation>
-                <property>
-                    <name>cmake.compiler</name>
-                </property>
-            </activation>
-            <properties>
-                <cmake.compiler>${cmake.compiler}</cmake.compiler>
-            </properties>
-        </profile>
-
-        <!-- if no command-line property was set, use the auto-detected value -->
-        <profile>
-            <id>compiler-attempt-auto-detect</id>
+            <id>auto-detect-compiler</id>
             <activation>
                 <property>
                     <name>!cmake.compiler</name>
@@ -177,6 +170,32 @@
             </activation>
             <properties>
                 <cmake.compiler>${detected.cmake.compiler}</cmake.compiler>
+            </properties>
+        </profile>
+
+        <!-- nmake.msvcver: if no command-line property was set, use the auto-detected value -->
+        <profile>
+            <id>auto-detect-msvcver</id>
+            <activation>
+                <property>
+                    <name>!nmake.msvcver</name>
+                </property>
+            </activation>
+            <properties>
+                <nmake.msvcver>${detected.nmake.msvcver}</nmake.msvcver>
+            </properties>
+        </profile>
+
+        <!-- bjam.toolset: if no command-line property was set, use the auto-detected value -->
+        <profile>
+            <id>auto-detect-bjam-toolset</id>
+            <activation>
+                <property>
+                    <name>!bjam.toolset</name>
+                </property>
+            </activation>
+            <properties>
+                <bjam.toolset>${detected.bjam.toolset}</bjam.toolset>
             </properties>
         </profile>
     </profiles>
