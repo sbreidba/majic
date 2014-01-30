@@ -1,6 +1,5 @@
 package com.sri.vt.majic;
 
-import com.sri.vt.majic.util.BuildEnvironment;
 import com.sri.vt.majic.util.CMakeDirectories;
 import com.sri.vt.majic.util.PropertyCache;
 import org.apache.maven.AbstractMavenLifecycleParticipant;

@@ -1,9 +1,9 @@
 package com.sri.vt.majic.mojo.cmake;
 
 import com.sri.vt.majic.util.CMakeDirectories;
-import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.clean.Cleaner;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -26,9 +26,20 @@ public class CompileMojo extends RunTargetMojo
     @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_PACKAGEDIR_DEFAULT)
     private File projectPackageDir;
 
+    /**
+     * If not set, this is derived from Maven's global debug flag (i.e. -X).
+     */
+    @Parameter(defaultValue = "false", property = "majic.compile.verbose")
+    private Boolean verbose;
+
     protected String getTarget()
     {
         return compileTarget;
+    }
+
+    private boolean isVerbose()
+    {
+        return ( verbose || getLog().isDebugEnabled());
     }
 
     @Override
@@ -36,10 +47,12 @@ public class CompileMojo extends RunTargetMojo
     {
         if (cleanPackageDirBeforeBuilding)
         {
-            getLog().info("Cleaning " + projectPackageDir);
+            Cleaner cleaner = new Cleaner(getLog(), isVerbose());
             try
             {
-                FileUtils.deleteDirectory(projectPackageDir);
+                // don't follow symlinks, do fail on error, do retry.
+                // this must be cleaned up or we run the risk of getting cruft.
+                cleaner.delete(projectPackageDir, null, false, true, true);
             }
             catch (IOException e)
             {

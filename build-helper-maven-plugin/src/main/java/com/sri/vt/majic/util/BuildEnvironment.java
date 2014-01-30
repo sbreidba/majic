@@ -1,6 +1,5 @@
 package com.sri.vt.majic.util;
 
-import org.apache.maven.MavenExecutionException;
 import org.apache.maven.project.MavenProject;
 
 import java.io.IOException;

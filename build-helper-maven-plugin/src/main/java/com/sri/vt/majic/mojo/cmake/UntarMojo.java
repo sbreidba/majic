@@ -3,6 +3,7 @@ package com.sri.vt.majic.mojo.cmake;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.clean.Cleaner;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -46,7 +47,18 @@ public class UntarMojo extends CMakeCommandMojo
      */
     @Parameter(defaultValue = "", required = true)
     private File outputDirectory;
-    
+
+    /**
+     * If not set, this is derived from Maven's global debug flag (i.e. -X).
+     */
+    @Parameter(defaultValue = "false", property = "majic.untar.verbose")
+    private Boolean verbose;
+
+    private boolean isVerbose()
+    {
+        return ( verbose || getLog().isDebugEnabled());
+    }
+
     protected String getCommand()
     {
         return command;
@@ -109,9 +121,12 @@ public class UntarMojo extends CMakeCommandMojo
                     moveContents(subDir);
                 }
 
+                Cleaner cleaner = new Cleaner(getLog(), isVerbose());
                 try
                 {
-                    FileUtils.deleteDirectory(subDir);
+                    // don't follow symlinks, don't fail on error, do retry.
+                    // this is not critical to clean up.
+                    cleaner.delete(subDir, null, false, false, true);
                 }
                 catch(IOException e)
                 {
@@ -142,7 +157,9 @@ public class UntarMojo extends CMakeCommandMojo
         */
 
         FileUtils.copyDirectory(sourceDirectory, getOutputDirectory());
-        FileUtils.deleteDirectory(sourceDirectory);
+
+        Cleaner cleaner = new Cleaner(getLog(), isVerbose());
+        cleaner.delete(sourceDirectory, null, false, false, true);
 
         /*for (File containedFile : sourceDirectory.listFiles())
         {
