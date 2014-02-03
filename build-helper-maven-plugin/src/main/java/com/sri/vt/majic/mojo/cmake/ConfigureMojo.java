@@ -110,6 +110,13 @@ public class ConfigureMojo extends CMakeMojo
     @Override
     protected boolean getSkip()
     {
+        File cmakeScript = new File(sourceDirectory, "CMakeLists.txt");
+        if (!cmakeScript.exists())
+        {
+            getLog().info("CMakeLists.txt not found -- skipping execution.");
+            return true;
+        }
+        
         return skip;
     }
 

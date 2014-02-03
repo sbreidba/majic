@@ -9,7 +9,9 @@
                 <phases>
                     <generate-sources>com.sri.vt.majic:build-helper-maven-plugin:cmake-untar-dependencies</generate-sources>
                     <process-sources>com.sri.vt.majic:build-helper-maven-plugin:cmake-configure</process-sources>
+                    <process-resources>org.apache.maven.plugins:maven-resources-plugin:resources</process-resources>
                     <compile>com.sri.vt.majic:build-helper-maven-plugin:cmake-compile</compile>
+                    <process-test-resources>org.apache.maven.plugins:maven-resources-plugin:testResources</process-test-resources>
                     <test>com.sri.vt.majic:build-helper-maven-plugin:cmake-test</test>
                     <prepare-package>com.sri.vt.majic:build-helper-maven-plugin:cmake-install</prepare-package>
                     <package>com.sri.vt.majic:build-helper-maven-plugin:cmake-tar</package>
