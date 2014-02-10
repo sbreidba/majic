@@ -84,7 +84,9 @@ public class CMakeDirectories
         {
             // empty build root, set defaults
             String path = topLevel.getAbsolutePath() + "-build";
-            updatedBuildRoot = new File(path, BuildEnvironment.getPackageClassifier(propertyCache.getProject()));
+
+            BuildEnvironment buildEnvironment = new BuildEnvironment(propertyCache.getProject());
+            updatedBuildRoot = new File(path, buildEnvironment.getPackageClassifier());
         }
 
         propertyCache.setProperty(BuildEnvironment.Properties.CMAKE_BUILD_ROOT, updatedBuildRoot.getAbsolutePath());

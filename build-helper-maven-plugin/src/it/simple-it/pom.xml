@@ -3,6 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>@project.groupId@</groupId>
+        <artifactId>majic-parent</artifactId>
+        <version>@project.version@</version>
+    </parent>
+
     <groupId>com.sri.vt.majic.it</groupId>
     <artifactId>simple-it</artifactId>
     <version>1.0.0-SNAPSHOT</version>
@@ -10,18 +16,7 @@
 
     <description>A simple IT verifying the basic use case.</description>
 
-    <profiles>
-        <profile>
-            <id>realClean</id>
-            <properties>
-                <mostlyCleanExclude/>
-            </properties>
-        </profile>
-    </profiles>
-
     <properties>
-        <mostlyCleanExclude>pkg/**</mostlyCleanExclude>
-
         <!-- Default style:
                 <toplevelproject>/
                     <operating_system>/
@@ -75,14 +70,6 @@
             </plugins>
         </pluginManagement>
 
-        <extensions>
-            <extension>
-                <groupId>@project.groupId@</groupId>
-                <artifactId>@project.artifactId@</artifactId>
-                <version>@project.version@</version>
-            </extension>
-        </extensions>
-
         <plugins>
             <plugin>
                 <groupId>@project.groupId@</groupId>
@@ -108,6 +95,21 @@
                     </execution>
 
                     <execution>
+                        <id>cmake-compile</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>cmake-compile</goal>
+                        </goals>
+                        <configuration>
+                            <configs>
+                                <config>Debug</config>
+                                <config>Release</config>
+                                <config></config>
+                            </configs>
+                        </configuration>
+                    </execution>
+
+                    <execution>
                         <id>cmake-install</id>
                         <phase>validate</phase>
                         <goals>
@@ -128,6 +130,11 @@
                         <goals>
                             <goal>cmake-tar</goal>
                         </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${cmake.project.bin.directory}
+                            </outputDirectory>
+                        </configuration>
                     </execution>
 
                     <execution>
@@ -139,10 +146,11 @@
                         <configuration>
                             <!-- this is not how you'd normally do this - here we're grabbing a tarball
                                  from a fixed, project-specific location where the project is "us".
-                                 This is done in this test harness to test out cmake-set-properties
+                                 This is done in this test harness to test out property interpolation
                                  as much as anything else.
                                  -->
-                            <tarFile>${cmake.project.bin.directory}/${project.artifactId}-${project.version}.tar.bz2
+                            <tarFile>
+                                ${cmake.project.bin.directory}/${project.artifactId}-${project.version}.tar.bz2
                             </tarFile>
 
                             <!-- testing output to an arbitrary place -->
@@ -160,7 +168,8 @@
                             <goal>cmake-untar</goal>
                         </goals>
                         <configuration>
-                            <tarFile>${cmake.project.bin.directory}/${project.artifactId}-${project.version}.tar.bz2
+                            <tarFile>
+                                ${cmake.project.bin.directory}/${project.artifactId}-${project.version}.tar.bz2
                             </tarFile>
                             <outputDirectory>${cmake.build.root}/untar-test</outputDirectory>
                         </configuration>
@@ -174,24 +183,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-clean-plugin</artifactId>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>${cmake.build.root}</directory>
-                            <excludes>
-                                <exclude>${mostlyCleanExclude}</exclude>
-                            </excludes>
-                        </fileset>
-                        <fileset>
-                            <directory>${cmake.project.bin.directory}</directory>
-                        </fileset>
-                    </filesets>
-                </configuration>
             </plugin>
         </plugins>
     </build>

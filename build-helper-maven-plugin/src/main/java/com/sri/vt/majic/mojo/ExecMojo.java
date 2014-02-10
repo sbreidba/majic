@@ -1,5 +1,7 @@
 package com.sri.vt.majic.mojo;
 
+import com.sri.vt.majic.util.BuildEnvironment;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -59,7 +61,16 @@ public class ExecMojo extends AbstractExecutorMojo
      */
     @Parameter()
     private Map<String, String> environmentVariables;
-    
+
+    /**
+     * If enabled, all commands are effectively wrapped with
+     *    cmd.exe /c vcvarsall.bat ${vcvars.arch} && [executable arguments]
+     * This is only effective under Windows, so it is safe to set to true
+     * even on projects expected to execute on Linux.
+     */
+    @Parameter(defaultValue = "false")
+    private boolean enableWindowsVCVarsEnvironment;
+
     @Override
     protected boolean shouldFailIfPluginNotFound()
     {
@@ -84,9 +95,14 @@ public class ExecMojo extends AbstractExecutorMojo
         return "exec";
     }
 
-    protected List<String> getArguments()
+    protected String getFinalExecutable()
     {
-        return arguments;
+        if (getEnableWindowsCommandShellMode())
+        {
+            return "cmd.exe";
+        }
+
+        return getExecutable();
     }
 
     protected String getExecutable()
@@ -94,14 +110,78 @@ public class ExecMojo extends AbstractExecutorMojo
         return executable;
     }
 
-    protected File getWorkingDirectory()
+    /** issue:
+     *
+     * easy enough to modify arguments by prepending cmd /c cruft
+     * but we need to add the executable to one of these
+     *
+     * plan:
+     * modify getArguments if it's not null, or if getCommandLine args *is* null
+     * modify getCommandlineArgs if it's not null
+     *
+     */
+
+    protected List<String> getArguments() throws MojoExecutionException {
+        return arguments;
+    }
+
+    protected List<String> getFinalArguments() throws MojoExecutionException
     {
-        return workingDirectory;
+        if (!getEnableWindowsCommandShellMode()) return getArguments();
+
+        // Let commandline args win
+        if (getCommandlineArgs() != null)
+        {
+            return getArguments();
+        }
+
+        List<String> modifiedArguments = new ArrayList<String>();
+        modifiedArguments.add("/c");
+        modifiedArguments.add(getBuildEnvironment().getVisualStudioVCVarsAllFile().getAbsolutePath());
+        modifiedArguments.add("&&");
+        modifiedArguments.add(getExecutable());
+
+        if (getArguments() != null)
+        {
+            modifiedArguments.addAll(getArguments());
+        }
+
+        return modifiedArguments;
     }
 
     protected String getCommandlineArgs()
     {
         return commandlineArgs;
+    }
+
+    protected static String enquoteString(String string)
+    {
+        return "\"" + string + "\"";
+    }
+
+    protected String getFinalCommandlineArgs() throws MojoExecutionException
+    {
+        if (!getEnableWindowsCommandShellMode()) return getCommandlineArgs();
+
+        // only modify this if it is in use already. if it's not,
+        // we'll fall back to modifications in getArguments.
+        String args = getCommandlineArgs();
+        if (args != null)
+        {
+            args = "/c "
+                    + enquoteString(getBuildEnvironment().getVisualStudioVCVarsAllFile().getAbsolutePath())
+                    + " && "
+                    + enquoteString(getExecutable())
+                    + " "
+                    + args;
+        }
+
+        return args;
+    }
+
+    protected File getWorkingDirectory()
+    {
+        return workingDirectory;
     }
 
     protected File getOutputFile()
@@ -119,13 +199,23 @@ public class ExecMojo extends AbstractExecutorMojo
         return false;
     }
 
-    protected Element[] getConfigurationElements()
+    protected boolean getEnableWindowsCommandShellMode()
+    {
+        if (!SystemUtils.IS_OS_WINDOWS)
+        {
+            return false;
+        }
+
+        return enableWindowsVCVarsEnvironment;
+    }
+    
+    protected Element[] getConfigurationElements() throws MojoExecutionException
     {
         List<Element> elements = new ArrayList<Element>();
         append(elements, "workingDirectory", getWorkingDirectory());
-        append(elements, "executable", getExecutable());
-        append(elements, "commandlineArgs", getCommandlineArgs());
-        append(elements, "arguments", "argument", getArguments());
+        append(elements, "executable", getFinalExecutable());
+        append(elements, "commandlineArgs", getFinalCommandlineArgs());
+        append(elements, "arguments", "argument", getFinalArguments());
         append(elements, "skip", Boolean.toString(getSkip()));
         append(elements, "outputFile", getOutputFile());
         append(elements, "environmentVariables", environmentVariables);

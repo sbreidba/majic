@@ -120,16 +120,10 @@ public class ConfigureMojo extends CMakeMojo
         return skip;
     }
 
-    protected String getCMakeGenerator()
+    protected String getCMakeGenerator() throws MojoExecutionException
     {
-        BuildEnvironment.Compiler compiler = BuildEnvironment.getCompiler(getProject());
-        if (compiler == null)
-        {
-            getLog().error("Could not determine compiler type");
-            return null;
-        }
-
-        BuildEnvironment.Arch arch = BuildEnvironment.getArchitecture(getProject());
+        BuildEnvironment.Compiler compiler = getBuildEnvironment().getCompiler();
+        BuildEnvironment.Arch arch = getBuildEnvironment().getArchitecture();
         if (arch == null)
         {
             getLog().error("Could not determine compiler architecture");
@@ -163,7 +157,7 @@ public class ConfigureMojo extends CMakeMojo
         }
     }
 
-    public List<String> getArguments()
+    public List<String> getArguments() throws MojoExecutionException
     {
         List<String> arguments = super.getArguments();
 

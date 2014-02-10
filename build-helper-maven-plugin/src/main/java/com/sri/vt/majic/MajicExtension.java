@@ -1,10 +1,13 @@
 package com.sri.vt.majic;
 
+import com.sri.vt.majic.util.BuildEnvironment;
 import com.sri.vt.majic.util.CMakeDirectories;
 import com.sri.vt.majic.util.PropertyCache;
 import org.apache.maven.AbstractMavenLifecycleParticipant;
 import org.apache.maven.MavenExecutionException;
 import org.apache.maven.execution.MavenSession;
+import org.apache.maven.model.Build;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
@@ -48,9 +51,20 @@ public class MajicExtension extends AbstractMavenLifecycleParticipant
         super.afterProjectsRead(session);
     }
 
-    private void UpdateProperties(MavenProject project) throws IOException, InterpolationException
+    private void UpdateProperties(MavenProject project) throws MavenExecutionException, IOException, InterpolationException
     {
         PropertyCache propertyCache = new PropertyCache(project, getLogger());
+
+        BuildEnvironment buildEnvironment = new BuildEnvironment(project);
+
+        try
+        {
+            buildEnvironment.updateProperties(propertyCache);
+        }
+        catch(MojoExecutionException cause)
+        {
+            throw new MavenExecutionException("Error updating build environment properties", cause);
+        }
 
         CMakeDirectories directories = new CMakeDirectories();
         directories.updateProperties(propertyCache);

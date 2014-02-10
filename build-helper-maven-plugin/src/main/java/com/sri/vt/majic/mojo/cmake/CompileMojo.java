@@ -26,6 +26,8 @@ public class CompileMojo extends RunTargetMojo
     @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_PACKAGEDIR_DEFAULT)
     private File projectPackageDir;
 
+    @Parameter(defaultValue = "true")
+    private boolean enableWindowsVCVarsEnvironment;
     /**
      * If not set, this is derived from Maven's global debug flag (i.e. -X).
      */
@@ -40,6 +42,12 @@ public class CompileMojo extends RunTargetMojo
     private boolean isVerbose()
     {
         return ( verbose || getLog().isDebugEnabled());
+    }
+
+    @Override
+    protected boolean getEnableWindowsCommandShellMode()
+    {
+        return enableWindowsVCVarsEnvironment;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.sri.vt.majic.mojo;
 
+import com.sri.vt.majic.util.BuildEnvironment;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.AbstractMojo;
@@ -28,7 +29,12 @@ public abstract class AbstractExecutorMojo extends AbstractMojo
     @Component(hint = "")
     private BuildPluginManager pluginManager;
 
-    protected Plugin getPlugin(MavenProject project, String groupId, String artifactId) throws MojoExecutionException
+    /**
+     * Not set until execute is called - project is unknown until then.
+     */
+    private BuildEnvironment buildEnvironment;
+
+    protected Plugin getPlugin(String groupId, String artifactId) throws MojoExecutionException
     {
         String execComponentKey = Plugin.constructKey(groupId, artifactId);
         return getProject().getPluginManagement().getPluginsAsMap().get(execComponentKey);
@@ -95,11 +101,13 @@ public abstract class AbstractExecutorMojo extends AbstractMojo
     abstract protected String getPluginGroupId();
     abstract protected String getPluginArtifactId();
     abstract protected String getGoal();
-    abstract protected Element[] getConfigurationElements();
+    abstract protected Element[] getConfigurationElements() throws MojoExecutionException;
 
     public void execute() throws MojoExecutionException, MojoFailureException
     {
-        Plugin plugin = getPlugin(getProject(), getPluginGroupId(), getPluginArtifactId());
+        buildEnvironment = new BuildEnvironment(getProject());
+
+        Plugin plugin = getPlugin(getPluginGroupId(), getPluginArtifactId());
         if (plugin == null)
         {
             if (shouldFailIfPluginNotFound())
@@ -133,6 +141,11 @@ public abstract class AbstractExecutorMojo extends AbstractMojo
         );
     }
 
+    protected BuildEnvironment getBuildEnvironment()
+    {
+        return buildEnvironment;
+    }
+    
     protected MavenProject getProject()
     {
         return project;

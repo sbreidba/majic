@@ -1,8 +1,14 @@
 package com.sri.vt.majic.util;
 
+import org.apache.commons.lang.SystemUtils;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.logging.Logger;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Map;
+
 
 public class BuildEnvironment
 {
@@ -75,6 +81,18 @@ public class BuildEnvironment
         // The OS classifier should be used when forming artifact classifiers as it collapses compatible
         // distros such as centos and rhel.
         public static final String OPERATING_SYSTEM_CLASSIFIER = "majic.os.classifier";
+
+        // The compiler version according to nmake, e.g. 1400 for Visual Studio 2008
+        // This follows the ${cmake.compiler} variable.
+        public static final String NMAKE_MSVCVER = "nmake.msvcver";
+
+        // The toolset used when compiling with bjam.
+        // This follows the ${cmake.compiler} variable.
+        public static final String BJAM_TOOLSET = "bjam.toolset";
+
+        // This is the common tools directory that corresponds to the selected compiler
+        // (if Windows) e.g. the contents of VS80COMNTOOLS, VS90COMNTOOLS, etc.
+        public static final String VISUAL_STUDIO_COMNTOOLS_DIR = "visual.studio.comntools.dir";
     }
 
     public enum Compiler
@@ -131,26 +149,125 @@ public class BuildEnvironment
             return null;
         }
     }
-    
-    public static String getPackageClassifier(MavenProject project) throws IOException
+
+    private MavenProject project;
+
+    public BuildEnvironment(MavenProject project)
     {
-        return project.getProperties().getProperty(Properties.PACKAGE_CLASSIFIER);
+        this.project = project;
     }
 
-    public static String getOperatingSystemClassifier(MavenProject project)
+    protected MavenProject getProject()
     {
-        return project.getProperties().getProperty(Properties.OPERATING_SYSTEM_CLASSIFIER);
+        return project;
     }
 
-    public static Compiler getCompiler(MavenProject project)
+    public String getPackageClassifier() throws IOException
     {
-        String compiler = project.getProperties().getProperty(Properties.CMAKE_COMPILER);
-        return Compiler.fromString(compiler);
+        return getProject().getProperties().getProperty(Properties.PACKAGE_CLASSIFIER);
     }
 
-    public static Arch getArchitecture(MavenProject project)
+    public String getOperatingSystemClassifier()
     {
-        String arch = project.getProperties().getProperty(Properties.CMAKE_ARCH);
+        return getProject().getProperties().getProperty(Properties.OPERATING_SYSTEM_CLASSIFIER);
+    }
+
+    public Compiler getCompiler() throws MojoExecutionException
+    {
+        String compilerStr = getProject().getProperties().getProperty(Properties.CMAKE_COMPILER);
+        if ((compilerStr == null) || (compilerStr.length() == 0))
+        {
+            throw new MojoExecutionException("cmake.compiler is not set - have you included the majic parent pom?");
+        }
+
+        Compiler compiler = Compiler.fromString(compilerStr);
+        if (compiler == null)
+        {
+            throw new MojoExecutionException("cmake.compiler could not be set from " + compilerStr);
+        }
+
+        return compiler;
+    }
+
+    public String getVisualStudioCommonToolsDir() throws MojoExecutionException
+    {
+        if (!SystemUtils.IS_OS_WINDOWS)
+        {
+            throw new MojoExecutionException("Trying to compute visual studio common tools dir on a non-windows platform.");
+        }
+
+        Map<String, String> env = System.getenv();
+
+        switch (getCompiler())
+        {
+            case vc2008:
+                return env.get("VS80COMNTOOLS");
+
+            case vc2009:
+                return env.get("VS90COMNTOOLS");
+
+            case vc2010:
+                return env.get("VS100COMNTOOLS");
+
+            case vc2012:
+                return env.get("VS110COMNTOOLS");
+
+            default:
+                throw new MojoExecutionException("Could not get visual studio common tools dir - unknown compiler type");
+        }
+    }
+
+    public File getVisualStudioVCVarsAllFile() throws  MojoExecutionException
+    {
+        File toolsPath = new File(getVisualStudioCommonToolsDir());
+        return new File(toolsPath, "..\\..\\VC\\vcvarsall.bat");
+    }
+
+    public Arch getArchitecture()
+    {
+        String arch = getProject().getProperties().getProperty(Properties.CMAKE_ARCH);
         return Arch.fromString(arch);
+    }
+
+    public void updateProperties(PropertyCache propertyCache) throws MojoExecutionException
+    {
+        if (SystemUtils.IS_OS_WINDOWS)
+        {
+            propertyCache.setProperty(
+                    Properties.VISUAL_STUDIO_COMNTOOLS_DIR,
+                    getVisualStudioCommonToolsDir());
+        }
+
+        switch (getCompiler())
+        {
+            case gcc:
+                propertyCache.setProperty(Properties.NMAKE_MSVCVER, "unknown");
+                propertyCache.setProperty(Properties.BJAM_TOOLSET, "gcc");
+                break;
+
+            case vc2008:
+                propertyCache.setProperty(Properties.NMAKE_MSVCVER, "1400");
+                propertyCache.setProperty(Properties.BJAM_TOOLSET, "msvc-8.0");
+                break;
+
+            case vc2009:
+                propertyCache.setProperty(Properties.NMAKE_MSVCVER, "1500");
+                propertyCache.setProperty(Properties.BJAM_TOOLSET, "msvc-9.0");
+                break;
+
+            case vc2010:
+                propertyCache.setProperty(Properties.NMAKE_MSVCVER, "1600");
+                propertyCache.setProperty(Properties.BJAM_TOOLSET, "msvc-10.0");
+                break;
+
+            case vc2012:
+                propertyCache.setProperty(Properties.NMAKE_MSVCVER, "1700");
+                propertyCache.setProperty(Properties.BJAM_TOOLSET, "msvc-11.0");
+                break;
+
+            default:
+                propertyCache.getLog().error("Could not detect compiler to use.");
+                break;
+        }
     }
 }
