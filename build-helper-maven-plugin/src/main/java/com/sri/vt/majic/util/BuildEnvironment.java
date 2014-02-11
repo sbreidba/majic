@@ -56,8 +56,8 @@ public class BuildEnvironment
         public static final String CMAKE_ARCH = "cmake.arch";
 
         // The package classifier is set by default to ${majic.os.classifier}-${cmake.compiler}-${cmake.arch}.
-        // Note that for dependencies, this property must be used as it is the only one that is interpolated
-        // at build time.
+        // Note that for dependencies, only properties defined in the parent (such as this one) can be used -
+        // interpolated properties cannot be used for dependency resolution.
         public static final String PACKAGE_CLASSIFIER = "majic.package.classifier";
 
         // The package extension is the maven "type", e.g. tar.bz2 or zip
@@ -65,18 +65,6 @@ public class BuildEnvironment
         // Changing it does not alter plugin behavior. It's not used in this code base, but it's defined in
         // the Majic parent pom, so it's here for documentation purposes.
         public static final String PACKAGE_EXTENSION = "majic.package.extension";
-
-        // The OS name is a human-readable/friendly display name
-        public static final String OPERATING_SYSTEM_NAME = "majic.os.name";
-
-        // The OS architecture is the java os.arch property (values x64, etc).
-        // Use care; this may not be correct in some circumstances.
-        // See http://stackoverflow.com/questions/4748673/how-can-i-check-the-bitness-of-my-os-using-java-j2se-not-os-arch
-        // for more details.
-        public static final String OPERATING_SYSTEM_ARCHITECTURE = "majic.os.arch";
-
-        // The OS distribution is debian, centos, rhel, win7, winxp, etc.
-        public static final String OPERATING_SYSTEM_DISTRIBUTION = "majic.os.distro";
 
         // The OS classifier should be used when forming artifact classifiers as it collapses compatible
         // distros such as centos and rhel.
@@ -93,6 +81,10 @@ public class BuildEnvironment
         // This is the common tools directory that corresponds to the selected compiler
         // (if Windows) e.g. the contents of VS80COMNTOOLS, VS90COMNTOOLS, etc.
         public static final String VISUAL_STUDIO_COMNTOOLS_DIR = "visual.studio.comntools.dir";
+
+        // This is the architecture as known by vcvarsall.bat. This follows the ${cmake.arch}
+        // variable.
+        public static final String VCVARS_ARCH = "vcvars.arch";
     }
 
     public enum Compiler
@@ -172,6 +164,11 @@ public class BuildEnvironment
         return getProject().getProperties().getProperty(Properties.OPERATING_SYSTEM_CLASSIFIER);
     }
 
+    public String getVCVarsArch()
+    {
+        return getProject().getProperties().getProperty(Properties.VCVARS_ARCH);
+    }
+    
     public Compiler getCompiler() throws MojoExecutionException
     {
         String compilerStr = getProject().getProperties().getProperty(Properties.CMAKE_COMPILER);
@@ -217,16 +214,21 @@ public class BuildEnvironment
         }
     }
 
-    public File getVisualStudioVCVarsAllFile() throws  MojoExecutionException
+    public File getVisualStudioVCVarsAllFile() throws MojoExecutionException
     {
         File toolsPath = new File(getVisualStudioCommonToolsDir());
         return new File(toolsPath, "..\\..\\VC\\vcvarsall.bat");
     }
 
-    public Arch getArchitecture()
+    public Arch getArchitecture() throws MojoExecutionException
     {
-        String arch = getProject().getProperties().getProperty(Properties.CMAKE_ARCH);
-        return Arch.fromString(arch);
+        String archStr = getProject().getProperties().getProperty(Properties.CMAKE_ARCH);
+        if (archStr == null)
+        {
+            throw new MojoExecutionException("cmake.arch could not be set from " + archStr);
+        }
+
+        return Arch.fromString(archStr);
     }
 
     public void updateProperties(PropertyCache propertyCache) throws MojoExecutionException
@@ -267,6 +269,21 @@ public class BuildEnvironment
 
             default:
                 propertyCache.getLog().error("Could not detect compiler to use.");
+                break;
+        }
+
+        switch (getArchitecture())
+        {
+            case bits32:
+                propertyCache.setProperty(Properties.VCVARS_ARCH, "x86");
+                break;
+
+            case bits64:
+                propertyCache.setProperty(Properties.VCVARS_ARCH, "x64");
+                break;
+
+            default:
+                propertyCache.setProperty(Properties.VCVARS_ARCH, "unknown");
                 break;
         }
     }

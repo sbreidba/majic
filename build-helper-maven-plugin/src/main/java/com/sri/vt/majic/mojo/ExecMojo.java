@@ -139,6 +139,7 @@ public class ExecMojo extends AbstractExecutorMojo
         modifiedArguments.add("/c");
         modifiedArguments.add("\"");
         modifiedArguments.add(enquoteString(getBuildEnvironment().getVisualStudioVCVarsAllFile().getAbsolutePath()));
+        modifiedArguments.add(getBuildEnvironment().getVCVarsArch());
         modifiedArguments.add("&&");
         modifiedArguments.add(enquoteString(getExecutable()));
 
@@ -176,6 +177,8 @@ public class ExecMojo extends AbstractExecutorMojo
         {
             args = "/c "
                     + enquoteString(getBuildEnvironment().getVisualStudioVCVarsAllFile().getAbsolutePath())
+                    + " "
+                    + getBuildEnvironment().getVCVarsArch()
                     + " && "
                     + enquoteString(getExecutable())
                     + " "
