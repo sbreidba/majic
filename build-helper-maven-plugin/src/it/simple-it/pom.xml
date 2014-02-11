@@ -83,6 +83,7 @@
                             <goal>cmake-configure</goal>
                         </goals>
                         <configuration>
+                            <enableWindowsVCVarsEnvironment>true</enableWindowsVCVarsEnvironment>
                             <configs>
                                 <config>Debug</config>
                                 <config>Release</config>
@@ -101,6 +102,7 @@
                             <goal>cmake-compile</goal>
                         </goals>
                         <configuration>
+                            <enableWindowsVCVarsEnvironment>true</enableWindowsVCVarsEnvironment>
                             <configs>
                                 <config>Debug</config>
                                 <config>Release</config>

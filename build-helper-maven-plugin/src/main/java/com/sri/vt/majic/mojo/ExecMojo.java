@@ -137,14 +137,20 @@ public class ExecMojo extends AbstractExecutorMojo
 
         List<String> modifiedArguments = new ArrayList<String>();
         modifiedArguments.add("/c");
-        modifiedArguments.add(getBuildEnvironment().getVisualStudioVCVarsAllFile().getAbsolutePath());
+        modifiedArguments.add("\"");
+        modifiedArguments.add(enquoteString(getBuildEnvironment().getVisualStudioVCVarsAllFile().getAbsolutePath()));
         modifiedArguments.add("&&");
-        modifiedArguments.add(getExecutable());
+        modifiedArguments.add(enquoteString(getExecutable()));
 
         if (getArguments() != null)
         {
-            modifiedArguments.addAll(getArguments());
+            for (String argument : getArguments())
+            {
+                modifiedArguments.add(enquoteString(argument));
+            }
         }
+
+        modifiedArguments.add("\"");
 
         return modifiedArguments;
     }
