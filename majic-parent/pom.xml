@@ -37,10 +37,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <majic.os.classifier>unknown</majic.os.classifier>
+
+        <!-- set from command-line -->
         <cmake.compiler>${cmake.compiler}</cmake.compiler>
+        <cmake.arch>${cmake.arch}</cmake.arch>
 
-        <cmake.arch>64</cmake.arch>
-
+        <default.cmake.arch>64</default.cmake.arch>
+        
         <!-- majic-documentation:properties -->
         <!-- The package classifier is the default classifier for the detected platform.
              For example: 'win7-vc2010-64'. Some artifacts (vtcmake, for example) are built
@@ -173,6 +176,19 @@
             </activation>
             <properties>
                 <cmake.compiler>${detected.cmake.compiler}</cmake.compiler>
+            </properties>
+        </profile>
+
+        <!-- cmake.arch: if no command-line property was set, use the default value -->
+        <profile>
+            <id>default-arch</id>
+            <activation>
+                <property>
+                    <name>!cmake.arch</name>
+                </property>
+            </activation>
+            <properties>
+                <cmake.arch>${default.cmake.arch}</cmake.arch>
             </properties>
         </profile>
     </profiles>
