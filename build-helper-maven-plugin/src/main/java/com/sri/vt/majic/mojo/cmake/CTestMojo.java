@@ -20,7 +20,7 @@ public class CTestMojo extends CMakeMojo
     @Parameter(defaultValue = "true")
     boolean verbose;
 
-    @Parameter(defaultValue = "skipTests")
+    @Parameter(defaultValue = "false", property = "skipTests")
     boolean skip;
 
     @Override
