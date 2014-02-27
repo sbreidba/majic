@@ -23,7 +23,7 @@ public class ExecMojo extends AbstractExecutorMojo
     /**
      * See the maven exec plugin for details on this parameter.
      */
-    @Parameter(alias = "workingDirectory", defaultValue = "${project.build.directory}")
+    @Parameter(defaultValue = "${project.build.directory}")
     private File workingDirectory;
 
     /**

@@ -30,11 +30,8 @@ public class CMakeMojo extends ExecMojo
     @Parameter(defaultValue = "")
     private List<String> configs;
 
-    /**
-     * The build directory, aka the CMake binary directory.
-     */
     @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT)
-    private File buildRoot;
+    private File workingDirectory;
 
     /**
      * If set, and <code>&lt;configs&gt;</code> is left to its default,
@@ -66,21 +63,16 @@ public class CMakeMojo extends ExecMojo
 
     protected File getWorkingDirectory()
     {
-        // Allow override of working directory
-        File workingDir = super.getWorkingDirectory();
-        if (workingDir != null)
-        {
-            return workingDir;
-        }
-
+        // If that's not set, we compute the working directory based on
+        // the buildRoot and configuration directories (if appropriate)
         String config = getCurrentConfig();
         if ((config != null) && (!SystemUtils.IS_OS_WINDOWS))
         {
-            return new File(buildRoot, getCurrentConfig().toLowerCase(Locale.ENGLISH));
+            return new File(workingDirectory, getCurrentConfig().toLowerCase(Locale.ENGLISH));
         }
         else
         {
-            return buildRoot;
+            return workingDirectory;
         }
     }
 
