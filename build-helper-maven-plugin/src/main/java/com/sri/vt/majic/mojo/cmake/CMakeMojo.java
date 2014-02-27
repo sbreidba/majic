@@ -66,6 +66,13 @@ public class CMakeMojo extends ExecMojo
 
     protected File getWorkingDirectory()
     {
+        // Allow override of working directory
+        File workingDir = super.getWorkingDirectory();
+        if (workingDir != null)
+        {
+            return workingDir;
+        }
+
         String config = getCurrentConfig();
         if ((config != null) && (!SystemUtils.IS_OS_WINDOWS))
         {
