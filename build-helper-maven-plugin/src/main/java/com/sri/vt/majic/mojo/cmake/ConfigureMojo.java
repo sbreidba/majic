@@ -3,6 +3,7 @@ package com.sri.vt.majic.mojo.cmake;
 import com.google.common.collect.ImmutableMap;
 import com.sri.vt.majic.util.BuildEnvironment;
 import com.sri.vt.majic.util.CMakeDirectories;
+import com.sri.vt.majic.util.Version;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -180,21 +181,28 @@ public class ConfigureMojo extends CMakeMojo
         {
             appendDashD(arguments, "CPACK_PACKAGE_VERSION", getProject().getVersion());
 
-            String[] versionComponents = getProject().getVersion().split("\\.");
+            Version version = Version.parse(getProject().getVersion());
 
-            if (versionComponents.length > 0)
+            appendDashD(arguments, "CPACK_PACKAGE_VERSION_COUNT", Integer.toString(version.getCount()));
+            
+            if (version.getMajor() != null)
             {
-                appendDashD(arguments, "CPACK_PACKAGE_VERSION_MAJOR", versionComponents[0]);
+                appendDashD(arguments, "CPACK_PACKAGE_VERSION_MAJOR", version.getMajor().toString());
             }
 
-            if (versionComponents.length > 1)
+            if (version.getMinor() != null)
             {
-                appendDashD(arguments, "CPACK_PACKAGE_VERSION_MINOR", versionComponents[1]);
+                appendDashD(arguments, "CPACK_PACKAGE_VERSION_MINOR", version.getMinor().toString());
             }
             
-            if (versionComponents.length > 2)
+            if (version.getPatch() != null)
             {
-                appendDashD(arguments, "CPACK_PACKAGE_VERSION_PATCH", versionComponents[2]);
+                appendDashD(arguments, "CPACK_PACKAGE_VERSION_PATCH", version.getPatch().toString());
+            }
+
+            if (version.getSuffix() != null)
+            {
+                appendDashD(arguments, "CPACK_PACKAGE_VERSION_SUFFIX", version.getSuffix());
             }
         }
 
