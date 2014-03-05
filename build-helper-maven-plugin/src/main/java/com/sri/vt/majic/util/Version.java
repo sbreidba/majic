@@ -41,7 +41,7 @@ public class Version
                     if (version.getCount() == 0)
                     {
                         // If we got nothing so far, then the entire string is the suffix
-                        version.setSuffix(versionString);
+                        if (versionString.length() > 0) version.setSuffix(versionString);
                     }
                     else
                     {

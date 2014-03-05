@@ -150,4 +150,30 @@ public class TestVersionParse
         Assert.assertNotNull(version.getSuffix());
         Assert.assertEquals(version.getSuffix(), "A-1.3.7-SNAPSHOT");
     }
+
+    @Test()
+    public void testCompletelyEmpty()
+    {
+        Version version = Version.parse("");
+
+        Assert.assertEquals(version.getCount(), 0);
+
+        Assert.assertNull(version.getMajor());
+        Assert.assertNull(version.getMinor());
+        Assert.assertNull(version.getPatch());
+        Assert.assertNull(version.getSuffix());
+    }
+
+    @Test()
+    public void testNull()
+    {
+        Version version = Version.parse("");
+
+        Assert.assertEquals(version.getCount(), 0);
+
+        Assert.assertNull(version.getMajor());
+        Assert.assertNull(version.getMinor());
+        Assert.assertNull(version.getPatch());
+        Assert.assertNull(version.getSuffix());
+    }
 }
