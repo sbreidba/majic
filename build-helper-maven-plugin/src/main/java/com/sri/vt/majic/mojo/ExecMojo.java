@@ -9,6 +9,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -71,6 +72,41 @@ public class ExecMojo extends AbstractExecutorMojo
     @Parameter(defaultValue = "false")
     private boolean enableWindowsVCVarsEnvironment;
 
+    /**
+     * This enables the configuration of INCLUDE, LIB, and PATH environment variables for the given
+     * compiler/SDK combination. An example of usage (Tip: Use all caps, or variables won't be expanded correctly.):
+     * <pre>
+     * {@code}
+     * < compilerSDKs>
+     *     < vc2012>${env.PROGRAMFILES(X86)}Microsoft SDKs\Windows\v7.1A</vc2012>
+     * < /compilerSDKs>
+     * </pre>
+     * If found, a sub-directory named include is added to the INCLUDE env var; likewise with lib/LIB and
+     * bin/PATH. Multiple sdk directories can be specified; separate them with semicolons.
+     *
+     * Note that this will append to the value of INCLUDE/LIB/PATH environment variables. If you need to
+     * add other values in manually, use something like:
+     *
+     * <pre>
+     * {@code}
+     * < environmentVariables>
+     *     < INSTALL>my_really_cool_path;${env.INSTALL}</INSTALL>
+     * < /environmentVariables>
+     * </pre>
+     *
+     * Likewise, if you need to completely replace the value of one of these environment variables, ignoring
+     * the current environment, do something like:
+     *
+     * <pre>
+     * {@code}
+     * < environmentVariables>
+     *     < INSTALL />
+     * < /environmentVariables>
+     * </pre>
+     */
+    @Parameter()
+    private Map<String, String> compilerSDKs;
+
     @Override
     protected boolean shouldFailIfPluginNotFound()
     {
@@ -110,18 +146,8 @@ public class ExecMojo extends AbstractExecutorMojo
         return executable;
     }
 
-    /** issue:
-     *
-     * easy enough to modify arguments by prepending cmd /c cruft
-     * but we need to add the executable to one of these
-     *
-     * plan:
-     * modify getArguments if it's not null, or if getCommandLine args *is* null
-     * modify getCommandlineArgs if it's not null
-     *
-     */
-
-    protected List<String> getArguments() throws MojoExecutionException {
+    protected List<String> getArguments() throws MojoExecutionException
+    {
         return arguments;
     }
 
@@ -217,7 +243,90 @@ public class ExecMojo extends AbstractExecutorMojo
 
         return enableWindowsVCVarsEnvironment;
     }
-    
+
+    protected void PrependSDKDirectoryToEnvironment(Map<String, String> mapEnv, File sdkRoot, String subDirectory, String envVar)
+    {
+        File fullPath = new File(sdkRoot, subDirectory);
+        if (!fullPath.exists())
+        {
+            getLog().warn("Configuring SDK: " + sdkRoot + ", but "
+                    + subDirectory + " was not found. Skipping configuration of " + envVar + " env var.");
+            return;
+        }
+
+        StringBuilder builder = new StringBuilder();
+
+        // if the user has already specified an env var (or we've been called with the same key twice!)
+        // then append what exists. If it doesn't exist, check the environment so we don't stomp on it.
+        String existingEnv = mapEnv.get(envVar);
+        if (existingEnv != null)
+        {
+            builder.append(mapEnv.get(envVar));
+        }
+        else
+        {
+            if (System.getenv(envVar) != null)
+            {
+                builder.append(System.getenv(envVar));
+            }
+        }
+
+        if (builder.length() > 0) builder.insert(0, ";");
+        builder.insert(0, fullPath.getAbsolutePath());
+
+        mapEnv.put(envVar, builder.toString());
+    }
+
+    protected Map<String, String> getEnvironmentVariables()
+    {
+        if ((getCompilerSDKs() != null) && (getCompilerSDKs().size() > 0))
+        {
+            try
+            {
+                BuildEnvironment.Compiler compiler = getBuildEnvironment().getCompiler();
+                if (getCompilerSDKs().containsKey(compiler.toString()))
+                {
+                    // Don't modify the source map - making a copy allows this to be called
+                    // transparently many times
+                    Map<String, String> envVars = new HashMap<String, String>();
+                    if (environmentVariables != null)
+                    {
+                        envVars.putAll(environmentVariables);
+                    }
+
+                    String semiSep = getCompilerSDKs().get(compiler.toString());
+                    String[] sdkValues = semiSep.split(";");
+                    for (String sdk : sdkValues)
+                    {
+                        File sdkRoot = new File(sdk);
+                        if (!sdkRoot.exists())
+                        {
+                            getLog().error("SDK directory " + sdk + " configured and active, but could not be found.");
+                            continue;
+                        }
+
+                        PrependSDKDirectoryToEnvironment(envVars, sdkRoot, "include", "INCLUDE");
+                        PrependSDKDirectoryToEnvironment(envVars, sdkRoot, "lib", "LIB");
+                        PrependSDKDirectoryToEnvironment(envVars, sdkRoot, "bin", "PATH");
+                    }
+
+                    return envVars;
+                }
+            }
+            catch (MojoExecutionException e)
+            {
+                getLog().warn("Exception caught while building SDK environment: " + e.getMessage());
+            }
+        }
+        
+        return environmentVariables;
+    }
+
+    protected Map<String, String> getCompilerSDKs()
+    {
+        return compilerSDKs;
+    }
+
     protected Element[] getConfigurationElements() throws MojoExecutionException
     {
         List<Element> elements = new ArrayList<Element>();
@@ -227,7 +336,7 @@ public class ExecMojo extends AbstractExecutorMojo
         append(elements, "arguments", "argument", getFinalArguments());
         append(elements, "skip", Boolean.toString(getSkip()));
         append(elements, "outputFile", getOutputFile());
-        append(elements, "environmentVariables", environmentVariables);
+        append(elements, "environmentVariables", getEnvironmentVariables());
 
         Element[] elementArray = new Element[elements.size()];
         elements.toArray(elementArray);
