@@ -132,9 +132,9 @@ public class ConfigureMojo extends CMakeMojo
         }
 
         String cmakeGenerator = mapCompilerToGeneratorPrefix.get(compiler);
-        if (SystemUtils.IS_OS_WINDOWS)
+        if ((SystemUtils.IS_OS_WINDOWS) && (arch == BuildEnvironment.Arch.bits64))
         {
-            cmakeGenerator += " Win" + arch.toString();
+            cmakeGenerator += " Win64";
         }
 
         return cmakeGenerator;
