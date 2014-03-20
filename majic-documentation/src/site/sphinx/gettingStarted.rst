@@ -159,6 +159,27 @@ Windows
    Use the latest installer from `cmake.org
    <http://www.cmake.org/cmake/resources/software.html>`__. 
 
+Running Maven with Majic and common options
+===============================
+
+- Start a build by running "mvn install" in the folder containing pom.xml.
+  On windows, the build should be run from a standard command prompt,
+  NOT from a Visual Studio command prompt. Also, do not setup the vcvars
+  environment in the standard command prompt.
+
+- The default architecture is 64 bit. To specify an architecture 
+  specify an architecture use -Dcmake.arch=[value]. Valid values
+  are "32" and "64".
+
+- The default compiler is Visual Studio on Windows. If more than
+  one version of Visual Studio is installed, the most recent is
+  used. To specity a compiler use -Dcmake.compiler=[value].
+  Valid values are "vc2010" and "vc2012".
+
+- The default compiler on linux is gcc. It is the only supported
+  compiler.
+
+
 A note about this documentation
 ===============================
 
