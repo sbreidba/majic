@@ -8,7 +8,7 @@
     <!-- majic-documentation:gavc -->
     <groupId>com.sri.vt.majic</groupId>
     <artifactId>majic-parent</artifactId>
-    <version>0.1.9-SNAPSHOT</version>
+    <version>0.1.10-SNAPSHOT</version>
     <packaging>pom</packaging>
     <!-- majic-documentation:gavc -->
 
