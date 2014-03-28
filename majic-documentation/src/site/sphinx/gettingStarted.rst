@@ -9,12 +9,11 @@ build multi-platform projects created for CMake then
 apply Maven/Artifactory/Jenkins style dependency management 
 to the resultant binary artifacts.
 
-Jenkins provides a continuous integration (CI) build and test system.
-This allows Majic to rapidily scale to 
+Jenkins allows Majic to rapidily scale to 
 manage hundreds of builds and dependencies, on multiple platforms,
 without the project developers having to manually build each dependency
-themselves. Instead, Jenkins automatically builds a project after
-the source code is changed, then cascades to build all projects
+themselves. Instead, a Jenkins continuous integration build automatically 
+builds a project after the source code is changed, then cascades to build all projects
 that are dependant upon the changed project. The resultant binaries
 are published on Artifactory and made available to developers.
 
@@ -24,7 +23,14 @@ software packages are uploaded to Artifactory and automatically downloaded
 to a developer's computer via Maven dependency management. Majic makes 
 such dependencies available to CMake's package finding infrastructure.
 This virtually eliminates the need for installing software on developer
-computers, with a exceptions such as projects requires special licensing.
+computers, with a exceptions such as projects requiring special licensing.
+
+The end result is that a developer needs only to download a given project
+from source control and invoke Maven to build it. Maven
+will automatically featch all the latest dependencies and make them 
+available to the project being developed. The developer no longer
+has to build dependencies or install prerequisite packages to work
+on a project.
 
 Majic currently supports CMake with C++ for Windows Visual Studio 2010
 and 2012, as well as gcc on Linux. However, Majic is not limited 
