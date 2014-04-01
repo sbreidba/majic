@@ -5,7 +5,7 @@
 
   <groupId>com.sri.vt.majic</groupId>
   <artifactId>majic</artifactId>
-  <version>0.1.10-SNAPSHOT</version>
+  <version>0.1.11-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Majic</name>
   <description>

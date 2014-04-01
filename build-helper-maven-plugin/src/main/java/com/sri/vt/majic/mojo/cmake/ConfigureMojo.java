@@ -61,6 +61,12 @@ public class ConfigureMojo extends CMakeMojo
     private Map<String, String> options;
 
     /**
+     * If not set, this is derived from Maven's global debug flag (i.e. -X).
+     */
+    @Parameter(defaultValue = "false", property = "majic.configure.verbose")
+    private Boolean verbose;
+
+    /**
      * If enabled, automatically adds <code>-DCPACK_PACKAGE_VERSION(_MAJOR|_MINOR|_PATCH)</code> to the configuration.
      */
     @Parameter(defaultValue = "true")
@@ -94,6 +100,14 @@ public class ConfigureMojo extends CMakeMojo
     private boolean addCMakeConfigurationTypes;
 
     /**
+     * If enabled, add the contents of any variables of the form
+     * ${cmake.vars(.{majic.os.classifier})(.{cmake.compiler})(.${cmake.arch}}
+     * to the configuration line.
+     */
+    @Parameter(defaultValue = "true")
+    private boolean addAdditionalPredefined;
+
+    /**
      * If set, the configuration step will be skipped.
      */
     @Parameter(defaultValue = "false", property = "skipCMakeConfig")
@@ -119,6 +133,11 @@ public class ConfigureMojo extends CMakeMojo
         }
         
         return skip;
+    }
+    
+    private boolean isVerbose()
+    {
+        return ( verbose || getLog().isDebugEnabled());
     }
 
     protected String getCMakeGenerator() throws MojoExecutionException
@@ -219,6 +238,32 @@ public class ConfigureMojo extends CMakeMojo
         if (addCMakeConfigurationTypes && SystemUtils.IS_OS_WINDOWS)
         {
             appendDashD(arguments, "CMAKE_CONFIGURATION_TYPES", getCurrentConfig());
+        }
+
+        // now add any of the ${cmake.vars*} variables.
+        if (addAdditionalPredefined)
+        {
+            StringBuilder additionalArgBuilder = new StringBuilder();
+            List<String> otherList = getBuildEnvironment().getAdditionalCMakeVariables();
+            for (String var : otherList)
+            {
+                if (isVerbose())
+                {
+                    getLog().info("Examining ${" + var + "} for additional CMake options");
+                }
+
+                String value = getProject().getProperties().getProperty(var);
+                if ((value != null) && (value.length() > 0))
+                {
+                    if (additionalArgBuilder.length() > 0) additionalArgBuilder.append(" ");
+                    additionalArgBuilder.append(value);
+                }
+            }
+
+            if (additionalArgBuilder.length() > 0)
+            {
+                arguments.add(additionalArgBuilder.toString());
+            }
         }
 
         arguments.add(getSourceDirectory().getAbsolutePath());

@@ -8,7 +8,7 @@
     <!-- majic-documentation:gavc -->
     <groupId>com.sri.vt.majic</groupId>
     <artifactId>majic-parent</artifactId>
-    <version>0.1.10-SNAPSHOT</version>
+    <version>0.1.11-SNAPSHOT</version>
     <packaging>pom</packaging>
     <!-- majic-documentation:gavc -->
 
@@ -55,6 +55,16 @@
              property is encouraged as the default extension may change in the future. -->
         <majic.package.extension>tar.bz2</majic.package.extension>
         <!-- majic-documentation:properties -->
+
+        <!-- set up defaults; this allows child poms to either:
+             - just use the defaults
+             - completely override the defaults
+             - append (or prepend) to the defaults, e.g.
+                < cmake.vars.gcc.32 >${default.cmake.vars.gcc.32}< /cmake.vars.gcc.32 >
+        -->
+        <default.cmake.vars.gcc.32>-DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32</default.cmake.vars.gcc.32>
+
+        <cmake.vars.gcc.32>${default.cmake.vars.gcc.32}</cmake.vars.gcc.32>
     </properties>
 
     <profiles>
@@ -199,7 +209,7 @@
                 <plugin>
                     <groupId>com.sri.vt.majic</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>0.1.10-SNAPSHOT</version>
+                    <version>0.1.11-SNAPSHOT</version>
                     <extensions>true</extensions>
                 </plugin>
 

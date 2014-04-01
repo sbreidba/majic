@@ -3,10 +3,11 @@ package com.sri.vt.majic.util;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.logging.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -54,6 +55,13 @@ public class BuildEnvironment
         // property. It is also used to form the package classifier.
         // The Arch enum lists the possible values.
         public static final String CMAKE_ARCH = "cmake.arch";
+
+        // This is a simple way to add CMake variables to a given build. This variable, ${cmake.vars}
+        // is used, but is also a prefix, and a larger set of variables is examined. The full set of variables
+        // is cmake.vars(.os)(.compiler)(.arch). Each component is optional. So while the contents of ${cmake.vars} \
+        // is always added, ${cmake.vars.win7} is added for all win7 builds, ${cmake.vars.32} is added for all
+        // 32-bit builds, ${cmake.vars.vc2010.64} is added for 64-bit visual studio 2010 builds, etc.
+        public static final String CMAKE_VARS = "cmake.vars";
 
         // The package classifier is set by default to ${majic.os.classifier}-${cmake.compiler}-${cmake.arch}.
         // Note that for dependencies, only properties defined in the parent (such as this one) can be used -
@@ -229,6 +237,16 @@ public class BuildEnvironment
         }
 
         return Arch.fromString(archStr);
+    }
+
+    public List<String> getAdditionalCMakeVariables() throws MojoExecutionException
+    {
+        StringCombinations combinations = new StringCombinations(Properties.CMAKE_VARS)
+                .combineWith("." + getOperatingSystemClassifier())
+                .combineWith("." + getCompiler().toString())
+                .combineWith("." + getArchitecture().toString());
+
+        return combinations.getStrings();
     }
 
     public void updateProperties(PropertyCache propertyCache) throws MojoExecutionException
