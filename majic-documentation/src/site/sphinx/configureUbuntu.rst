@@ -81,6 +81,28 @@ If you are not using ROS and want a conventional install of gdal, use::
       qt4-doc \
       qt4-demos
 
+:index:`matlab`
+~~~~~~~~~~~~~~~
+
+Matlab installers may be obtained from
+``\\rebel\it_installs\Matlab\Linux 64-bit``. For the ``R2013a``
+version, make a local copy of the entire R2013a folder, unzip the
+glnxa64 installer in place, and then run the setup.
+
+::
+
+   cd R2013a
+   unzip matlab_R2013a_glnxa64_installer.zip 
+   cp matlab_license.dat ~/Documents
+   sudo ./install
+   echo export PATH=\$PATH:/usr/local/MATLAB/R2013a/bin >> ~/.bashrc
+
+Use the file installation key
+``02586-43325-41039-17882-41372-47263``. 
+
+After installation is complete, be sure to add the matlab bin folder
+to your :envvar:`PATH` environment variable.
+      
 :index:`Eclipse` for C++:
 =========================
 
