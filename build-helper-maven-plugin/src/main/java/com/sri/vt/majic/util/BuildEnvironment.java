@@ -56,6 +56,10 @@ public class BuildEnvironment
         // The Arch enum lists the possible values.
         public static final String CMAKE_ARCH = "cmake.arch";
 
+        // The CMAKE_SIZEOF_VOID_P value: 8 when building 64-bit, 4 when building 32-bit.
+        // Useful when cross-compiling.
+        public static final String CMAKE_SIZEOF_VOID_P = "cmake.sizeof.void.p";
+
         // This is a simple way to add CMake variables to a given build. This variable, ${cmake.vars}
         // is used, but is also a prefix, and a larger set of variables is examined. The full set of variables
         // is cmake.vars(.os)(.compiler)(.arch). Each component is optional. So while the contents of ${cmake.vars} \
@@ -294,14 +298,17 @@ public class BuildEnvironment
         {
             case bits32:
                 propertyCache.setProperty(Properties.VCVARS_ARCH, "x86");
+                propertyCache.setProperty(Properties.CMAKE_SIZEOF_VOID_P, "4");
                 break;
 
             case bits64:
                 propertyCache.setProperty(Properties.VCVARS_ARCH, "x64");
+                propertyCache.setProperty(Properties.CMAKE_SIZEOF_VOID_P, "8");
                 break;
 
             default:
                 propertyCache.setProperty(Properties.VCVARS_ARCH, "unknown");
+                propertyCache.setProperty(Properties.CMAKE_SIZEOF_VOID_P, "unknown");
                 break;
         }
     }
