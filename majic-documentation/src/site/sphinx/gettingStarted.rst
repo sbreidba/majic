@@ -2,14 +2,14 @@
 Introduction
 ============
 
-MAJIC - Maven, Artifactory and JenkIns with Cmake
+MAJIC - Maven, Artifactory and Jenkins Integrated with Cmake
 
 Majic is Maven plugin built to work with CMake. The plugin can
 build multi-platform projects created for CMake then
 apply Maven/Artifactory/Jenkins style dependency management 
 to the resultant binary artifacts.
 
-Jenkins allows Majic to rapidily scale to 
+Jenkins and Artifactory allow Majic to rapidily scale to 
 manage hundreds of builds and dependencies, on multiple platforms,
 without the project developers having to manually build each dependency
 themselves. Instead, a Jenkins continuous integration build automatically 
@@ -43,8 +43,8 @@ Getting Started as a Developer
 
 1. Install the :ref:`required components <developer-prerequisites>` to your local computer. 
 2. Clone the desired repository that is Majic ready to your local computer.
-3. Open a standard command line prompt in the cloned directory. On Windows, do NOT use a visual-studio command line prompt.
-4. "mvn install" 
+3. Open a standard command line prompt in the cloned directory. On Windows, do NOT use a visual studio command line prompt.
+4. run "mvn install" 
 
 Common Command Line Options
 ===============================
