@@ -15,11 +15,12 @@ Majic User Guide
    parentPom
    maven
    configureGit
-   jenkinsSetup
+   jenkinsJobSetup
    configureUbuntu
    configureCentos
    configureVc10
    linuxNotes
+   jenkinsServerSetup
 
    glossary
    todoList
