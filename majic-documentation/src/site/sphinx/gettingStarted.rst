@@ -41,19 +41,18 @@ to use other build systems such as nmake and ant.
 Getting Started as a Developer
 ===============================
 
-1. Install the required components to your local computer. :ref:`_developer-prerequisites`
+1. Install the required components to your local computer. :ref:`developer-prerequisites`
 2. Clone the desired repository that is Majic ready to your local computer.
-3. Open a standard command line prompt in the cloned directory. On Windows,
-do NOT use a visual-studio command line prompt.
+3. Open a standard command line prompt in the cloned directory. On Windows, do NOT use a visual-studio command line prompt.
 4. "mvn install" 
 
 Common Command Line Options
 ===============================
 
-- **cmake.arch** The default Majic architecture is 64 bit. To specify another architecture 
+- *cmake.arch* The default Majic architecture is 64 bit. To specify another architecture 
   use "-Dcmake.arch=[value]". Valid values are "32" and "64".
 
-- **cmake.compiler** The default compiler is Visual Studio on Windows. If more than
+- *cmake.compiler* The default compiler is Visual Studio on Windows. If more than
   one version of Visual Studio is installed, the most recent is
   used. To specity a compiler use "-Dcmake.compiler=[value]".
   Valid values are "vc2010" and "vc2012". The default compiler on linux is gcc. 
