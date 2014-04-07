@@ -10,6 +10,7 @@ Majic User Guide
    :maxdepth: 2
 
    gettingStarted
+   faq
    majicCMakeLifecycle
    buildHelperPlugin
    parentPom
@@ -20,7 +21,6 @@ Majic User Guide
    configureCentos
    configureVc10
    linuxNotes
-
    glossary
    todoList
 

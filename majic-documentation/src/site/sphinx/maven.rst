@@ -73,11 +73,20 @@ phases are for the corresponding cmake steps discussed above.
 |    site-deploy
 
 
-Troubleshooting
-===============
+.. _helpful-maven-commands:
+
+Helpful Maven Commands
+======================
+
+Plugin Help
+   When you run a command like mvn help:system, you are telling Maven to
+   run the 'system' goal within the 'help' plugin. Almost all plugins have a 'help' goal.
+   For example, to see all of the goals of the help plugin, try::
+
+      mvn help:help
 
 Effective POM
-   The "effective" pom is the pom that is actually used when
+   The "effective pom" is the pom file with variable interpolation performed.
    building. The effective pom has all of the variables replaced with
    their actual value. The effective pom is analogous to the
    output of the pre-processor in a C/C++ compilation. To see the
@@ -86,29 +95,43 @@ Effective POM
       mvn help:effective-pom
 
 Active Profiles
-   mvn profiles are ... To see the active profiles available use:: 
+   Maven profiles enable optional or conditional elements within a pom file,
+   such as what operating system or compiler is in use, or even whether to run
+   other parts of the build cycle such as integration tests (unit tests are
+   typically run on each invocation.)
+   
+   To see the active profiles use::
 
       mvn help:active-profiles
 
-Starting a new project
-   validate a project's pom::
-      mvn validate
+Show Environment
+   Viewing the system environment (variables, tool paths, etc.) can be helpful
+   for debugging. To get Maven's view of common environment information::
 
-Show environment::
+      mvn help:system
 
-   mvn help:env
+Looking for Dependency Updates
+   To check if newer releases of dependencies are available, use::
 
-mvn validate (with dep convergence added to parent pom)
-mvn help:system
-mvn dependency:tree -Dverbose=true
+      mvn versions:display-dependency-updates
 
+   To see if releases or snapshots are available, use::
 
-.. todo::
+      mvn versions:display-dependency-updates -DallowSnapshots=true
 
-   Skip, please put in a short description of maven profiles above.
+   In general the Versions plugin can be quite helpful (the "set" goal is pretty handy).
+   Take a look at the help goal to learn more.
+
+Generating a Text View of Dependencies
+   If you'd like to see what your project is dependent on (including transitive dependencies),
+   run::
+
+      mvn dependency:tree
+
+   By default, Maven's dependency convergence strategies are used to filter the output. If you'd like
+   to see *every* dependency, including those that were not selected by default, add the verbose flag::
    
-Listings
-========
+      mvn dependency:tree -Dverbose=true
 
 .. toctree::
 

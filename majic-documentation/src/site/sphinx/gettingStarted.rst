@@ -87,8 +87,8 @@ Ubuntu
    :command:`apt-get` to install the jdk. Installing with apt-get will
    provide automatic notifications of updates.
 
-Note that maven requires the java *jdk*; the *jre* is not sufficient
-for using for maven. 
+Note that Maven really only requires the Java *jdk*; the *jre* is sufficient
+unless you are actually compiling Java code.
 
 Maven Installation Instructions
 -------------------------------
