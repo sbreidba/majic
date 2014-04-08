@@ -1,7 +1,7 @@
 .. _configuring-jenkins:
 
 ===================
-Configuring a Jenkins Server Computer
+Configuration: Jenkins Server
 ===================
 
 Install Jenkins

@@ -3,8 +3,7 @@
 FAQ
 ========
 
-Maven Questions
----------------
+**Maven Questions**
 
 In the pom file, what is the difference between <dependencies> and <dependencyManagement>?
    <dependencies> tells Maven: "I am dependent on these thing".
@@ -16,6 +15,8 @@ In the pom file, what is the difference between <dependencies> and <dependencyMa
    Using <dependencyManagement> is a best practice when there's more than one pom file in a specific project,
    as it consolidates the version numbers into one place, ensuring consistency.
    If there's only one pom file, that's not very interesting.
+
+   Also see the `Apache documentation <http://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#Dependency_Management>`_
 
 What happens if there are dependency conflicts? Meaning, I depend on a:2.0, but a transitive dependency depends on a:1.0?
    By default, Maven will select the later dependency (in this case a:2.0) and use it. This might not work, of course,
