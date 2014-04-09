@@ -56,7 +56,7 @@ public class CompileMojo extends RunTargetMojo
             }
             catch (IOException e)
             {
-                getLog().warn("Could not clean " + projectPackageDir + ": " + e.getMessage());
+                throw new MojoFailureException("Could not clean " + projectPackageDir + ": " + e.getMessage());
             }
         }
 
