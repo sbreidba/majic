@@ -1,7 +1,7 @@
 .. _ubuntuInstall:
 
 =================================================
-Configuration of new ubuntu 12.04 computer aspn03
+Configuration: Ubuntu 12.04 for ASPN
 =================================================
 
 In this section we show various apt-get installs of packages used for

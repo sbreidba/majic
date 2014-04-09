@@ -1,7 +1,7 @@
 .. _Configuring git:
 
 ===========
-git and ssh
+Configuration: git and ssh
 ===========
 
 Installing git

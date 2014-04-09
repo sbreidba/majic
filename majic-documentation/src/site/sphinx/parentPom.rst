@@ -1,5 +1,5 @@
 ====================
-The Majic Parent POM
+Understanding the Majic Parent POM
 ====================
 
 The Majic pom file at :download:`majic-parent/pom.xml <../../../../majic-parent/pom.xml>` should be

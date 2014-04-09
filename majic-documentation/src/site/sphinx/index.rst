@@ -11,17 +11,17 @@ Majic User Guide
 
    gettingStarted
    faq
-   majicCMakeLifecycle
-   buildHelperPlugin
-   parentPom
-   maven
-   configureGit
    jenkinsJobSetup
+   artifactory
+   maven
+   parentPom
+   configureGit
    configureUbuntu
    configureCentos
+   jenkinsServerSetup
    configureVc10
    linuxNotes
-   jenkinsServerSetup
+   majicCMakeLifecycle
    glossary
    todoList
 

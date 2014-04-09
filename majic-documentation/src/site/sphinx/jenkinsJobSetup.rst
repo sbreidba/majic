@@ -5,7 +5,7 @@ Working with Jenkins
 ===================
 
 Creating a new Majic Build
-===============
+===================
 
 Majic uses two Jenkins jobs to build a single Majic project. The "master" job monitors source control for changes and
 launches the "matrix" job to perform the build(s) for the specific platforms and configurations, such as 32-bit Windows 7

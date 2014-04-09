@@ -1,5 +1,5 @@
 ====================
-Packaging with Majic
+Reference: Packaging with Majic
 ====================
 
 Maven has a number of packaging schemes available by default. The most commonly-used,

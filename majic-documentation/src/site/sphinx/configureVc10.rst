@@ -1,5 +1,5 @@
 ==========
-VC10 Notes
+Reference: VC10 Notes
 ==========
 
 installed gmake (and a bunch of other stuff) using GetGnuWin32 as

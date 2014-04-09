@@ -1,5 +1,5 @@
 ==============
-Maven Overview
+Working with Maven
 ==============
 
 Terms

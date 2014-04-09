@@ -1,5 +1,5 @@
 ==========================================================
-Configuring a Linux (CentOs/RedHat) System for Development
+Configuration: Linux (CentOs/RedHat) System for Development
 ==========================================================
 
 EPEL
