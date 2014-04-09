@@ -232,13 +232,17 @@ public class Cleaner
                 {
                     try
                     {
-                        logVerbose.log("Delete failed, trying again in " + delays[i] + " milliseconds");
+                        if (logWarn != null)
+                        {
+                            logWarn.log("Delete of " + file + " failed, trying again in " + delays[i] + " milliseconds");
+                        }
                         Thread.sleep( delays[i] );
                     }
                     catch ( InterruptedException e )
                     {
                         // ignore
                     }
+
                     deleted = file.delete() || !file.exists();
                 }
             }
