@@ -11,14 +11,13 @@ Majic User Guide
 
    gettingStarted
    faq
-   jenkinsJobSetup
-   artifactory
-   maven
+   workingWithMajic
    parentPom
    configureGit
    configureUbuntu
    configureCentos
    jenkinsServerSetup
+   mavenReference
    configureVc10
    linuxNotes
    majicCMakeLifecycle
