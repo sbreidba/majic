@@ -202,7 +202,7 @@ Converting snapshots to release builds
 3.	Look for dependency updates (if this is a leaf, obviously there won't be any). All dependencies must be updated to release versions.
 
 	a.	To get a list of available released dependencies, run "mvn versions:display-dependency-updates"
-	b.	*and/or* run "mvn versions:use-latest-releases". This will update the pom file to use the most recent release of all dependencies. It also creates a backup of the original pom file which can be deleted.
+	b.	*and/or* run "mvn versions:use-releases". This will update the pom file to use the most recent release of all dependencies. It also creates a backup of the original pom file which can be deleted.
 	c.	Take a look at the diff for the pom file --- make sure it's sensible. It should only be list non-snapshot versions as dependencies.
 4.	Update the project's version number
 
