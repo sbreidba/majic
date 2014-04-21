@@ -9,9 +9,8 @@ Majic User Guide
 .. toctree::
    :maxdepth: 2
 
-   gettingStarted
-   faq
    workingWithMajic
+   faq
    parentPom
    configureGit
    configureUbuntu

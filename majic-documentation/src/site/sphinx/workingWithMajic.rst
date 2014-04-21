@@ -2,10 +2,80 @@
 Working with Majic
 ==============
 
-Overview
-=====
 
-Majic projects are built with Maven. To build the project run "mvn install" from a command line in the project's folder.
+Introduction
+============
+
+MAJIC - Maven, Artifactory and Jenkins Integrated with Cmake
+
+Majic is Maven plugin built to work with CMake. The plugin can
+build multi-platform projects created for CMake then
+apply Artifactory+Jenkins style dependency management 
+to the resultant binary artifacts. Majic also leverages the
+`convention over configuration <http://en.wikipedia.org/wiki/Convention_over_configuration>`_
+design philosophy 
+of Maven and applies it to CMake --- and in particular to CMake's
+package finding system --- to simplify the CMake build environment
+and reduce complexity.
+
+Jenkins and Artifactory allow Majic to rapidly scale to 
+manage hundreds of builds and dependencies, on multiple platforms,
+without the project developers having to manually build each dependency
+themselves. Instead, a Jenkins continuous integration build automatically 
+builds a project after the source code is changed, then cascades to build all projects
+that are dependent upon the changed project. The resultant binaries
+are published on Artifactory and made available to developers.
+
+Majic also reduces or eliminates the need for
+software packages to be installed on build servers and developer computers by
+applying the convention over configuration philosophy to CMake dependencies. 
+Software packages from third parties are packaged in a 
+:ref:`standardized format <prebuilt-packages>` and 
+uploaded to Artifactory. The packages are then automatically downloaded
+to a developer's computer, via Maven dependency management, and made
+available to CMake's package finding infrastructure.
+This can virtually eliminate the need for installing software on developer
+computers, with exceptions for projects such as those that require special licensing.
+
+The end result is that a developer needs only to download a given project
+from source control and invoke Maven to build it. Maven
+will automatically fetch all the latest dependencies and make them 
+available to the project being developed. The developer no longer
+has to build dependencies or install prerequisite packages to work
+on a project. This makes bringing on new developers vastly easier, as is
+configuring a build server. Managers and QA staff can retrieve, install,
+test and deliver products without building a project themselves. 
+The convention over configuration design practice reduces the 
+complexity of the overall system.
+
+Majic currently supports CMake with C++ for Windows Visual Studio 2010
+and 2012, as well as gcc on Linux. However, Majic is not limited 
+to these platforms, nor is it limited to CMake. Majic can be scripted
+to use other build systems such as nmake and ant.
+
+Getting Started as a Developer
+===============================
+
+1. Install the :ref:`required components <developer-prerequisites>` to your local computer. 
+2. Clone the desired repository that is Majic ready to your local computer.
+3. Open a standard command line prompt in the cloned directory. On Windows, do NOT use a visual studio command line prompt.
+4. run "mvn install" 
+
+Common Command Line Options
+===============================
+
+- **cmake.arch** The default Majic architecture is 64 bit. To specify another architecture 
+  use "-Dcmake.arch=[value]". Valid values are "32" and "64". Ex. "mvn install -Dcmake.arch=32"
+
+- **cmake.compiler** The default compiler is Visual Studio on Windows. If more than
+  one version of Visual Studio is installed, the most recent is
+  used. To specity a compiler use "-Dcmake.compiler=[value]".
+  Valid values are "vc2010" and "vc2012". The default compiler on linux is gcc. 
+  It is the only supported compiler.
+  Ex. "mvn install -Dcmake.compiler=vc2010"
+
+The Majic Folder Layout
+=====
 
 Majic projects use a standard folder layout: ::
 
@@ -50,6 +120,8 @@ Log in to the server, such as http://git-open.sarnoff.internal
   c.	Edit the "repository url" for your branch AND set the correct "branch specifier"
   d.	Click "Save"
   
+.. _prebuilt-packages:
+
 Prebuilt Packages
 =====
 
@@ -118,7 +190,7 @@ To create a release build perform the following steps:
 4.	Once the release version of the project has been successfully built and labelled as per below, increment the version number and change it back to a SNAPSHOT build to continue development on the next version of the project.
 5.	Use the conversion processes detailed below.
 
-Converting Snapshots to Release builds
+Converting snapshots to release builds
 ====================
 
 
@@ -142,10 +214,12 @@ Converting Snapshots to Release builds
 
 	a.	If you are using git flow run "git flow release finish"
 
-Converting release builds to a snapshot
+Converting release to snapshot builds
 ==================================
 
-After a release build has been created a project is typically converted back to a SNAPSHOT build to continue development on the next version.
+After a release build has been created a project is typically converted back to a SNAPSHOT 
+build to continue development on the next version.  
+
 
 1.	Run "mvn versions:set" to update the version. Make sure to increment the version number and use the keyword "SNAPSHOT" in the version string.
 
