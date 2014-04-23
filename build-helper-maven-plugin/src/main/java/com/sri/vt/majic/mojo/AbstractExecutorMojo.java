@@ -123,7 +123,7 @@ public abstract class AbstractExecutorMojo extends AbstractMojo
             }
         }
         
-        getLog().info("Using plugin : " + plugin.toString());
+        getLog().debug("Using plugin : " + plugin.toString());
 
         executeMojo(
             plugin(
