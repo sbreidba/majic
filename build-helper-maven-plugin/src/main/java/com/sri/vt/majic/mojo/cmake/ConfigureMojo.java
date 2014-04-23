@@ -1,29 +1,39 @@
 package com.sri.vt.majic.mojo.cmake;
 
 import com.google.common.collect.ImmutableMap;
+import com.sri.vt.majic.util.ArtifactHelper;
 import com.sri.vt.majic.util.BuildEnvironment;
 import com.sri.vt.majic.util.CMakeDirectories;
 import com.sri.vt.majic.util.Version;
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Executes the CMake configuration step.
  */
-@Mojo(name="cmake-configure", defaultPhase=LifecyclePhase.PROCESS_SOURCES, requiresProject=true)
+@Mojo(name="cmake-configure", defaultPhase=LifecyclePhase.PROCESS_SOURCES, requiresProject=true, requiresDependencyResolution = ResolutionScope.TEST)
 public class ConfigureMojo extends CMakeMojo
 {
     @Parameter(defaultValue = "${basedir}")
     private File sourceDirectory;
+
+    /**
+     * See the untar goal for more information.
+     */
+    @Parameter(defaultValue = "true", property = "cmake.untar.inplace")
+    private boolean extractInPlace;
 
     /**
      * The CMake generator to use (i.e. <code>cmake -G generator</code>)
@@ -227,7 +237,33 @@ public class ConfigureMojo extends CMakeMojo
 
         if (addCMakePrefixPath)
         {
-            appendDashD(arguments, "CMAKE_PREFIX_PATH", packageRoot.getAbsolutePath() + ";" + exportRoot.getAbsolutePath());
+            StringBuilder prefixPath = new StringBuilder();
+            if (getExtractInPlace())
+            {
+                Set artifacts = getProject().getArtifacts();
+                if ((artifacts != null) && (!artifacts.isEmpty()))
+                {
+                    for (Object object : artifacts)
+                    {
+                        if (prefixPath.length() > 0)
+                        {
+                            prefixPath.append(";");
+                        }
+
+                        Artifact artifact = (Artifact)object;
+                        File file = ArtifactHelper.getRepoExtractDirectory(artifact);
+                        prefixPath.append(file.getAbsolutePath());
+                    }
+                }
+            }
+            else
+            {
+                prefixPath.append(packageRoot.getAbsolutePath());
+                prefixPath.append(";");
+                prefixPath.append(exportRoot.getAbsolutePath());
+            }
+
+            appendDashD(arguments, "CMAKE_PREFIX_PATH", prefixPath.toString());
         }
 
         if (addCMakeInstallPrefix)
@@ -271,6 +307,11 @@ public class ConfigureMojo extends CMakeMojo
         return arguments;
     }
 
+    protected boolean getExtractInPlace()
+    {
+        return extractInPlace;
+    }
+    
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
     {

@@ -80,8 +80,8 @@
   </build>
 
   <issueManagement>
-    <url>http://jira.sarnoff.internal/secure/Dashboard.jspa?selectPageId=10900</url>
     <system>JIRA</system>
+    <url>http://jira.sarnoff.internal:8080/secure/Dashboard.jspa?selectPageId=11000</url>
   </issueManagement>
 
   <url>http://build-open/job/vt-majic/</url>
@@ -97,8 +97,8 @@
   </ciManagement>
 
   <scm>
-    <connection>scm:git:ssh://git-open.sarnoff.internal/scm/vision/majic.git</connection>
-    <url>http://git-open.sarnoff.internal/contents</url>
+    <connection>scm:git:ssh://stash-vt.sarnoff.internal:2222/common/majic.git</connection>
+    <url>https://stash-vt.sarnoff.internal/projects/COMMON/repos/majic/browse</url>
   </scm>
 
   <modules>

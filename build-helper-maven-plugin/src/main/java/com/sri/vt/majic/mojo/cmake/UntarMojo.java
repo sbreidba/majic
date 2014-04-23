@@ -30,6 +30,16 @@ public class UntarMojo extends CMakeCommandMojo
     private File tarFile;
 
     /**
+     * Normally tarballs are expanded within the m2 repository.
+     * If this is not desirable, override it here. Other goals
+     * such as config may have interactions with this behavior, so
+     * it is suggested that the property be set instead of directly
+     * configuring this value.
+     */
+    @Parameter(defaultValue = "true", property = "cmake.untar.inplace")
+    private boolean extractInPlace;
+
+    /**
      * The directory that contains small marker files used to determine when tarballs need to be unpacked.
      */
     @Parameter(defaultValue = "${cmake.build.root}/cmake-untar/markers")
@@ -74,7 +84,14 @@ public class UntarMojo extends CMakeCommandMojo
 
     protected File getWorkingDirectory()
     {
-        return getTemporaryExtractDir();
+        if (getExtractInPlace())
+        {
+            return getOutputDirectory();
+        }
+        else
+        {
+            return getTemporaryExtractDir();
+        }
     }
 
     protected File getOutputDirectory()
@@ -112,6 +129,8 @@ public class UntarMojo extends CMakeCommandMojo
 
     protected void moveFiles() throws IOException
     {
+        assert(!getExtractInPlace());
+        
         if (shouldStripRootDirectory())
         {
             for (File subDir : getTemporaryExtractDir().listFiles())
@@ -160,18 +179,6 @@ public class UntarMojo extends CMakeCommandMojo
 
         Cleaner cleaner = new Cleaner(getLog(), isVerbose());
         cleaner.delete(sourceDirectory, null, false, false, true);
-
-        /*for (File containedFile : sourceDirectory.listFiles())
-        {
-            if (dryRunMove)
-            {
-                getLog().info("I would have moved " + containedFile + " to " + getOutputDirectory());
-            }
-            else
-            {
-                FileUtils.moveToDirectory(containedFile, getOutputDirectory(), true);
-            }
-        }*/
     }
 
     @Override
@@ -188,14 +195,22 @@ public class UntarMojo extends CMakeCommandMojo
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
     {
-        getTemporaryExtractDir().mkdirs();
+        if (!getExtractInPlace())
+        {
+            getTemporaryExtractDir().mkdirs();
+        }
+        
         getMarkersDirectory().mkdirs();
 
         super.execute();
 
         try
         {
-            moveFiles();
+            if (!getExtractInPlace())
+            {
+                moveFiles();
+            }
+
             FileUtils.touch(getMarkerFile());
         }
         catch(IOException e)
@@ -207,5 +222,10 @@ public class UntarMojo extends CMakeCommandMojo
     protected boolean shouldStripRootDirectory()
     {
         return stripRootDirectory;
+    }
+
+    protected boolean getExtractInPlace()
+    {
+        return extractInPlace;
     }
 }

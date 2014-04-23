@@ -1,5 +1,6 @@
 package com.sri.vt.majic.mojo.cmake;
 
+import com.sri.vt.majic.util.ArtifactHelper;
 import com.sri.vt.majic.util.CMakeDirectories;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -70,29 +71,46 @@ public class UntarDependenciesMojo extends UntarMojo
 
     protected File getOutputDirectory()
     {
-        if (currentArtifact.getScope().equalsIgnoreCase(Artifact.SCOPE_TEST))
+        if (getExtractInPlace())
         {
-            return testScopeOutputDirectory;
+            return ArtifactHelper.getRepoExtractDirectory(currentArtifact);
         }
-
-        if (currentArtifact.getScope().equalsIgnoreCase(Artifact.SCOPE_COMPILE))
+        else
         {
-            return compileScopeOutputDirectory;
-        }
+            if (currentArtifact.getScope().equalsIgnoreCase(Artifact.SCOPE_TEST))
+            {
+                return testScopeOutputDirectory;
+            }
 
-        if (currentArtifact.getScope().equalsIgnoreCase(Artifact.SCOPE_RUNTIME))
-        {
-            // these are external packages
-            return runtimeScopeOutputDirectory;
-        }
+            if (currentArtifact.getScope().equalsIgnoreCase(Artifact.SCOPE_COMPILE))
+            {
+                return compileScopeOutputDirectory;
+            }
 
-        return outputDirectory;
+            if (currentArtifact.getScope().equalsIgnoreCase(Artifact.SCOPE_RUNTIME))
+            {
+                // these are external packages
+                return runtimeScopeOutputDirectory;
+            }
+
+            return outputDirectory;
+        }
     }
 
     @Override
     protected File getMarkersDirectory()
     {
-        return new File(getOutputDirectory(), "cmake-untar-dependencies/markers");
+        File baseDir;
+        if (getExtractInPlace())
+        {
+            baseDir = currentArtifact.getFile().getParentFile();
+        }
+        else
+        {
+            baseDir = getOutputDirectory();
+        }
+        
+        return new File(baseDir, "cmake-untar-dependencies/markers");
     }
 
     @Override
@@ -122,4 +140,5 @@ public class UntarDependenciesMojo extends UntarMojo
             }
         }
     }
+
 }

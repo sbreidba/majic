@@ -1,6 +1,5 @@
 package com.sri.vt.majic.mojo.cmake;
 
-import com.sri.vt.majic.util.BuildEnvironment;
 import com.sri.vt.majic.util.CMakeDirectories;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -22,7 +21,7 @@ public class TarMojo extends CMakeCommandMojo
 {
     @Component()
     private MavenProjectHelper projectHelper;
-    
+
     @Parameter(defaultValue = "tar cjf", required = true)
     private String command;
 
