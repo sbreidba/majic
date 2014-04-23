@@ -64,7 +64,7 @@ public class UntarMojo extends CMakeCommandMojo
     @Parameter(defaultValue = "false", property = "majic.untar.verbose")
     private Boolean verbose;
 
-    private boolean isVerbose()
+    protected boolean isVerbose()
     {
         return ( verbose || getLog().isDebugEnabled());
     }
@@ -195,11 +195,30 @@ public class UntarMojo extends CMakeCommandMojo
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
     {
-        if (!getExtractInPlace())
+        // Normally we'd just let super.execute() handle skipping, but in this case
+        // there's enough extra stuff - directory creation, logging - that we can avoid
+        // by checking it up-front.
+        if (getSkip() || isUpToDate()) return;
+
+        getLog().info("Extracting " + getTarFile().toString() + " to " + getOutputDirectory());
+        Cleaner cleaner = new Cleaner(getLog(), isVerbose());
+        try
         {
-            getTemporaryExtractDir().mkdirs();
+            if (getExtractInPlace())
+            {
+                cleaner.delete(getOutputDirectory(), null, false, true, true);
+            }
+            else
+            {
+                cleaner.delete(getTemporaryExtractDir(), null, false, true, true);
+                getTemporaryExtractDir().mkdirs();
+            }
         }
-        
+        catch(IOException e)
+        {
+            throw new MojoFailureException("Could not clean up directory during untar: " + e.getMessage());
+        }
+
         getMarkersDirectory().mkdirs();
 
         super.execute();
