@@ -5,12 +5,14 @@ import com.sri.vt.majic.util.CMakeDirectories;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.clean.Cleaner;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -22,6 +24,16 @@ public class UntarDependenciesMojo extends UntarMojo
     // Not settable by the user - always computed instead.
     @Parameter(defaultValue = "", readonly = true)
     private File tarFile;
+
+    /**
+     * Normally tarballs are expanded within the m2 repository.
+     * If this is not desirable, override it here. Other goals
+     * such as config may have interactions with this behavior, so
+     * it is suggested that the property be set instead of directly
+     * configuring this value.
+     */
+    @Parameter(defaultValue = "true", property = "cmake.untar.inplace")
+    private boolean extractInPlace;
 
     /**
      * The fallback output directory for unknown scopes.
@@ -135,9 +147,29 @@ public class UntarDependenciesMojo extends UntarMojo
                     continue;
                 }
 
+                // Extracting in-place is slightly safer as we can always remove the output dir contents
+                // If we extract to module dirs, we end up merging directories, so we can't clean out
+                // old cruft.
+                Cleaner cleaner = new Cleaner(getLog(), isVerbose());
+                if (!getSkip() && !isUpToDate() && getExtractInPlace())
+                {
+                    try
+                    {
+                        cleaner.delete(getOutputDirectory(), null, false, true, true);
+                    }
+                    catch(IOException e)
+                    {
+                        throw new MojoFailureException("Could not clean up directory during untar: " + e.getMessage());
+                    }
+                }
+
                 super.execute();
             }
         }
     }
 
+    protected boolean getExtractInPlace()
+    {
+        return extractInPlace;
+    }
 }

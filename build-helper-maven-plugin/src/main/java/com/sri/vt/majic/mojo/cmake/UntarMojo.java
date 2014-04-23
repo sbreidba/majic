@@ -1,5 +1,6 @@
 package com.sri.vt.majic.mojo.cmake;
 
+import org.apache.commons.io.FileExistsException;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -28,16 +29,6 @@ public class UntarMojo extends CMakeCommandMojo
      */
     @Parameter(defaultValue = "", required = true)
     private File tarFile;
-
-    /**
-     * Normally tarballs are expanded within the m2 repository.
-     * If this is not desirable, override it here. Other goals
-     * such as config may have interactions with this behavior, so
-     * it is suggested that the property be set instead of directly
-     * configuring this value.
-     */
-    @Parameter(defaultValue = "true", property = "cmake.untar.inplace")
-    private boolean extractInPlace;
 
     /**
      * The directory that contains small marker files used to determine when tarballs need to be unpacked.
@@ -84,14 +75,7 @@ public class UntarMojo extends CMakeCommandMojo
 
     protected File getWorkingDirectory()
     {
-        if (getExtractInPlace())
-        {
-            return getOutputDirectory();
-        }
-        else
-        {
-            return getTemporaryExtractDir();
-        }
+        return getTemporaryExtractDir();
     }
 
     protected File getOutputDirectory()
@@ -129,8 +113,6 @@ public class UntarMojo extends CMakeCommandMojo
 
     protected void moveFiles() throws IOException
     {
-        assert(!getExtractInPlace());
-        
         if (shouldStripRootDirectory())
         {
             for (File subDir : getTemporaryExtractDir().listFiles())
@@ -161,7 +143,7 @@ public class UntarMojo extends CMakeCommandMojo
 
     protected void moveContents(File sourceDirectory) throws IOException
     {
-        /* TODO: moving directories doesn't really work very well.
+        /* Moving directories doesn't really work very well.
 
            First, FileUtils.moveXXX will complain if the destination already exists.
            Second, even if it didn't, the java implementations seem to revert to copy & delete, so
@@ -173,12 +155,22 @@ public class UntarMojo extends CMakeCommandMojo
               Then we can selectively extract the contents of the tarball directly to the output directory.
               This is probably our best option if it's practical.
            3. Do a recursive move, but checking to see if the target exists before the move, deleting it first if so.
+
+           Best bet is to always extract to a clean output dir. UntarDependencies does this as long as
+           in-place extraction is enabled.
         */
 
-        FileUtils.copyDirectory(sourceDirectory, getOutputDirectory());
+        try
+        {
+            FileUtils.moveDirectory(sourceDirectory, getOutputDirectory());
+        }
+        catch(FileExistsException e)
+        {
+            FileUtils.copyDirectory(sourceDirectory, getOutputDirectory());
 
-        Cleaner cleaner = new Cleaner(getLog(), isVerbose());
-        cleaner.delete(sourceDirectory, null, false, false, true);
+            Cleaner cleaner = new Cleaner(getLog(), isVerbose());
+            cleaner.delete(sourceDirectory, null, false, false, true);
+        }
     }
 
     @Override
@@ -204,15 +196,8 @@ public class UntarMojo extends CMakeCommandMojo
         Cleaner cleaner = new Cleaner(getLog(), isVerbose());
         try
         {
-            if (getExtractInPlace())
-            {
-                cleaner.delete(getOutputDirectory(), null, false, true, true);
-            }
-            else
-            {
-                cleaner.delete(getTemporaryExtractDir(), null, false, true, true);
-                getTemporaryExtractDir().mkdirs();
-            }
+            cleaner.delete(getTemporaryExtractDir(), null, false, true, true);
+            getTemporaryExtractDir().mkdirs();
         }
         catch(IOException e)
         {
@@ -225,11 +210,7 @@ public class UntarMojo extends CMakeCommandMojo
 
         try
         {
-            if (!getExtractInPlace())
-            {
-                moveFiles();
-            }
-
+            moveFiles();
             FileUtils.touch(getMarkerFile());
         }
         catch(IOException e)
@@ -241,10 +222,5 @@ public class UntarMojo extends CMakeCommandMojo
     protected boolean shouldStripRootDirectory()
     {
         return stripRootDirectory;
-    }
-
-    protected boolean getExtractInPlace()
-    {
-        return extractInPlace;
     }
 }
