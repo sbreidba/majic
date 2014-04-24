@@ -90,8 +90,19 @@ public class TarMojo extends CMakeCommandMojo
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
     {
+        if (!getWorkingDirectory().exists())
+        {
+            getLog().warn("Skipping tar step: directory " + getWorkingDirectory() + " does not exist.");
+            return;
+        }
+
         super.execute();
 
+        if (getSkip() || isUpToDate())
+        {
+            return;
+        }
+        
         if (shouldAttachArtifact())
         {
             try
