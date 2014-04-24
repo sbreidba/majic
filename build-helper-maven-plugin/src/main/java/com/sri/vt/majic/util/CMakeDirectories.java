@@ -8,7 +8,7 @@ public class CMakeDirectories
     public static final String CMAKE_BUILD_ROOT_DEFAULT = "${" + BuildEnvironment.Properties.CMAKE_BUILD_ROOT + "}";
 
     public static final String CMAKE_PACKAGE_ROOT_DEFAULT = "${" + BuildEnvironment.Properties.CMAKE_BUILD_ROOT + "}/pkg";
-    public static final String CMAKE_EXPORT_ROOT_DEFAULT = "${" + BuildEnvironment.Properties.CMAKE_BUILD_ROOT + "}/exports";
+    public static final String CMAKE_EXPORT_ROOT_DEFAULT = "${" + BuildEnvironment.Properties.CMAKE_BUILD_ROOT + "}/imports";
 
     public static final String CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT = "${" + BuildEnvironment.Properties.CMAKE_BUILD_ROOT + "}/${project.artifactId}";
     public static final String CMAKE_PROJECT_PACKAGEDIR_DEFAULT = CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT + "/exports";
