@@ -30,10 +30,22 @@ public class ConfigureMojo extends CMakeMojo
     private File sourceDirectory;
 
     /**
-     * See the untar goal for more information.
+     * See the untar dependencies goal for more information.
      */
     @Parameter(defaultValue = "true", property = "cmake.untar.inplace")
     private boolean extractInPlace;
+
+    /**
+     * See the untar dependencies goal for more information.
+     */
+    @Parameter(defaultValue = "true", property = "cmake.untar.create.symlinks")
+    private boolean createSymbolicLinks;
+
+    /**
+     * See the untar dependencies goal for more information.
+     */
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_PACKAGE_DIR_DEFAULT, property = "cmake.untar.symlink.directory")
+    private File symbolicLinkDirectory;
 
     /**
      * The CMake generator to use (i.e. <code>cmake -G generator</code>)
@@ -233,19 +245,31 @@ public class ConfigureMojo extends CMakeMojo
             StringBuilder prefixPath = new StringBuilder();
             if (getExtractInPlace())
             {
-                Set artifacts = getProject().getArtifacts();
-                if ((artifacts != null) && (!artifacts.isEmpty()))
+                if (getCreateSymbolicLinks())
                 {
-                    for (Object object : artifacts)
+                    if (getSymbolicLinkDirectory() == null)
                     {
-                        if (prefixPath.length() > 0)
-                        {
-                            prefixPath.append(";");
-                        }
+                        throw new MojoExecutionException("Must specify symlink destination directory");
+                    }
 
-                        Artifact artifact = (Artifact)object;
-                        File file = ArtifactHelper.getRepoExtractDirectory(artifact);
-                        prefixPath.append(file.getAbsolutePath());
+                    prefixPath.append(getSymbolicLinkDirectory());
+                }
+                else
+                {
+                    Set artifacts = getProject().getArtifacts();
+                    if ((artifacts != null) && (!artifacts.isEmpty()))
+                    {
+                        for (Object object : artifacts)
+                        {
+                            if (prefixPath.length() > 0)
+                            {
+                                prefixPath.append(";");
+                            }
+
+                            Artifact artifact = (Artifact)object;
+                            File file = ArtifactHelper.getRepoExtractDirectory(artifact);
+                            prefixPath.append(file.getAbsolutePath());
+                        }
                     }
                 }
             }
@@ -304,7 +328,17 @@ public class ConfigureMojo extends CMakeMojo
     {
         return extractInPlace;
     }
-    
+
+    protected boolean getCreateSymbolicLinks()
+    {
+        return createSymbolicLinks;
+    }
+
+    protected File getSymbolicLinkDirectory()
+    {
+        return symbolicLinkDirectory;
+    }
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
     {

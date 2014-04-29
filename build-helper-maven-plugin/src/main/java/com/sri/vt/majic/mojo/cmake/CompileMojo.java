@@ -28,7 +28,7 @@ public class CompileMojo extends RunTargetMojo
     @Parameter(defaultValue = "true")
     private boolean cleanPackageDirBeforeBuilding;
     
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_PACKAGEDIR_DEFAULT)
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_EXPORT_DIR_DEFAULT)
     private File projectPackageDir;
 
     /**

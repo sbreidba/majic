@@ -27,13 +27,35 @@ public class UntarDependenciesMojo extends UntarMojo
 
     /**
      * Normally tarballs are expanded within the m2 repository.
-     * If this is not desirable, override it here. Other goals
-     * such as config may have interactions with this behavior, so
+     * If this is not desirable, override it here.
+     *
+     * Other goals such as config may have interactions with this behavior, so
      * it is suggested that the property be set instead of directly
      * configuring this value.
      */
     @Parameter(defaultValue = "true", property = "cmake.untar.inplace")
     private boolean extractInPlace;
+
+    /**
+     * If set, symlinks are created that point to the untarred dependencies.
+     *
+     * Other goals such as config may have interactions with this behavior, so
+     * it is suggested that the property be set instead of directly
+     * configuring this value.
+     */
+    @Parameter(defaultValue = "true", property = "cmake.untar.create.symlinks")
+    private boolean createSymbolicLinks;
+
+    /**
+     * Only valid when extractInPlace is enabled. This is the location where symbolic
+     * links to dependencies are created.
+     *
+     * Other goals such as config may have interactions with this behavior, so
+     * it is suggested that the property be set instead of directly
+     * configuring this value.
+     */
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_PACKAGE_DIR_DEFAULT, property = "cmake.untar.symlink.directory")
+    private File symbolicLinkDirectory;
 
     /**
      * The fallback output directory for unknown scopes.
@@ -109,6 +131,16 @@ public class UntarDependenciesMojo extends UntarMojo
         }
     }
 
+    protected boolean getCreateSymbolicLinks()
+    {
+        return createSymbolicLinks;
+    }
+    
+    protected File getSymbolicLinkDirectory()
+    {
+        return symbolicLinkDirectory;
+    }
+    
     @Override
     protected File getMarkersDirectory()
     {
@@ -134,6 +166,32 @@ public class UntarDependenciesMojo extends UntarMojo
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
     {
+        if (getCreateSymbolicLinks())
+        {
+            if (getSymbolicLinkDirectory() == null)
+            {
+                throw new MojoExecutionException("Must specify symlink destination directory");
+            }
+
+            if (getSymbolicLinkDirectory().exists())
+            {
+                File[] files = getSymbolicLinkDirectory().listFiles();
+                for (File file : files)
+                {
+                    if (java.nio.file.Files.isSymbolicLink(file.toPath()))
+                    {
+                        if (isVerbose())
+                        {
+                            getLog().info("Removing symlink " + file.getPath());
+                        }
+
+                        file.delete();
+                    }
+                }
+
+            }
+        }
+
         Set artifacts = getProject().getArtifacts();
         if ((artifacts != null) && (!artifacts.isEmpty()))
         {
@@ -164,6 +222,39 @@ public class UntarDependenciesMojo extends UntarMojo
                 }
 
                 super.execute();
+
+                if (getCreateSymbolicLinks())
+                {
+                    getSymbolicLinkDirectory().mkdirs();
+
+                    java.nio.file.Path target = getOutputDirectory().toPath();
+
+                    File symLink = new File(
+                            getSymbolicLinkDirectory(),
+                            artifact.getArtifactId() + "-" + artifact.getBaseVersion());
+
+                    if (!symLink.exists())
+                    {
+                        java.nio.file.Path symLinkPath = symLink.toPath();
+
+                        try
+                        {
+                            getLog().info("Creating symlink from " + symLinkPath + " to " + target);
+                            java.nio.file.Files.createSymbolicLink(symLinkPath, target);
+                        }
+                        catch(SecurityException e)
+                        {
+                            throw new MojoExecutionException(
+                                    "Security exception occurred when creating symlink. " +
+                                    "Either run as Administrator or set cmake.untar.create.symlinks to false. " +
+                                    e.getMessage());
+                        }
+                        catch(IOException e)
+                        {
+                            throw new MojoExecutionException("Could not create dependency symlink: " + e.getMessage());
+                        }
+                    }
+                }
             }
         }
     }

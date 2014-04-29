@@ -25,7 +25,7 @@ public class TarMojo extends CMakeCommandMojo
     @Parameter(defaultValue = "tar cjf", required = true)
     private String command;
 
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_PACKAGEDIR_DEFAULT)
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_EXPORT_DIR_DEFAULT)
     private File workingDirectory;
 
     // Note: tar.bz2 is not replaced here or in 'type' with ${majic.package.extension}
@@ -34,7 +34,7 @@ public class TarMojo extends CMakeCommandMojo
     @Parameter(defaultValue = "${project.artifactId}-${project.version}.tar.bz2")
     private String outputName;
 
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_PACKAGEDIR_DEFAULT)
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_EXPORT_DIR_DEFAULT)
     private File outputDirectory;
 
     @Parameter(defaultValue = "true")
