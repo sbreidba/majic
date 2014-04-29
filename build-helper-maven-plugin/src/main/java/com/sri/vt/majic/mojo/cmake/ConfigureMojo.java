@@ -96,13 +96,6 @@ public class ConfigureMojo extends CMakeMojo
     private boolean addCMakeInstallPrefix;
 
     /**
-     * If enabled, for single-config (e.g. not Windows) builds, this will add <code>-DCMAKE_BUILD_TYPE="..."</code>
-     * to the configuration.
-     */
-    @Parameter(defaultValue = "true")
-    private boolean addCMakeBuildType;
-
-    /**
      * If enabled, for multi-config builds, this will add <code>-DCMAKE_CONFIGURATION_TYPES="..."</code>
      * to the configuration.
      */

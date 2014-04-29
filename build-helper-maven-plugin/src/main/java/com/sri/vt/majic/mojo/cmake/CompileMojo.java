@@ -20,6 +20,11 @@ public class CompileMojo extends RunTargetMojo
     @Parameter(alias = "target", defaultValue = "")
     private String compileTarget;
 
+    /**
+     * Note that if this is enabled, then the clean step always occurs,
+     * even if this goal is otherwise skipped. If this is not desirable,
+     * tie this variable and your skip variable together.
+     */
     @Parameter(defaultValue = "true")
     private boolean cleanPackageDirBeforeBuilding;
     
