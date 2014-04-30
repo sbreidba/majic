@@ -44,7 +44,7 @@ public class CompileMojo extends RunTargetMojo
 
     private boolean isVerbose()
     {
-        return ( verbose || getLog().isDebugEnabled());
+        return (verbose || getLog().isDebugEnabled());
     }
 
     @Override
