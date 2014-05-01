@@ -51,7 +51,7 @@ public class ConfigureMojo extends CMakeMojo
      * The project install dir defines where CMake INSTALL(...) commands copy files to.
      * It is only used if addCMakeInstallPrefix is enabled.
      */
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_INSTALLDIR_DEFAULT)
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_INSTALL_DIR_DEFAULT)
     private File projectInstallDir;
 
     /**
