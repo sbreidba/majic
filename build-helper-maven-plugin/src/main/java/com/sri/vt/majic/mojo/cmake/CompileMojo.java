@@ -24,12 +24,15 @@ public class CompileMojo extends RunTargetMojo
      * Note that if this is enabled, then the clean step always occurs,
      * even if this goal is otherwise skipped. If this is not desirable,
      * tie this variable and your skip variable together.
+     *
+     * Cleaning exports before building prevents a broken build from leaving
+     * out-dated results in the export dir.
      */
     @Parameter(defaultValue = "true")
-    private boolean cleanPackageDirBeforeBuilding;
+    private boolean cleanExportDirBeforeBuilding;
     
     @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_EXPORT_DIR_DEFAULT)
-    private File projectPackageDir;
+    private File projectExportDir;
 
     /**
      * If not set, this is derived from Maven's global debug flag (i.e. -X).
@@ -50,18 +53,18 @@ public class CompileMojo extends RunTargetMojo
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
     {
-        if (cleanPackageDirBeforeBuilding)
+        if (cleanExportDirBeforeBuilding)
         {
             Cleaner cleaner = new Cleaner(getLog(), isVerbose());
             try
             {
                 // don't follow symlinks, do fail on error, do retry.
                 // this must be cleaned up or we run the risk of getting cruft.
-                cleaner.delete(projectPackageDir, null, false, true, true);
+                cleaner.delete(projectExportDir, null, false, true, true);
             }
             catch (IOException e)
             {
-                throw new MojoFailureException("Could not clean " + projectPackageDir + ": " + e.getMessage());
+                throw new MojoFailureException("Could not clean " + projectExportDir + ": " + e.getMessage());
             }
         }
 
