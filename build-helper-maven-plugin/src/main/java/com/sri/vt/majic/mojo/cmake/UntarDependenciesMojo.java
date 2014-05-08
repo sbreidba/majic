@@ -239,7 +239,7 @@ public class UntarDependenciesMojo extends UntarMojo
 
                         try
                         {
-                            getLog().info("Creating symlink from " + symLinkPath + " to " + target);
+                            if (isVerbose()) getLog().info("Creating symlink from " + symLinkPath + " to " + target);
                             java.nio.file.Files.createSymbolicLink(symLinkPath, target);
                         }
                         catch(SecurityException e)

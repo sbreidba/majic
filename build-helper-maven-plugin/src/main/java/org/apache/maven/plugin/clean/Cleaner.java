@@ -30,9 +30,10 @@ import java.io.IOException;
  * 
  * @author Benjamin Bentmann
  *
- * SRI Notes: This is the Cleaner class from the maven-clean-plugin with two changes.
+ * SRI Notes: This is the Cleaner class from the maven-clean-plugin with three changes.
  * 1. Made the class public
  * 2. Added verbose logging when retrying delete on Windows.
+ * 3. Test symbolic links with new Java 7 API instead of guessing via checking if canonical.
  */
 public class Cleaner
 {
@@ -124,8 +125,7 @@ public class Cleaner
     /**
      * Deletes the specified file or directory.
      * 
-     * @param file The file/directory to delete, must not be <code>null</code>. If <code>followSymlinks</code> is
-     *            <code>false</code>, it is assumed that the parent file is canonical.
+     * @param file The file/directory to delete, must not be <code>null</code>.
      * @param pathname The relative pathname of the file, using {@link File#separatorChar}, must not be
      *            <code>null</code>.
      * @param selector The selector used to determine what contents to delete, may be <code>null</code> to delete
@@ -148,17 +148,16 @@ public class Cleaner
         {
             if ( selector == null || selector.couldHoldSelected( pathname ) )
             {
-                File canonical = followSymlinks ? file : file.getCanonicalFile();
-                if ( followSymlinks || file.equals( canonical ) )
+                if ( followSymlinks || !java.nio.file.Files.isSymbolicLink(file.toPath()) )
                 {
-                    String[] filenames = canonical.list();
+                    String[] filenames = file.list();
                     if ( filenames != null )
                     {
                         String prefix = ( pathname.length() > 0 ) ? pathname + File.separatorChar : "";
                         for ( int i = filenames.length - 1; i >= 0; i-- )
                         {
                             String filename = filenames[i];
-                            File child = new File( canonical, filename );
+                            File child = new File( file, filename );
                             result.update( delete( child, prefix + filename, selector, followSymlinks, failOnError,
                                                    retryOnError ) );
                         }
