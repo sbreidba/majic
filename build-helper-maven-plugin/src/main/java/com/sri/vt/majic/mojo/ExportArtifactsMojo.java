@@ -59,6 +59,9 @@ public class ExportArtifactsMojo extends AbstractMojo
         try
         {
             File outputFile = new File(outputDirectory, outputFileName);
+            getLog().debug("Canonicalizing " + outputFile);
+            outputFile = outputFile.getCanonicalFile();
+            getLog().debug("Resulted in " + outputFile);
             writer = new PrintWriter(outputFile, "UTF-8");
         }
         catch (FileNotFoundException e)
@@ -68,6 +71,10 @@ public class ExportArtifactsMojo extends AbstractMojo
         catch (UnsupportedEncodingException e)
         {
             throw new MojoExecutionException("Could not create output file: Unsupported Encoding: ", e);
+        }
+        catch (IOException e)
+        {
+            throw new MojoExecutionException("General IOException: ", e);
         }
 
         Xpp3Dom dom = new Xpp3Dom("artifacts");
