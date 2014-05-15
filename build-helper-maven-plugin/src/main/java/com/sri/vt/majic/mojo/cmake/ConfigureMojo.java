@@ -240,6 +240,11 @@ public class ConfigureMojo extends CMakeMojo
             appendDashD(arguments, "CMAKE_CONFIGURATION_TYPES", getCurrentConfig());
         }
 
+        if (addCMakeBuildType && !SystemUtils.IS_OS_WINDOWS)
+        {
+            appendDashD(arguments, "CMAKE_BUILD_TYPE", getCurrentConfig());
+        }
+
         // now add any of the ${cmake.vars*} variables.
         if (addAdditionalPredefined)
         {
