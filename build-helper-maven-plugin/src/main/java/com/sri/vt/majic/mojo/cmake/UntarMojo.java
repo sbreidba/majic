@@ -1,5 +1,6 @@
 package com.sri.vt.majic.mojo.cmake;
 
+import org.apache.commons.io.FileExistsException;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -54,7 +55,7 @@ public class UntarMojo extends CMakeCommandMojo
     @Parameter(defaultValue = "false", property = "majic.untar.verbose")
     private Boolean verbose;
 
-    private boolean isVerbose()
+    protected boolean isVerbose()
     {
         return ( verbose || getLog().isDebugEnabled());
     }
@@ -142,7 +143,7 @@ public class UntarMojo extends CMakeCommandMojo
 
     protected void moveContents(File sourceDirectory) throws IOException
     {
-        /* TODO: moving directories doesn't really work very well.
+        /* Moving directories doesn't really work very well.
 
            First, FileUtils.moveXXX will complain if the destination already exists.
            Second, even if it didn't, the java implementations seem to revert to copy & delete, so
@@ -154,24 +155,22 @@ public class UntarMojo extends CMakeCommandMojo
               Then we can selectively extract the contents of the tarball directly to the output directory.
               This is probably our best option if it's practical.
            3. Do a recursive move, but checking to see if the target exists before the move, deleting it first if so.
+
+           Best bet is to always extract to a clean output dir. UntarDependencies does this as long as
+           in-place extraction is enabled.
         */
 
-        FileUtils.copyDirectory(sourceDirectory, getOutputDirectory());
-
-        Cleaner cleaner = new Cleaner(getLog(), isVerbose());
-        cleaner.delete(sourceDirectory, null, false, false, true);
-
-        /*for (File containedFile : sourceDirectory.listFiles())
+        try
         {
-            if (dryRunMove)
-            {
-                getLog().info("I would have moved " + containedFile + " to " + getOutputDirectory());
-            }
-            else
-            {
-                FileUtils.moveToDirectory(containedFile, getOutputDirectory(), true);
-            }
-        }*/
+            FileUtils.moveDirectory(sourceDirectory, getOutputDirectory());
+        }
+        catch(FileExistsException e)
+        {
+            FileUtils.copyDirectory(sourceDirectory, getOutputDirectory());
+
+            Cleaner cleaner = new Cleaner(getLog(), isVerbose());
+            cleaner.delete(sourceDirectory, null, false, false, true);
+        }
     }
 
     @Override
@@ -188,7 +187,23 @@ public class UntarMojo extends CMakeCommandMojo
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
     {
-        getTemporaryExtractDir().mkdirs();
+        // Normally we'd just let super.execute() handle skipping, but in this case
+        // there's enough extra stuff - directory creation, logging - that we can avoid
+        // by checking it up-front.
+        if (getSkip() || isUpToDate()) return;
+
+        getLog().info("Extracting " + getTarFile().toString() + " to " + getOutputDirectory());
+        Cleaner cleaner = new Cleaner(getLog(), isVerbose());
+        try
+        {
+            cleaner.delete(getTemporaryExtractDir(), null, false, true, true);
+            getTemporaryExtractDir().mkdirs();
+        }
+        catch(IOException e)
+        {
+            throw new MojoFailureException("Could not clean up directory during untar: " + e.getMessage());
+        }
+
         getMarkersDirectory().mkdirs();
 
         super.execute();

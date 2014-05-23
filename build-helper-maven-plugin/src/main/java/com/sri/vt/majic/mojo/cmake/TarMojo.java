@@ -21,7 +21,7 @@ public class TarMojo extends CMakeCommandMojo
 {
     @Component()
     private MavenProjectHelper projectHelper;
-    
+
     @Parameter(defaultValue = "tar cjf", required = true)
     private String command;
 

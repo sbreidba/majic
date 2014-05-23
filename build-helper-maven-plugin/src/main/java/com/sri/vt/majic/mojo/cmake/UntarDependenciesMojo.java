@@ -1,15 +1,18 @@
 package com.sri.vt.majic.mojo.cmake;
 
+import com.sri.vt.majic.util.ArtifactHelper;
 import com.sri.vt.majic.util.CMakeDirectories;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.clean.Cleaner;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -21,6 +24,38 @@ public class UntarDependenciesMojo extends UntarMojo
     // Not settable by the user - always computed instead.
     @Parameter(defaultValue = "", readonly = true)
     private File tarFile;
+
+    /**
+     * Normally tarballs are expanded within the m2 repository.
+     * If this is not desirable, override it here.
+     *
+     * Other goals such as config may have interactions with this behavior, so
+     * it is suggested that the property be set instead of directly
+     * configuring this value.
+     */
+    @Parameter(defaultValue = "true", property = "cmake.untar.inplace")
+    private boolean extractInPlace;
+
+    /**
+     * If set, symlinks are created that point to the untarred dependencies.
+     *
+     * Other goals such as config may have interactions with this behavior, so
+     * it is suggested that the property be set instead of directly
+     * configuring this value.
+     */
+    @Parameter(defaultValue = "true", property = "cmake.untar.create.symlinks")
+    private boolean createSymbolicLinks;
+
+    /**
+     * Only valid when extractInPlace is enabled. This is the location where symbolic
+     * links to dependencies are created.
+     *
+     * Other goals such as config may have interactions with this behavior, so
+     * it is suggested that the property be set instead of directly
+     * configuring this value.
+     */
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_PACKAGE_DIR_DEFAULT, property = "cmake.untar.symlink.directory")
+    private File symbolicLinkDirectory;
 
     /**
      * The fallback output directory for unknown scopes.
@@ -70,29 +105,56 @@ public class UntarDependenciesMojo extends UntarMojo
 
     protected File getOutputDirectory()
     {
-        if (currentArtifact.getScope().equalsIgnoreCase(Artifact.SCOPE_TEST))
+        if (getExtractInPlace())
         {
-            return testScopeOutputDirectory;
+            return ArtifactHelper.getRepoExtractDirectory(currentArtifact);
         }
-
-        if (currentArtifact.getScope().equalsIgnoreCase(Artifact.SCOPE_COMPILE))
+        else
         {
-            return compileScopeOutputDirectory;
-        }
+            if (currentArtifact.getScope().equalsIgnoreCase(Artifact.SCOPE_TEST))
+            {
+                return testScopeOutputDirectory;
+            }
 
-        if (currentArtifact.getScope().equalsIgnoreCase(Artifact.SCOPE_RUNTIME))
-        {
-            // these are external packages
-            return runtimeScopeOutputDirectory;
-        }
+            if (currentArtifact.getScope().equalsIgnoreCase(Artifact.SCOPE_COMPILE))
+            {
+                return compileScopeOutputDirectory;
+            }
 
-        return outputDirectory;
+            if (currentArtifact.getScope().equalsIgnoreCase(Artifact.SCOPE_RUNTIME))
+            {
+                // these are external packages
+                return runtimeScopeOutputDirectory;
+            }
+
+            return outputDirectory;
+        }
     }
 
+    protected boolean getCreateSymbolicLinks()
+    {
+        return createSymbolicLinks;
+    }
+    
+    protected File getSymbolicLinkDirectory()
+    {
+        return symbolicLinkDirectory;
+    }
+    
     @Override
     protected File getMarkersDirectory()
     {
-        return new File(getOutputDirectory(), "cmake-untar-dependencies/markers");
+        File baseDir;
+        if (getExtractInPlace())
+        {
+            baseDir = currentArtifact.getFile().getParentFile();
+        }
+        else
+        {
+            baseDir = getOutputDirectory();
+        }
+        
+        return new File(baseDir, "cmake-untar-dependencies/markers");
     }
 
     @Override
@@ -104,6 +166,32 @@ public class UntarDependenciesMojo extends UntarMojo
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
     {
+        if (getCreateSymbolicLinks())
+        {
+            if (getSymbolicLinkDirectory() == null)
+            {
+                throw new MojoExecutionException("Must specify symlink destination directory");
+            }
+
+            if (getSymbolicLinkDirectory().exists())
+            {
+                File[] files = getSymbolicLinkDirectory().listFiles();
+                for (File file : files)
+                {
+                    if (java.nio.file.Files.isSymbolicLink(file.toPath()))
+                    {
+                        if (isVerbose())
+                        {
+                            getLog().info("Removing symlink " + file.getPath());
+                        }
+
+                        file.delete();
+                    }
+                }
+
+            }
+        }
+
         Set artifacts = getProject().getArtifacts();
         if ((artifacts != null) && (!artifacts.isEmpty()))
         {
@@ -113,13 +201,66 @@ public class UntarDependenciesMojo extends UntarMojo
                 setCurrentArtifact(artifact);
                 if (getOutputDirectory() == null)
                 {
-                    getLog().info("Ignoring dependency " + artifact.toString());
+                    if (isVerbose()) getLog().info("Ignoring dependency " + artifact.toString());
                     continue;
                 }
 
-                getLog().info("Extracting dependency " + artifact.toString() + " to " + getOutputDirectory());
+                // Extracting in-place is slightly safer as we can always remove the output dir contents
+                // If we extract to module dirs, we end up merging directories, so we can't clean out
+                // old cruft.
+                Cleaner cleaner = new Cleaner(getLog(), isVerbose());
+                if (!getSkip() && !isUpToDate() && getExtractInPlace())
+                {
+                    try
+                    {
+                        cleaner.delete(getOutputDirectory(), null, false, true, true);
+                    }
+                    catch(IOException e)
+                    {
+                        throw new MojoFailureException("Could not clean up directory during untar: " + e.getMessage());
+                    }
+                }
+
                 super.execute();
+
+                if (getCreateSymbolicLinks())
+                {
+                    getSymbolicLinkDirectory().mkdirs();
+
+                    java.nio.file.Path target = getOutputDirectory().toPath();
+
+                    File symLink = new File(
+                            getSymbolicLinkDirectory(),
+                            artifact.getArtifactId() + "-" + artifact.getBaseVersion());
+
+                    if (!symLink.exists())
+                    {
+                        java.nio.file.Path symLinkPath = symLink.toPath();
+
+                        try
+                        {
+                            if (isVerbose()) getLog().info("Creating symlink from " + symLinkPath + " to " + target);
+                            java.nio.file.Files.createSymbolicLink(symLinkPath, target);
+                        }
+                        catch(SecurityException e)
+                        {
+                            throw new MojoExecutionException(
+                                    "Security exception occurred when creating symlink. " +
+                                    "Either run as Administrator or set cmake.untar.create.symlinks to false. " +
+                                    e.getMessage());
+                        }
+                        catch(IOException e)
+                        {
+                            throw new MojoExecutionException("Could not create dependency symlink: " + e.getMessage());
+                        }
+                    }
+                }
             }
         }
+    }
+
+    protected boolean getExtractInPlace()
+    {
+        return extractInPlace;
     }
 }
