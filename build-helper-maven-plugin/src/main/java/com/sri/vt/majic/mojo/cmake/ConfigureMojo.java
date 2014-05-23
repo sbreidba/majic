@@ -73,7 +73,7 @@ public class ConfigureMojo extends CMakeMojo
      * The project install dir defines where CMake INSTALL(...) commands copy files to.
      * It is only used if addCMakeInstallPrefix is enabled.
      */
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_INSTALLDIR_DEFAULT)
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_INSTALL_DIR_DEFAULT)
     private File projectInstallDir;
 
     /**
@@ -113,6 +113,13 @@ public class ConfigureMojo extends CMakeMojo
      */
     @Parameter(defaultValue = "true")
     private boolean addCMakeConfigurationTypes;
+
+    /**
+     * If enabled, for single-config (e.g. not Windows) builds, this will add <code>-DCMAKE_BUILD_TYPE="..."</code>
+     * to the configuration.
+     */
+    @Parameter(defaultValue = "true")
+    private boolean addCMakeBuildType;
 
     /**
      * If enabled, add the contents of any variables of the form
@@ -291,6 +298,11 @@ public class ConfigureMojo extends CMakeMojo
         if (addCMakeConfigurationTypes && SystemUtils.IS_OS_WINDOWS)
         {
             appendDashD(arguments, "CMAKE_CONFIGURATION_TYPES", getCurrentConfig());
+        }
+
+        if (addCMakeBuildType && !SystemUtils.IS_OS_WINDOWS)
+        {
+            appendDashD(arguments, "CMAKE_BUILD_TYPE", getCurrentConfig());
         }
 
         // now add any of the ${cmake.vars*} variables.

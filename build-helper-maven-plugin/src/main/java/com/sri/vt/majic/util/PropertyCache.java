@@ -1,5 +1,6 @@
 package com.sri.vt.majic.util;
 
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.interpolation.InterpolationException;
 import org.codehaus.plexus.interpolation.Interpolator;
@@ -38,7 +39,23 @@ public class PropertyCache
     {
         return log;
     }
-    
+
+    public void copySystemProperties(MavenSession session)
+    {
+        copySystemProperty(session, BuildEnvironment.Properties.CMAKE_BUILD_ROOT);
+        copySystemProperty(session, BuildEnvironment.Properties.CMAKE_COMPILER);
+        copySystemProperty(session, BuildEnvironment.Properties.CMAKE_ARCH);
+    }
+
+    private void copySystemProperty(MavenSession session, String property)
+    {
+        String value = session.getUserProperties().getProperty(property);
+        if (value != null)
+        {
+            setProperty(property, value);
+        }
+    }
+
     public void setProperty(String key, String value)
     {
         String existing = project.getProperties().getProperty(key);

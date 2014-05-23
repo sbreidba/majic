@@ -36,7 +36,7 @@ public class MajicExtension extends AbstractMavenLifecycleParticipant
         {
             for (MavenProject project : session.getProjects())
             {
-                UpdateProperties(project);
+                UpdateProperties(session, project);
             }
         }
         catch (IOException e)
@@ -51,9 +51,11 @@ public class MajicExtension extends AbstractMavenLifecycleParticipant
         super.afterProjectsRead(session);
     }
 
-    private void UpdateProperties(MavenProject project) throws MavenExecutionException, IOException, InterpolationException
+    private void UpdateProperties(MavenSession session, MavenProject project) throws MavenExecutionException, IOException, InterpolationException
     {
         PropertyCache propertyCache = new PropertyCache(project, getLogger());
+
+        propertyCache.copySystemProperties(session);
 
         BuildEnvironment buildEnvironment = new BuildEnvironment(project);
 

@@ -38,10 +38,6 @@
 
         <majic.os.classifier>unknown</majic.os.classifier>
 
-        <!-- set from command-line -->
-        <cmake.compiler>${cmake.compiler}</cmake.compiler>
-        <cmake.arch>${cmake.arch}</cmake.arch>
-
         <default.cmake.arch>64</default.cmake.arch>
         
         <!-- majic-documentation:properties -->
