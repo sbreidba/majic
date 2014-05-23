@@ -5,7 +5,7 @@
 
   <groupId>com.sri.vt.majic</groupId>
   <artifactId>majic</artifactId>
-  <version>0.1.12-SNAPSHOT</version>
+  <version>0.2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Majic</name>
   <description>
@@ -26,7 +26,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- reporting doesn't honor pluginManagement, so we use a property for these -->
     <maven.javadoc.plugin.version>2.9.1</maven.javadoc.plugin.version>
-    <maven.plugin.plugin.version>3.2</maven.plugin.plugin.version>
+    <maven.plugin.plugin.version>3.3</maven.plugin.plugin.version>
   </properties>
 
   <dependencyManagement>
