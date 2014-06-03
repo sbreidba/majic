@@ -43,8 +43,6 @@ public class PropertyCache
     public void copySystemProperties(MavenSession session)
     {
         copySystemProperty(session, BuildEnvironment.Properties.CMAKE_BUILD_ROOT);
-        copySystemProperty(session, BuildEnvironment.Properties.CMAKE_COMPILER);
-        copySystemProperty(session, BuildEnvironment.Properties.CMAKE_ARCH);
     }
 
     private void copySystemProperty(MavenSession session, String property)
@@ -78,6 +76,7 @@ public class PropertyCache
         for (Object objPropertyKey : getProject().getProperties().keySet())
         {
             String property = getProject().getProperties().getProperty((String)objPropertyKey);
+            log.debug("Re-interpolating [" + objPropertyKey + "] as " + interpolator.interpolate(property) + " (current value is [" + property + "])");
             getProject().getProperties().setProperty((String)objPropertyKey, interpolator.interpolate(property));
         }
     }

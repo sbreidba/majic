@@ -36,8 +36,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <majic.os.classifier>unknown</majic.os.classifier>
-
+        <detected.cmake.os>unknown</detected.cmake.os>
+        <detected.cmake.compiler>unknown</detected.cmake.compiler>
+      
         <default.cmake.arch>64</default.cmake.arch>
         
         <!-- majic-documentation:properties -->
@@ -45,7 +46,7 @@
              For example: 'win7-vc2010-64'. Some artifacts (vtcmake, for example) are built
              with other classifiers; see the individual artifact definition for more information.
         -->
-        <majic.package.classifier>${majic.os.classifier}-${cmake.compiler}-${cmake.arch}</majic.package.classifier>
+        <majic.package.classifier>${cmake.os}-${cmake.compiler}-${cmake.arch}</majic.package.classifier>
 
         <!-- The package extension is the default extension for Majic artifacts. Using this
              property is encouraged as the default extension may change in the future. -->
@@ -63,9 +64,24 @@
         <cmake.vars.gcc.32>${default.cmake.vars.gcc.32}</cmake.vars.gcc.32>
     </properties>
 
+    <!--
+    Note: compiler and detection must be done here, and not in the plugin.
+    This is because all variables that affect dependency resolution must be
+    resolvable without plugin interaction, as that occurs too late.
+
+    Properties derived from ${cmake.compiler}, etc. are found within the plugin;
+    it's simpler to put that sort of logic there - it's difficult to make
+    maven variables conditional on other variables without Ant hackery.
+
+    But that means there's code in two places. If this section gets modified
+    please check the BuildEnvironment class to see if modifications need to be made
+    in the Java code as well.
+    -->
+
+
     <profiles>
         <profile>
-            <id>os-win7</id>
+            <id>detected-os-win7</id>
             <activation>
                 <os>
                     <family>windows</family>
@@ -73,7 +89,7 @@
                 </os>
             </activation>
             <properties>
-                <majic.os.classifier>win7</majic.os.classifier>
+                <detected.cmake.os>win7</detected.cmake.os>
             </properties>
         </profile>
 
@@ -83,7 +99,7 @@
             it's possible that the <version> could be used to distinguish variants/major versions
             but I don't know how to map 2.6.32-358.18.1.el6.x86_64 to "centos6".
             -->
-            <id>os-centos6</id>
+            <id>detected-os-centos6</id>
             <activation>
                 <os>
                     <family>unix</family>
@@ -91,23 +107,9 @@
                 </os>
             </activation>
             <properties>
-                <majic.os.classifier>centos6</majic.os.classifier>
+                <detected.cmake.os>centos6</detected.cmake.os>
             </properties>
         </profile>
-
-        <!--
-        Note: compiler detection must be done here, and not in the plugin.
-        This is because ${cmake.compiler} must be resolvable without plugin
-        interaction, so that it can be used in dependency classifiers.
-
-        Properties derived from ${cmake.compiler} are found within the plugin;
-        it's simpler to put that sort of logic there - it's difficult to make
-        maven variables conditional on other variables without Ant hackery.
-
-        But that means there's code in two places. If this section gets modified
-        please check the BuildEnvironment class to see if modifications need to be made
-        in the Java code as well.
-        -->
 
         <profile>
             <id>detected-compiler-gcc</id>
@@ -182,6 +184,18 @@
             </activation>
             <properties>
                 <cmake.compiler>${detected.cmake.compiler}</cmake.compiler>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>auto-detect-os</id>
+            <activation>
+                <property>
+                    <name>!cmake.os</name>
+                </property>
+            </activation>
+            <properties>
+                <cmake.os>${detected.cmake.os}</cmake.os>
             </properties>
         </profile>
 
