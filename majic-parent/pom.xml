@@ -78,7 +78,6 @@
     in the Java code as well.
     -->
 
-
     <profiles>
         <profile>
             <id>detected-os-win7</id>
@@ -212,7 +211,7 @@
             </properties>
         </profile>
 
-        <!-- Either majic.clean.repo or majic.clean.repo.full will enable pruning.
+        <!-- Either majic.prune.repo or majic.prune.repo.full will enable pruning.
            If majic.prune.repo.full is specified, *all* versions of the artifact
            are pruned.
            -->
@@ -285,12 +284,7 @@
                     <version>0.2.0-SNAPSHOT</version>
                 </plugin>
 
-                <!-- exec and clean are needed for the majic build-helper -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>2.5</version>
-                </plugin>
+                <!-- needed for the majic build-helper -->
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>

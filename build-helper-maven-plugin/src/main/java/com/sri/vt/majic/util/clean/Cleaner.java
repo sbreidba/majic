@@ -1,4 +1,4 @@
-package org.apache.maven.plugin.clean;
+package com.sri.vt.majic.util.clean;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
