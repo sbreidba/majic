@@ -166,6 +166,9 @@ public class UntarMojo extends CMakeCommandMojo
         }
         catch(FileExistsException e)
         {
+            getLog().warn("Slow operation: UntarMojo forced to copy from " +
+                    sourceDirectory + " and delete from " + getOutputDirectory() +
+                    " instead of moving the source.");
             FileUtils.copyDirectory(sourceDirectory, getOutputDirectory());
 
             Cleaner cleaner = new Cleaner(getLog(), isVerbose());
@@ -192,7 +195,7 @@ public class UntarMojo extends CMakeCommandMojo
         // by checking it up-front.
         if (getSkip() || isUpToDate()) return;
 
-        getLog().info("Extracting " + getTarFile().toString() + " to " + getOutputDirectory());
+        if (isVerbose()) getLog().info("Extracting " + getTarFile().toString() + " to " + getOutputDirectory());
         Cleaner cleaner = new Cleaner(getLog(), isVerbose());
         try
         {
