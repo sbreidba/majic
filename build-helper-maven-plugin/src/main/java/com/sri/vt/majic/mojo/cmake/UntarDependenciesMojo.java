@@ -12,11 +12,9 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -116,7 +114,7 @@ public class UntarDependenciesMojo extends UntarMojo
     {
         if (getExtractInPlace())
         {
-            return ArtifactHelper.getRepoExtractDirectory(currentArtifact);
+            return ArtifactHelper.getRepoExtractDirectory(reactorProjects, currentArtifact);
         }
         else
         {
@@ -173,63 +171,6 @@ public class UntarDependenciesMojo extends UntarMojo
         return currentArtifact.getFile();
     }
 
-    /**
-     * Null-safe compare of two artifacts based on groupId, artifactId, version, type and classifier.
-     *
-     * @param a the first artifact.
-     * @param b the second artifact.
-     * @return <code>true</code> if and only if the two artifacts have the same groupId, artifactId, version,
-     *         type and classifier.
-     */
-    private static boolean equals( Artifact a, Artifact b )
-    {
-        return a == b || !( a == null || b == null )
-            && StringUtils.equals(a.getGroupId(), b.getGroupId())
-            && StringUtils.equals(a.getArtifactId(), b.getArtifactId())
-            && StringUtils.equals(a.getVersion(), b.getVersion())
-            && StringUtils.equals(a.getType(), b.getType())
-            && StringUtils.equals(a.getClassifier(), b.getClassifier());
-    }
-
-    /**
-     * Returns <code>true</code> if the artifact has a file.
-     *
-     * @param artifact the artifact (may be null)
-     * @return <code>true</code> if and only if the artifact is non-null and has a file.
-     */
-     private static boolean hasFile(Artifact artifact)
-     {
-        return artifact != null && artifact.getFile() != null && artifact.getFile().isFile();
-    }
-
-    protected Artifact getArtifactFromReactor(Artifact artifact)
-    {
-        if (reactorProjects == null)
-        {
-            return null;
-        }
-
-        for (MavenProject mavenProject : reactorProjects)
-        {
-            // check the main artifact
-            if (equals(artifact, mavenProject.getArtifact()) && hasFile(mavenProject.getArtifact()))
-            {
-                return mavenProject.getArtifact();
-            }
-
-            // check any attached artifacts
-            for (Artifact attachedArtifact : mavenProject.getAttachedArtifacts())
-            {
-                if (equals(artifact, attachedArtifact) && hasFile(attachedArtifact))
-                {
-                    return attachedArtifact;
-                }
-            }
-        }
-
-        return null;
-    }
-
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
     {
@@ -269,7 +210,7 @@ public class UntarDependenciesMojo extends UntarMojo
                 boolean isReactorArtifact = false;
                 Artifact artifact = (Artifact)object;
 
-                Artifact reactorArtifact = getArtifactFromReactor(artifact);
+                Artifact reactorArtifact = ArtifactHelper.getArtifactFromReactor(reactorProjects, artifact);
                 if (reactorArtifact != null)
                 {
                     isReactorArtifact = true;
@@ -280,7 +221,7 @@ public class UntarDependenciesMojo extends UntarMojo
                 setCurrentArtifact(artifact);
                 if (getOutputDirectory() == null)
                 {
-                    if (isVerbose()) getLog().info("Ignoring dependency " + artifact.toString());
+                    getLog().warn("Could not determine output directory for " + artifact.toString() + ". Ignoring.");
                     continue;
                 }
 
@@ -310,26 +251,7 @@ public class UntarDependenciesMojo extends UntarMojo
                 {
                     getSymbolicLinkDirectory().mkdirs();
 
-                    java.nio.file.Path target;
-                    if (isReactorArtifact)
-                    {
-                        getLog().info("Artifact " + artifact + " was built with the reactor. The current build output will be used instead of unpacking from the local repository.");
-                        String path = artifact.getFile().getAbsolutePath();
-                        if (path.endsWith("." + artifact.getType()))
-                        {
-                            path = path.substring(0, path.length() - artifact.getType().length() - 1);
-                        }
-                        else
-                        {
-                            getLog().error("Could not determine reactor project directory from artifact name. Symlink will likely be incorrect.");
-                        }
-
-                        target = java.nio.file.Paths.get(path);
-                    }
-                    else
-                    {
-                        target = getOutputDirectory().toPath();
-                    }
+                    java.nio.file.Path target = getOutputDirectory().toPath();
 
                     File symLink = new File(
                             getSymbolicLinkDirectory(),
