@@ -13,8 +13,10 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.project.MavenProject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,9 @@ import java.util.Set;
 @Mojo(name="cmake-configure", defaultPhase=LifecyclePhase.PROCESS_SOURCES, requiresProject=true, requiresDependencyResolution = ResolutionScope.TEST)
 public class ConfigureMojo extends CMakeMojo
 {
+    @Parameter( defaultValue = "${reactorProjects}", readonly = true )
+    protected List<MavenProject> reactorProjects;
+
     @Parameter(defaultValue = "${basedir}")
     private File sourceDirectory;
 
@@ -252,31 +257,25 @@ public class ConfigureMojo extends CMakeMojo
             StringBuilder prefixPath = new StringBuilder();
             if (getExtractInPlace())
             {
-                if (getCreateSymbolicLinks())
+                Set artifacts = getProject().getArtifacts();
+                if ((artifacts != null) && (!artifacts.isEmpty()))
                 {
-                    if (getSymbolicLinkDirectory() == null)
+                    for (Object object : artifacts)
                     {
-                        throw new MojoExecutionException("Must specify symlink destination directory");
-                    }
-
-                    prefixPath.append(getSymbolicLinkDirectory());
-                }
-                else
-                {
-                    Set artifacts = getProject().getArtifacts();
-                    if ((artifacts != null) && (!artifacts.isEmpty()))
-                    {
-                        for (Object object : artifacts)
+                        if (prefixPath.length() > 0)
                         {
-                            if (prefixPath.length() > 0)
-                            {
-                                prefixPath.append(";");
-                            }
-
-                            Artifact artifact = (Artifact)object;
-                            File file = ArtifactHelper.getRepoExtractDirectory(artifact);
-                            prefixPath.append(file.getAbsolutePath());
+                            prefixPath.append(";");
                         }
+
+                        Artifact artifact = (Artifact)object;
+                        File file = ArtifactHelper.getRepoExtractDirectory(reactorProjects, artifact);
+                        if (file == null)
+                        {
+                            getLog().warn("Could not determine output directory for " + artifact.toString() + ". Not adding to CMAKE_PREFIX_PATH.");
+                            continue;
+                        }
+
+                        prefixPath.append(file.getAbsolutePath());
                     }
                 }
             }

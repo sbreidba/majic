@@ -3,6 +3,7 @@ package com.sri.vt.majic.mojo.cmake;
 import com.sri.vt.majic.util.ArtifactHelper;
 import com.sri.vt.majic.util.CMakeDirectories;
 import com.sri.vt.majic.util.clean.Cleaner;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -10,9 +11,12 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -98,6 +102,9 @@ public class UntarDependenciesMojo extends UntarMojo
         return super.shouldStripRootDirectory();
     }
 
+    @Parameter( defaultValue = "${reactorProjects}", readonly = true )
+    protected List<MavenProject> reactorProjects;
+
     protected void setCurrentArtifact(Artifact artifact)
     {
         currentArtifact = artifact;
@@ -107,10 +114,11 @@ public class UntarDependenciesMojo extends UntarMojo
     {
         if (getExtractInPlace())
         {
-            return ArtifactHelper.getRepoExtractDirectory(currentArtifact);
+            return ArtifactHelper.getRepoExtractDirectory(reactorProjects, currentArtifact);
         }
         else
         {
+            getLog().warn("Deprecated functionality used. Only in-place extraction will be supported in future releases.");
             if (currentArtifact.getScope().equalsIgnoreCase(Artifact.SCOPE_TEST))
             {
                 return testScopeOutputDirectory;
@@ -192,36 +200,52 @@ public class UntarDependenciesMojo extends UntarMojo
             }
         }
 
+        Set<Artifact> reactorArtifacts = new HashSet<Artifact>();
+
         Set artifacts = getProject().getArtifacts();
         if ((artifacts != null) && (!artifacts.isEmpty()))
         {
             for (Object object : artifacts)
             {
+                boolean isReactorArtifact = false;
                 Artifact artifact = (Artifact)object;
+
+                Artifact reactorArtifact = ArtifactHelper.getArtifactFromReactor(reactorProjects, artifact);
+                if (reactorArtifact != null)
+                {
+                    isReactorArtifact = true;
+                    artifact = reactorArtifact;
+                    reactorArtifacts.add(reactorArtifact);
+                }
+
                 setCurrentArtifact(artifact);
                 if (getOutputDirectory() == null)
                 {
-                    if (isVerbose()) getLog().info("Ignoring dependency " + artifact.toString());
+                    getLog().warn("Could not determine output directory for " + artifact.toString() + ". Ignoring.");
                     continue;
                 }
 
                 // Extracting in-place is slightly safer as we can always remove the output dir contents
                 // If we extract to module dirs, we end up merging directories, so we can't clean out
-                // old cruft.
-                Cleaner cleaner = new Cleaner(getLog(), isVerbose());
-                if (!getSkip() && !isUpToDate() && getExtractInPlace())
+                // old cruft. Note that we don't bother cleaning/extracting if this is a reactor artifact -
+                // what we need is available on-disk.
+                if (!isReactorArtifact && getExtractInPlace())
                 {
-                    try
+                    Cleaner cleaner = new Cleaner(getLog(), isVerbose());
+                    if (!getSkip() && !isUpToDate())
                     {
-                        cleaner.delete(getOutputDirectory(), null, false, true, true);
+                        try
+                        {
+                            cleaner.delete(getOutputDirectory(), null, false, true, true);
+                        }
+                        catch(IOException e)
+                        {
+                            throw new MojoFailureException("Could not clean up directory during untar: " + e.getMessage());
+                        }
                     }
-                    catch(IOException e)
-                    {
-                        throw new MojoFailureException("Could not clean up directory during untar: " + e.getMessage());
-                    }
-                }
 
-                super.execute();
+                    super.execute();
+                }
 
                 if (getCreateSymbolicLinks())
                 {
@@ -240,7 +264,36 @@ public class UntarDependenciesMojo extends UntarMojo
                         try
                         {
                             if (isVerbose()) getLog().info("Creating symlink from " + symLinkPath + " to " + target);
-                            java.nio.file.Files.createSymbolicLink(symLinkPath, target);
+
+                            boolean created = false;
+                            int[] delays = { 0, 50, 250, 750, 1500, 5000 };
+                            for ( int i = 0; !created && i < delays.length; i++ )
+                            {
+                                try
+                                {
+                                    java.nio.file.Files.createSymbolicLink(symLinkPath, target);
+                                    Thread.sleep(delays[i]);
+                                    created = true;
+                                }
+                                catch (InterruptedException e)
+                                {
+                                    // ignore
+                                }
+                                catch (IOException e)
+                                {
+                                    // eat exception unless we're done trying
+                                    if (i == (delays.length - 1)) throw e;
+
+                                    if (SystemUtils.IS_OS_WINDOWS)
+                                    {
+                                        // try to release any locks held by non-closed files
+                                        System.gc();
+                                    }
+
+                                    getLog().warn("Symlink creation failed. Retrying.");
+                                }
+                            }
+
                         }
                         catch(SecurityException e)
                         {
@@ -255,6 +308,29 @@ public class UntarDependenciesMojo extends UntarMojo
                         }
                     }
                 }
+            }
+        }
+
+        getLog().info("Dependency Summary:");
+        getLog().info("");
+        getLog().info("Local repository/artifact cache:");
+        logArtifacts(artifacts, reactorArtifacts);
+        getLog().info("Reactor artifacts:");
+        logArtifacts(reactorArtifacts, null);
+    }
+
+    private void logArtifacts(Set artifacts, Set excludeArtifacts)
+    {
+        if (artifacts.size() == 0)
+        {
+            getLog().info("   (none)");
+        }
+        else
+        {
+            for (Object artifactObject : artifacts)
+            {
+                Artifact artifact = (Artifact)artifactObject;
+                if ((excludeArtifacts == null) || !excludeArtifacts.contains(artifact)) getLog().info("   " + artifact);
             }
         }
     }
