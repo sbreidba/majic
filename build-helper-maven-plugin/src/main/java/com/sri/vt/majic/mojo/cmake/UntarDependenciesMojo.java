@@ -255,7 +255,7 @@ public class UntarDependenciesMojo extends UntarMojo
 
                     File symLink = new File(
                             getSymbolicLinkDirectory(),
-                            artifact.getArtifactId() + "-" + artifact.getBaseVersion());
+                            artifact.getGroupId() + "-" + artifact.getArtifactId() + "-" + artifact.getBaseVersion());
 
                     if (!symLink.exists())
                     {
