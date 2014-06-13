@@ -1,5 +1,7 @@
 package com.sri.vt.majic.util;
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -91,14 +93,20 @@ public class CMakeDirectories
             updatedBuildRoot = new File(path, buildEnvironment.getPackageClassifier());
         }
 
-        propertyCache.setProperty(BuildEnvironment.Properties.CMAKE_BUILD_ROOT, updatedBuildRoot.getAbsolutePath());
+        propertyCache.setProperty(
+                BuildEnvironment.Properties.CMAKE_BUILD_ROOT,
+                FilenameUtils.separatorsToUnix(updatedBuildRoot.getAbsolutePath()));
+
         return updatedBuildRoot.getAbsoluteFile();
     }
 
     public File updateProjectBindir(File buildRoot, PropertyCache propertyCache) throws IOException
     {
         File projectBin = new File(buildRoot, propertyCache.getProject().getArtifactId());
-        propertyCache.setProperty(BuildEnvironment.Properties.CMAKE_PROJECT_BIN_DIRECTORY, projectBin.getAbsolutePath());
+        propertyCache.setProperty(
+                BuildEnvironment.Properties.CMAKE_PROJECT_BIN_DIRECTORY,
+                FilenameUtils.separatorsToUnix(projectBin.getAbsolutePath()));
+        
         return projectBin.getAbsoluteFile();
     }
 }

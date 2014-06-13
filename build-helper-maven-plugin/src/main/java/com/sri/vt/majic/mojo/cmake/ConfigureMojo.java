@@ -5,6 +5,8 @@ import com.sri.vt.majic.util.ArtifactHelper;
 import com.sri.vt.majic.util.BuildEnvironment;
 import com.sri.vt.majic.util.CMakeDirectories;
 import com.sri.vt.majic.util.Version;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -196,12 +198,21 @@ public class ConfigureMojo extends CMakeMojo
         return sourceDirectory;
     }
 
-    private void appendDashD(List<String> list, String key, String value)
+    private void appendDashD(List<String> list, String key, String value, boolean convertToUnixPath)
     {
         if ((value != null) && (value.length() != 0))
         {
+            if (convertToUnixPath)
+            {
+                value = FilenameUtils.separatorsToUnix(value);
+            }
             list.add(new StringBuilder("-D").append(key).append("=").append(value).toString());
         }
+    }
+
+    private void appendDashD(List<String> list, String key, String value)
+    {
+        appendDashD(list, key, value, false);
     }
 
     public List<String> getArguments() throws MojoExecutionException
@@ -286,12 +297,12 @@ public class ConfigureMojo extends CMakeMojo
                 prefixPath.append(exportRoot.getAbsolutePath());
             }
 
-            appendDashD(arguments, "CMAKE_PREFIX_PATH", prefixPath.toString());
+            appendDashD(arguments, "CMAKE_PREFIX_PATH", prefixPath.toString(), true);
         }
 
         if (addCMakeInstallPrefix)
         {
-            appendDashD(arguments, "CMAKE_INSTALL_PREFIX", projectInstallDir.getAbsolutePath());
+            appendDashD(arguments, "CMAKE_INSTALL_PREFIX", projectInstallDir.getAbsolutePath(), true);
         }
 
         if (addCMakeConfigurationTypes && SystemUtils.IS_OS_WINDOWS)
