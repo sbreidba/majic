@@ -226,7 +226,7 @@ public class Cleaner
                     System.gc();
                 }
 
-                int[] delays = { 50, 250, 750 };
+                int[] delays = { 50, 250, 750, 1500, 5000 };
                 for ( int i = 0; !deleted && i < delays.length; i++ )
                 {
                     try

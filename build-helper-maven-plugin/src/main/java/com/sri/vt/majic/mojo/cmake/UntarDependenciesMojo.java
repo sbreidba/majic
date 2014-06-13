@@ -249,8 +249,6 @@ public class UntarDependenciesMojo extends UntarMojo
 
                 if (getCreateSymbolicLinks())
                 {
-                    getSymbolicLinkDirectory().mkdirs();
-
                     java.nio.file.Path target = getOutputDirectory().toPath();
 
                     File symLink = new File(
@@ -266,14 +264,21 @@ public class UntarDependenciesMojo extends UntarMojo
                             if (isVerbose()) getLog().info("Creating symlink from " + symLinkPath + " to " + target);
 
                             boolean created = false;
-                            int[] delays = { 0, 50, 250, 750, 1500, 5000 };
+                            int[] delays = { 0, 50, 250, 750, 1500, 5000, 7500 };
                             for ( int i = 0; !created && i < delays.length; i++ )
                             {
                                 try
                                 {
+                                    if (SystemUtils.IS_OS_WINDOWS)
+                                    {
+                                        // try to release any locks held by non-closed files
+                                        System.gc();
+                                    }
+
+                                    getSymbolicLinkDirectory().mkdirs();
                                     java.nio.file.Files.createSymbolicLink(symLinkPath, target);
                                     Thread.sleep(delays[i]);
-                                    created = true;
+                                    created = symLink.exists();
                                 }
                                 catch (InterruptedException e)
                                 {
@@ -284,16 +289,9 @@ public class UntarDependenciesMojo extends UntarMojo
                                     // eat exception unless we're done trying
                                     if (i == (delays.length - 1)) throw e;
 
-                                    if (SystemUtils.IS_OS_WINDOWS)
-                                    {
-                                        // try to release any locks held by non-closed files
-                                        System.gc();
-                                    }
-
-                                    getLog().warn("Symlink creation failed. Retrying.");
+                                    getLog().warn("Symlink creation failed with " + e.toString() + ". Retrying in " + delays[i + 1] + " milliseconds.");
                                 }
                             }
-
                         }
                         catch(SecurityException e)
                         {
