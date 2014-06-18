@@ -276,8 +276,8 @@ public class UntarDependenciesMojo extends UntarMojo
                                     }
 
                                     getSymbolicLinkDirectory().mkdirs();
-                                    java.nio.file.Files.createSymbolicLink(symLinkPath, target);
                                     Thread.sleep(delays[i]);
+                                    java.nio.file.Files.createSymbolicLink(symLinkPath, target);
                                     created = symLink.exists();
                                 }
                                 catch (InterruptedException e)
