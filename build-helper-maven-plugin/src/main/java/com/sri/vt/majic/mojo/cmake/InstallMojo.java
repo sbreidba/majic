@@ -20,9 +20,6 @@ public class InstallMojo extends RunTargetMojo
     @Parameter(alias = "target", defaultValue = "install")
     private String installTarget;
 
-    @Parameter(defaultValue = "true")
-    private boolean cleanExportDirBeforeInstalling;
-
     @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_EXPORT_DIR_DEFAULT)
     private File projectExportDir;
 
@@ -40,26 +37,5 @@ public class InstallMojo extends RunTargetMojo
     protected String getTarget()
     {
         return installTarget;
-    }
-
-    @Override
-    public void execute() throws MojoExecutionException, MojoFailureException
-    {
-        if (cleanExportDirBeforeInstalling)
-        {
-            Cleaner cleaner = new Cleaner(getLog(), isVerbose());
-            try
-            {
-                // don't follow symlinks, do fail on error, do retry.
-                // this must be cleaned up or we run the risk of getting cruft.
-                cleaner.delete(projectExportDir, null, false, true, true);
-            }
-            catch (IOException e)
-            {
-                throw new MojoFailureException("Could not clean " + projectExportDir + ": " + e.getMessage());
-            }
-        }
-
-        super.execute();
     }
 }
