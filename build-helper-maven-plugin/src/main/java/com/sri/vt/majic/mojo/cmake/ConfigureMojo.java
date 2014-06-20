@@ -257,8 +257,11 @@ public class ConfigureMojo extends CMakeMojo
                         prefixPath.append(";");
                     }
 
+                    // Note that we can't use the symlink location in Windows - cmake doesn't seem to be able to
+                    // traverse it
                     Artifact artifact = (Artifact)object;
                     File file = ArtifactHelper.getRepoExtractDirectory(reactorProjects, artifact);
+
                     if (file == null)
                     {
                         getLog().warn("Could not determine output directory for " + artifact.toString() + ". Not adding to CMAKE_PREFIX_PATH.");

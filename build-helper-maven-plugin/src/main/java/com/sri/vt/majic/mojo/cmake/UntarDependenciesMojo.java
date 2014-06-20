@@ -39,6 +39,10 @@ public class UntarDependenciesMojo extends UntarMojo
      * If symbolic links are being created, they will be output to this directory.
      */
     @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_PACKAGE_DIR_DEFAULT, property = "cmake.untar.symlink.directory")
+    private File getSymbolicLinkDirectory;
+
+    // This is now determined automatically and cannot be overridden.
+    @Parameter(defaultValue = "", readonly = true)
     private File outputDirectory;
 
     // TODO! select the types to be extracted!
@@ -65,7 +69,7 @@ public class UntarDependenciesMojo extends UntarMojo
     
     protected File getSymbolicLinkDirectory()
     {
-        return outputDirectory;
+        return getSymbolicLinkDirectory;
     }
     
     @Override
@@ -130,9 +134,7 @@ public class UntarDependenciesMojo extends UntarMojo
                     continue;
                 }
 
-                // Extracting in-place is slightly safer as we can always remove the output dir contents
-                // If we extract to module dirs, we end up merging directories, so we can't clean out
-                // old cruft. Note that we don't bother cleaning/extracting if this is a reactor artifact -
+                // We don't bother cleaning/extracting if this is a reactor artifact -
                 // what we need is available on-disk.
                 if (!isReactorArtifact)
                 {
@@ -141,6 +143,8 @@ public class UntarDependenciesMojo extends UntarMojo
                     {
                         try
                         {
+                            // Since this artifact was out of date, we may be extracting to the same location.
+                            // We'll clean up what was there before extracting again.
                             cleaner.delete(getOutputDirectory(), null, false, true, true);
                         }
                         catch(IOException e)
@@ -156,12 +160,15 @@ public class UntarDependenciesMojo extends UntarMojo
                 {
                     java.nio.file.Path target = getOutputDirectory().toPath();
 
-                    File symLink = new File(
-                            getSymbolicLinkDirectory(),
-                            artifact.getGroupId() + "-" + artifact.getArtifactId() + "-" + artifact.getBaseVersion());
+                    File symLink = ArtifactHelper.getSymlinkDirectory(getSymbolicLinkDirectory(), artifact);
 
-                    if (!symLink.exists())
+                    if (symLink.exists())
                     {
+                        getLog().error("Symlink " + symLink + " already exists.");
+                    }
+
+//                    if (!symLink.exists())
+                 //   {
                         java.nio.file.Path symLinkPath = symLink.toPath();
 
                         try
@@ -191,6 +198,10 @@ public class UntarDependenciesMojo extends UntarMojo
                                 }
                                 catch (IOException e)
                                 {
+                                    // when this is related to admin rights, the specific class will be a
+                                    // java.nio.file.FileSystemException, and the message is "A required
+                                    // privilege is not held by the client."
+
                                     // eat exception unless we're done trying
                                     if (i == (delays.length - 1)) throw e;
 
@@ -209,7 +220,7 @@ public class UntarDependenciesMojo extends UntarMojo
                         {
                             throw new MojoExecutionException("Could not create dependency symlink: " + e.getMessage());
                         }
-                    }
+                    //}
                 }
             }
         }

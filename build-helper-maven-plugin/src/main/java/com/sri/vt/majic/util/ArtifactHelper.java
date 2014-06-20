@@ -34,7 +34,6 @@ public class ArtifactHelper
             return new File(path);
         }
 
-
         File outDir = artifact.getFile().getParentFile();
         if ((artifact.getClassifier() != null) && (artifact.getClassifier().length() > 0))
         {
@@ -44,6 +43,15 @@ public class ArtifactHelper
         {
             return outDir;
         }
+    }
+
+    public static File getSymlinkDirectory(File baseDirectory, Artifact artifact)
+    {
+        File symLink = new File(
+            baseDirectory,
+            artifact.getGroupId() + "-" + artifact.getArtifactId() + "-" + artifact.getBaseVersion());
+        
+        return symLink;
     }
 
     /**
