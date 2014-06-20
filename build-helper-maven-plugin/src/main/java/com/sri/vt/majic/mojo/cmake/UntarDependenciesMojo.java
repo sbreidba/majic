@@ -30,77 +30,20 @@ public class UntarDependenciesMojo extends UntarMojo
     private File tarFile;
 
     /**
-     * Normally tarballs are expanded within the m2 repository.
-     * If this is not desirable, override it here.
-     *
-     * Other goals such as config may have interactions with this behavior, so
-     * it is suggested that the property be set instead of directly
-     * configuring this value.
-     */
-    @Parameter(defaultValue = "true", property = "cmake.untar.inplace")
-    private boolean extractInPlace;
-
-    /**
      * If set, symlinks are created that point to the untarred dependencies.
-     *
-     * Other goals such as config may have interactions with this behavior, so
-     * it is suggested that the property be set instead of directly
-     * configuring this value.
      */
     @Parameter(defaultValue = "true", property = "cmake.untar.create.symlinks")
     private boolean createSymbolicLinks;
 
     /**
-     * Only valid when extractInPlace is enabled. This is the location where symbolic
-     * links to dependencies are created.
-     *
-     * Other goals such as config may have interactions with this behavior, so
-     * it is suggested that the property be set instead of directly
-     * configuring this value.
+     * If symbolic links are being created, they will be output to this directory.
      */
     @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_PACKAGE_DIR_DEFAULT, property = "cmake.untar.symlink.directory")
-    private File symbolicLinkDirectory;
-
-    /**
-     * The fallback output directory for unknown scopes.
-     */
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT)
     private File outputDirectory;
-
-    /**
-     * The output directory for test scoped dependencies.
-     */
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT)
-    private File testScopeOutputDirectory;
-
-    /**
-     * The output directory for compile scoped dependencies.
-     */
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_EXPORT_ROOT_DEFAULT)
-    private File compileScopeOutputDirectory;
-
-    /**
-     * The output directory for runtime scoped dependencies.
-     */
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_PACKAGE_ROOT_DEFAULT)
-    private File runtimeScopeOutputDirectory;
 
     // TODO! select the types to be extracted!
 
     private Artifact currentArtifact;
-
-    @Override
-    protected boolean shouldStripRootDirectory()
-    {
-        // For source artifacts, we keep the directory
-        String classifier = currentArtifact.getClassifier();
-        if ((classifier != null) && classifier.equalsIgnoreCase("sources"))
-        {
-            return false;
-        }
-        
-        return super.shouldStripRootDirectory();
-    }
 
     @Parameter( defaultValue = "${reactorProjects}", readonly = true )
     protected List<MavenProject> reactorProjects;
@@ -112,31 +55,7 @@ public class UntarDependenciesMojo extends UntarMojo
 
     protected File getOutputDirectory()
     {
-        if (getExtractInPlace())
-        {
-            return ArtifactHelper.getRepoExtractDirectory(reactorProjects, currentArtifact);
-        }
-        else
-        {
-            getLog().warn("Deprecated functionality used. Only in-place extraction will be supported in future releases.");
-            if (currentArtifact.getScope().equalsIgnoreCase(Artifact.SCOPE_TEST))
-            {
-                return testScopeOutputDirectory;
-            }
-
-            if (currentArtifact.getScope().equalsIgnoreCase(Artifact.SCOPE_COMPILE))
-            {
-                return compileScopeOutputDirectory;
-            }
-
-            if (currentArtifact.getScope().equalsIgnoreCase(Artifact.SCOPE_RUNTIME))
-            {
-                // these are external packages
-                return runtimeScopeOutputDirectory;
-            }
-
-            return outputDirectory;
-        }
+        return ArtifactHelper.getRepoExtractDirectory(reactorProjects, currentArtifact);
     }
 
     protected boolean getCreateSymbolicLinks()
@@ -146,22 +65,13 @@ public class UntarDependenciesMojo extends UntarMojo
     
     protected File getSymbolicLinkDirectory()
     {
-        return symbolicLinkDirectory;
+        return outputDirectory;
     }
     
     @Override
     protected File getMarkersDirectory()
     {
-        File baseDir;
-        if (getExtractInPlace())
-        {
-            baseDir = currentArtifact.getFile().getParentFile();
-        }
-        else
-        {
-            baseDir = getOutputDirectory();
-        }
-        
+        File baseDir = currentArtifact.getFile().getParentFile();
         return new File(baseDir, "cmake-untar-dependencies/markers");
     }
 
@@ -183,24 +93,19 @@ public class UntarDependenciesMojo extends UntarMojo
 
             if (getSymbolicLinkDirectory().exists())
             {
-                File[] files = getSymbolicLinkDirectory().listFiles();
-                for (File file : files)
+                Cleaner cleaner = new Cleaner(getLog(), isVerbose());
+                try
                 {
-                    if (java.nio.file.Files.isSymbolicLink(file.toPath()))
-                    {
-                        if (isVerbose())
-                        {
-                            getLog().info("Removing symlink " + file.getPath());
-                        }
-
-                        file.delete();
-                    }
+                    cleaner.delete(getSymbolicLinkDirectory(), null, false, true, true);
                 }
-
+                catch (IOException e)
+                {
+                    throw new MojoExecutionException(e.getMessage());
+                }
             }
         }
 
-        Set<Artifact> reactorArtifacts = new HashSet<Artifact>();
+        Set<Artifact> reactorArtifacts = new HashSet<>();
 
         Set artifacts = getProject().getArtifacts();
         if ((artifacts != null) && (!artifacts.isEmpty()))
@@ -229,7 +134,7 @@ public class UntarDependenciesMojo extends UntarMojo
                 // If we extract to module dirs, we end up merging directories, so we can't clean out
                 // old cruft. Note that we don't bother cleaning/extracting if this is a reactor artifact -
                 // what we need is available on-disk.
-                if (!isReactorArtifact && getExtractInPlace())
+                if (!isReactorArtifact)
                 {
                     Cleaner cleaner = new Cleaner(getLog(), isVerbose());
                     if (!getSkip() && !isUpToDate())
@@ -331,10 +236,5 @@ public class UntarDependenciesMojo extends UntarMojo
                 if ((excludeArtifacts == null) || !excludeArtifacts.contains(artifact)) getLog().info("   " + artifact);
             }
         }
-    }
-
-    protected boolean getExtractInPlace()
-    {
-        return extractInPlace;
     }
 }

@@ -1,12 +1,11 @@
 package com.sri.vt.majic.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.io.File;
+import java.util.List;
 
 public class ArtifactHelper
 {
