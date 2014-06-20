@@ -43,18 +43,6 @@ public class ConfigureMojo extends CMakeMojo
     private boolean extractInPlace;
 
     /**
-     * See the untar dependencies goal for more information.
-     */
-    @Parameter(defaultValue = "true", property = "cmake.untar.create.symlinks")
-    private boolean createSymbolicLinks;
-
-    /**
-     * See the untar dependencies goal for more information.
-     */
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_PACKAGE_DIR_DEFAULT, property = "cmake.untar.symlink.directory")
-    private File symbolicLinkDirectory;
-
-    /**
      * The CMake generator to use (i.e. <code>cmake -G generator</code>)
      * Left blank, this will be computed automatically from cmake.generator and cmake.arch.
      * If set, it will override the use of those variables.
@@ -349,16 +337,6 @@ public class ConfigureMojo extends CMakeMojo
     protected boolean getExtractInPlace()
     {
         return extractInPlace;
-    }
-
-    protected boolean getCreateSymbolicLinks()
-    {
-        return createSymbolicLinks;
-    }
-
-    protected File getSymbolicLinkDirectory()
-    {
-        return symbolicLinkDirectory;
     }
 
     @Override
