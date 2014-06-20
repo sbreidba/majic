@@ -5,7 +5,6 @@ import com.sri.vt.majic.util.ArtifactHelper;
 import com.sri.vt.majic.util.BuildEnvironment;
 import com.sri.vt.majic.util.CMakeDirectories;
 import com.sri.vt.majic.util.Version;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.artifact.Artifact;
@@ -18,7 +17,6 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,24 +33,6 @@ public class ConfigureMojo extends CMakeMojo
 
     @Parameter(defaultValue = "${basedir}")
     private File sourceDirectory;
-
-    /**
-     * See the untar dependencies goal for more information.
-     */
-    @Parameter(defaultValue = "true", property = "cmake.untar.inplace")
-    private boolean extractInPlace;
-
-    /**
-     * See the untar dependencies goal for more information.
-     */
-    @Parameter(defaultValue = "true", property = "cmake.untar.create.symlinks")
-    private boolean createSymbolicLinks;
-
-    /**
-     * See the untar dependencies goal for more information.
-     */
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_PACKAGE_DIR_DEFAULT, property = "cmake.untar.symlink.directory")
-    private File symbolicLinkDirectory;
 
     /**
      * The CMake generator to use (i.e. <code>cmake -G generator</code>)
@@ -266,35 +246,30 @@ public class ConfigureMojo extends CMakeMojo
         if (addCMakePrefixPath)
         {
             StringBuilder prefixPath = new StringBuilder();
-            if (getExtractInPlace())
+
+            Set artifacts = getProject().getArtifacts();
+            if ((artifacts != null) && (!artifacts.isEmpty()))
             {
-                Set artifacts = getProject().getArtifacts();
-                if ((artifacts != null) && (!artifacts.isEmpty()))
+                for (Object object : artifacts)
                 {
-                    for (Object object : artifacts)
+                    if (prefixPath.length() > 0)
                     {
-                        if (prefixPath.length() > 0)
-                        {
-                            prefixPath.append(";");
-                        }
-
-                        Artifact artifact = (Artifact)object;
-                        File file = ArtifactHelper.getRepoExtractDirectory(reactorProjects, artifact);
-                        if (file == null)
-                        {
-                            getLog().warn("Could not determine output directory for " + artifact.toString() + ". Not adding to CMAKE_PREFIX_PATH.");
-                            continue;
-                        }
-
-                        prefixPath.append(file.getAbsolutePath());
+                        prefixPath.append(";");
                     }
+
+                    // Note that we can't use the symlink location in Windows - cmake doesn't seem to be able to
+                    // traverse it
+                    Artifact artifact = (Artifact)object;
+                    File file = ArtifactHelper.getRepoExtractDirectory(reactorProjects, artifact);
+
+                    if (file == null)
+                    {
+                        getLog().warn("Could not determine output directory for " + artifact.toString() + ". Not adding to CMAKE_PREFIX_PATH.");
+                        continue;
+                    }
+
+                    prefixPath.append(file.getAbsolutePath());
                 }
-            }
-            else
-            {
-                prefixPath.append(packageRoot.getAbsolutePath());
-                prefixPath.append(";");
-                prefixPath.append(exportRoot.getAbsolutePath());
             }
 
             appendDashD(arguments, "CMAKE_PREFIX_PATH", prefixPath.toString(), true);
@@ -344,21 +319,6 @@ public class ConfigureMojo extends CMakeMojo
         arguments.add(getSourceDirectory().getAbsolutePath());
 
         return arguments;
-    }
-
-    protected boolean getExtractInPlace()
-    {
-        return extractInPlace;
-    }
-
-    protected boolean getCreateSymbolicLinks()
-    {
-        return createSymbolicLinks;
-    }
-
-    protected File getSymbolicLinkDirectory()
-    {
-        return symbolicLinkDirectory;
     }
 
     @Override

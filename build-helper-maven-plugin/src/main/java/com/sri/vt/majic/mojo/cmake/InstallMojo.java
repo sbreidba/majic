@@ -1,15 +1,11 @@
 package com.sri.vt.majic.mojo.cmake;
 
 import com.sri.vt.majic.util.CMakeDirectories;
-import com.sri.vt.majic.util.clean.Cleaner;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Executes the cmake install target.
