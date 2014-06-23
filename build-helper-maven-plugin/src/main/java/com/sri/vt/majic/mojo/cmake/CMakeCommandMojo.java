@@ -12,11 +12,23 @@ public class CMakeCommandMojo extends CMakeMojo
     @Parameter(defaultValue = "", required = true)
     private String command;
 
+    /**
+     * If not set, this is derived from Maven's global debug flag (i.e. -X).
+     */
+    @Parameter(defaultValue = "false", property = "majic.cmake.command.verbose")
+    private Boolean verbose;
+
     protected String getCommand()
     {
         return command;
     }
     
+    @Override
+    protected boolean isVerbose()
+    {
+        return (verbose || getLog().isDebugEnabled());
+    }
+
     @Override
     protected String getCommandlineArgs()
     {

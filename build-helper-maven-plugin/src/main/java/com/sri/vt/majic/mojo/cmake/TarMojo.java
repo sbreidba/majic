@@ -43,6 +43,18 @@ public class TarMojo extends CMakeCommandMojo
     @Parameter(defaultValue = "tar.bz2")
     private String type;
 
+    /**
+     * If not set, this is derived from Maven's global debug flag (i.e. -X).
+     */
+    @Parameter(defaultValue = "false", property = "majic.cmake.tar.verbose")
+    private Boolean verbose;
+
+    @Override
+    protected boolean isVerbose()
+    {
+        return (verbose || getLog().isDebugEnabled());
+    }
+
     protected String getCommand()
     {
         return command;

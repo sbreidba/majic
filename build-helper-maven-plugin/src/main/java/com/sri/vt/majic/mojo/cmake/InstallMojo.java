@@ -25,7 +25,7 @@ public class InstallMojo extends RunTargetMojo
     @Parameter(defaultValue = "false", property = "majic.install.verbose")
     private Boolean verbose;
 
-    private boolean isVerbose()
+    protected boolean isVerbose()
     {
         return (verbose || getLog().isDebugEnabled());
     }

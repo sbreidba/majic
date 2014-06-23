@@ -30,7 +30,7 @@ public class CompileMojo extends RunTargetMojo
         return compileTarget;
     }
 
-    private boolean isVerbose()
+    protected boolean isVerbose()
     {
         return (verbose || getLog().isDebugEnabled());
     }

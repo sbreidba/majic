@@ -144,7 +144,7 @@ public class ConfigureMojo extends CMakeMojo
         return skip;
     }
     
-    private boolean isVerbose()
+    protected boolean isVerbose()
     {
         return ( verbose || getLog().isDebugEnabled());
     }

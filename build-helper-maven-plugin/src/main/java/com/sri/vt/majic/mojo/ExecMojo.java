@@ -19,7 +19,7 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.Element;
  * An extension of the maven exec plugin with extended logging capabilities.
  */
 @Mojo(name="exec", requiresProject=true)
-public class ExecMojo extends AbstractExecutorMojo
+public abstract class ExecMojo extends AbstractExecutorMojo
 {
     /**
      * See the maven exec plugin for details on this parameter.

@@ -33,6 +33,18 @@ public class RunTargetMojo extends CMakeMojo
     @Parameter(defaultValue = "4", property = "cmake.jobs")
     private Integer jobs;
 
+    /**
+     * If not set, this is derived from Maven's global debug flag (i.e. -X).
+     */
+    @Parameter(defaultValue = "false", property = "majic.cmake.runtarget.verbose")
+    private Boolean verbose;
+
+    @Override
+    protected boolean isVerbose()
+    {
+        return (verbose || getLog().isDebugEnabled());
+    }
+
     @Override
     protected String getCommandlineArgs()
     {

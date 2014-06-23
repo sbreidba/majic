@@ -32,8 +32,20 @@ public class UntarDependenciesMojo extends UntarMojo
     /**
      * If set, symlinks are created that point to the untarred dependencies.
      */
-    @Parameter(defaultValue = "true", property = "cmake.untar.create.symlinks")
+    @Parameter(defaultValue = "true", property = "cmake.untar.dependencies.create.symlinks")
     private boolean createSymbolicLinks;
+
+    /**
+     * If not set, this is derived from Maven's global debug flag (i.e. -X).
+     */
+    @Parameter(defaultValue = "false", property = "majic.cmake.untar.dependencies.verbose")
+    private Boolean verbose;
+
+    @Override
+    protected boolean isVerbose()
+    {
+        return (verbose || getLog().isDebugEnabled());
+    }
 
     /**
      * If symbolic links are being created, they will be output to this directory.

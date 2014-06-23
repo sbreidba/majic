@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class CMakeMojo extends ExecMojo
+public abstract class CMakeMojo extends ExecMojo
 {
     /**
      * The executable to run to perform cmake commands.

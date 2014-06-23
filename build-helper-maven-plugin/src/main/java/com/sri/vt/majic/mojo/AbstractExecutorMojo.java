@@ -50,7 +50,7 @@ public abstract class AbstractExecutorMojo extends AbstractMojo
 
     protected void append(List<Element> elements, String name, String value)
     {
-        getLog().info(name + " is " + ((value == null) ? "(not set)" : "[" + value + "]"));
+        if (isVerbose()) getLog().info(name + " is " + ((value == null) ? "(not set)" : "[" + value + "]"));
 		if (value != null)
 		{
 			elements.add(element(name, value));
@@ -80,7 +80,6 @@ public abstract class AbstractExecutorMojo extends AbstractMojo
         elements.add(new Element(elementName, childArray));
     }
 
-
     protected void append(List<Element> elements, String elementName, Map<String, String> values)
     {
         if ((values == null) || (values.size() == 0))
@@ -102,6 +101,7 @@ public abstract class AbstractExecutorMojo extends AbstractMojo
     abstract protected String getPluginArtifactId();
     abstract protected String getGoal();
     abstract protected Element[] getConfigurationElements() throws MojoExecutionException;
+    abstract protected boolean isVerbose();
 
     public void execute() throws MojoExecutionException, MojoFailureException
     {

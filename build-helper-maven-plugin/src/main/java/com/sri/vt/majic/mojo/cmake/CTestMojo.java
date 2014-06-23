@@ -17,8 +17,17 @@ public class CTestMojo extends CMakeMojo
     @Parameter(alias = "executable", defaultValue = "ctest")
     private String exeName;
 
-    @Parameter(defaultValue = "true")
-    boolean verbose;
+    /**
+     * If not set, this is derived from Maven's global debug flag (i.e. -X).
+     */
+    @Parameter(defaultValue = "false", property = "majic.ctest.verbose")
+    private Boolean verbose;
+
+    @Override
+    protected boolean isVerbose()
+    {
+        return (verbose || getLog().isDebugEnabled());
+    }
 
     @Parameter(defaultValue = "false", property = "skipTests")
     boolean skip;
