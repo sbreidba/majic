@@ -32,7 +32,7 @@ public class UntarDependenciesMojo extends UntarMojo
     /**
      * If set, symlinks are created that point to the untarred dependencies.
      */
-    @Parameter(defaultValue = "true", property = "cmake.untar.dependencies.create.symlinks")
+    @Parameter(defaultValue = "false", property = "cmake.untar.dependencies.create.symlinks")
     private boolean createSymbolicLinks;
 
     /**
@@ -50,7 +50,7 @@ public class UntarDependenciesMojo extends UntarMojo
     /**
      * If symbolic links are being created, they will be output to this directory.
      */
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_PACKAGE_DIR_DEFAULT, property = "cmake.untar.symlink.directory")
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_PACKAGE_DIR_DEFAULT, property = "cmake.untar.dependencies.symlink.directory")
     private File getSymbolicLinkDirectory;
 
     // This is now determined automatically and cannot be overridden.
