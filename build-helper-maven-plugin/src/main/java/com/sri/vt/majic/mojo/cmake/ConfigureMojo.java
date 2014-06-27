@@ -43,20 +43,6 @@ public class ConfigureMojo extends CMakeMojo
     private String generator;
 
     /**
-     * The package dir is the location that "external" packages are unpacked to.
-     * It is only used if addCMakePrefixPath is enabled.
-     */
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_PACKAGE_ROOT_DEFAULT)
-    private File packageRoot;
-
-    /**
-     * The export dir is the location that "internal" packages are unpacked to.
-     * It is only used if addCMakePrefixPath is enabled.
-     */
-    @Parameter(defaultValue = CMakeDirectories.CMAKE_EXPORT_ROOT_DEFAULT)
-    private File exportRoot;
-
-    /**
      * The project install dir defines where CMake INSTALL(...) commands copy files to.
      * It is only used if addCMakeInstallPrefix is enabled.
      */
@@ -73,7 +59,7 @@ public class ConfigureMojo extends CMakeMojo
      * If not set, this is derived from Maven's global debug flag (i.e. -X).
      */
     @Parameter(defaultValue = "false", property = "majic.configure.verbose")
-    private Boolean verbose;
+    private boolean verbose;
 
     /**
      * If enabled, automatically adds <code>-DCPACK_PACKAGE_VERSION(_MAJOR|_MINOR|_PATCH)</code> to the configuration.
@@ -146,7 +132,7 @@ public class ConfigureMojo extends CMakeMojo
     
     protected boolean isVerbose()
     {
-        return ( verbose || getLog().isDebugEnabled());
+        return (verbose || getLog().isDebugEnabled());
     }
 
     protected String getCMakeGenerator() throws MojoExecutionException
