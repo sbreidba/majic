@@ -30,7 +30,7 @@ import java.util.Arrays;
  * 
  * @author Benjamin Bentmann
  */
-class GlobSelector
+public class GlobSelector
     implements Selector
 {
 

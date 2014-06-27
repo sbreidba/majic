@@ -5,6 +5,8 @@ import com.sri.vt.majic.util.ArtifactHelper;
 import com.sri.vt.majic.util.BuildEnvironment;
 import com.sri.vt.majic.util.CMakeDirectories;
 import com.sri.vt.majic.util.Version;
+import com.sri.vt.majic.util.clean.Cleaner;
+import com.sri.vt.majic.util.clean.GlobSelector;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.maven.artifact.Artifact;
@@ -17,6 +19,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +58,8 @@ public class ConfigureMojo extends CMakeMojo
     @Parameter(defaultValue = "")
     private Map<String, String> options;
 
+    @Parameter(defaultValue = "true", property="majic.configure.clean.cmake.cache")
+    private boolean removeCMakeCache;
     /**
      * If not set, this is derived from Maven's global debug flag (i.e. -X).
      */
@@ -310,6 +315,21 @@ public class ConfigureMojo extends CMakeMojo
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
     {
+        if (removeCMakeCache)
+        {
+            GlobSelector selector = new GlobSelector(new String[] { "CMakeFiles/**", "CMakeCache.txt" }, null);
+
+            Cleaner cleaner = new Cleaner(getLog(), isVerbose());
+            try
+            {
+                cleaner.delete(getWorkingDirectory(), selector, false, true, true);
+            }
+            catch (IOException e)
+            {
+                throw new MojoExecutionException("Could not clean CMakeFiles directory: " + e.getMessage());
+            }
+        }
+
         ExecutionMode mode = ExecutionMode.ExecutionPerConfig;
         if (SystemUtils.IS_OS_WINDOWS)
         {
