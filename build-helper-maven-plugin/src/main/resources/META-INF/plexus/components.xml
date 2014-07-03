@@ -16,7 +16,7 @@
                     <test>com.sri.vt.majic:build-helper-maven-plugin:cmake-test</test>
                     <prepare-package>com.sri.vt.majic:build-helper-maven-plugin:cmake-install</prepare-package>
                     <package>com.sri.vt.majic:build-helper-maven-plugin:cmake-tar</package>
-                    <clean>com.sri.vt.majic:build-helper-maven-plugin:cmake-clean,org.apache.maven.plugins:maven-install-plugin:clean</clean>
+                    <clean>org.apache.maven.plugins:maven-clean-plugin:clean,com.sri.vt.majic:build-helper-maven-plugin:cmake-clean</clean>
                     <install>org.apache.maven.plugins:maven-install-plugin:install</install>
                     <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
                 </phases>
