@@ -16,6 +16,7 @@
     <description>
         This pom file contains properties and settings common to all Majic projects.
     </description>
+    
     <organization>
         <name>SRI Vision Technologies Lab</name>
         <url>https://wiki.sri.com/display/VT/Home</url>
@@ -24,14 +25,6 @@
     <prerequisites>
         <maven>3.0.5</maven>
     </prerequisites>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>artifactory-vt</id>
-            <name>SRI VT Repository</name>
-            <url>https://artifactory-vt.sarnoff.internal/artifactory/repo</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
