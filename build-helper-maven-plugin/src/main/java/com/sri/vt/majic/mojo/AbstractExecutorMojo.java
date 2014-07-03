@@ -105,8 +105,6 @@ public abstract class AbstractExecutorMojo extends AbstractMojo
 
     public void execute() throws MojoExecutionException, MojoFailureException
     {
-        buildEnvironment = new BuildEnvironment(getProject());
-
         Plugin plugin = getPlugin(getPluginGroupId(), getPluginArtifactId());
         if (plugin == null)
         {
@@ -143,6 +141,11 @@ public abstract class AbstractExecutorMojo extends AbstractMojo
 
     protected BuildEnvironment getBuildEnvironment()
     {
+        if (buildEnvironment == null)
+        {
+            buildEnvironment = new BuildEnvironment(getProject());
+        }
+
         return buildEnvironment;
     }
     
