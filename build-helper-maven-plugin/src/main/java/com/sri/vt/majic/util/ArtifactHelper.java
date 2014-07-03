@@ -41,7 +41,7 @@ public class ArtifactHelper
         }
         else
         {
-            return outDir;
+            return new File(outDir, "unpack");
         }
     }
 
