@@ -1,6 +1,7 @@
 package com.sri.vt.majic.mojo.cmake;
 
 import com.sri.vt.majic.util.ArtifactHelper;
+import com.sri.vt.majic.util.BuildEnvironment;
 import com.sri.vt.majic.util.CMakeDirectories;
 import com.sri.vt.majic.util.clean.Cleaner;
 import org.apache.commons.lang3.SystemUtils;
@@ -130,6 +131,25 @@ public class UntarDependenciesMojo extends UntarMojo
             {
                 boolean isReactorArtifact = false;
                 Artifact artifact = (Artifact)object;
+
+                // TODO much better filtering than this.
+                try
+                {
+                    if (getBuildEnvironment() == null) getLog().error("Why is the build env null?");
+                    if (getBuildEnvironment().getPackageType() == null) getLog().error("Why is the package type null?");
+                    if (artifact == null) getLog().error("Why is the artifact null?");
+                    
+                    String artifactType = artifact.getType();
+                    if ((artifactType == null) || !artifact.getType().equals(getBuildEnvironment().getPackageType()))
+                    {
+                        getLog().warn("Skipping unpack of dependency: " + artifact);
+                        continue;
+                    }
+                }
+                catch (IOException e)
+                {
+                    throw new MojoExecutionException(e.getMessage());
+                }
 
                 Artifact reactorArtifact = ArtifactHelper.getArtifactFromReactor(reactorProjects, artifact);
                 if (reactorArtifact != null)

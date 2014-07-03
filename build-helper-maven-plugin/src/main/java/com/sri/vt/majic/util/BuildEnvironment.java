@@ -170,6 +170,11 @@ public class BuildEnvironment
         return getProject().getProperties().getProperty(Properties.PACKAGE_CLASSIFIER);
     }
 
+    public String getPackageType() throws IOException
+    {
+        return getProject().getProperties().getProperty(Properties.PACKAGE_EXTENSION);
+    }
+
     public String getOperatingSystemClassifier()
     {
         return getProject().getProperties().getProperty(Properties.OPERATING_SYSTEM_CLASSIFIER);
