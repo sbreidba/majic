@@ -29,7 +29,7 @@ public class CleanMojo extends AbstractMojo
 
     private boolean isVerbose()
     {
-        return ( verbose || getLog().isDebugEnabled());
+        return (verbose || getLog().isDebugEnabled());
     }
 
     @Override
