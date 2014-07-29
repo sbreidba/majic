@@ -1,6 +1,8 @@
 package com.sri.vt.majic.util;
 
+import org.apache.commons.io.FileSystemUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.maven.model.Build;
 
 import java.io.File;
 import java.io.IOException;
@@ -97,6 +99,14 @@ public class CMakeDirectories
                 BuildEnvironment.Properties.CMAKE_BUILD_ROOT,
                 FilenameUtils.separatorsToUnix(updatedBuildRoot.getAbsolutePath()));
 
+        String relPath = PathUtils.getRelativePath(
+                updatedBuildRoot.getPath(),
+                propertyCache.getProject().getBasedir().getAbsolutePath(),
+                File.separator);
+        propertyCache.setProperty(
+                BuildEnvironment.Properties.CMAKE_BUILD_ROOT_RELATIVE,
+                FilenameUtils.separatorsToUnix(relPath));
+
         return updatedBuildRoot.getAbsoluteFile();
     }
 
@@ -106,7 +116,15 @@ public class CMakeDirectories
         propertyCache.setProperty(
                 BuildEnvironment.Properties.CMAKE_PROJECT_BIN_DIRECTORY,
                 FilenameUtils.separatorsToUnix(projectBin.getAbsolutePath()));
-        
+
+        String relPath = PathUtils.getRelativePath(
+                projectBin.getPath(),
+                propertyCache.getProject().getBasedir().getAbsolutePath(),
+                File.separator);
+        propertyCache.setProperty(
+                BuildEnvironment.Properties.CMAKE_PROJECT_BIN_DIRECTORY_RELATIVE,
+                FilenameUtils.separatorsToUnix(relPath));
+
         return projectBin.getAbsoluteFile();
     }
 }

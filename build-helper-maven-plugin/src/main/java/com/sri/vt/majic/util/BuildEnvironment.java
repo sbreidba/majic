@@ -38,12 +38,16 @@ public class BuildEnvironment
         //   ... but be careful with mvn clean!
         //   (Note that ${project.build.directory} is absolute, so you can revert to a maven-style per-project "target"
         //   build by using that variable as-is or with a suffix.)
+        // The relative version is relative to the project basedir.
         public static final String CMAKE_BUILD_ROOT = "cmake.build.root";
+        public static final String CMAKE_BUILD_ROOT_RELATIVE = "cmake.build.root.relative";
 
         // The project bin directory maps to the CMake variable CMAKE_BINARY_DIR. It's effectively a per-project
         // sandbox. By default it is set to ${cmake.build.root}/${project.artifactId}
         // While this is a computable property, it is set in the Maven project since it's used fairly often.
+        // The relative version is relative to the project basedir.
         public static final String CMAKE_PROJECT_BIN_DIRECTORY = "cmake.project.bin.directory";
+        public static final String CMAKE_PROJECT_BIN_DIRECTORY_RELATIVE = "cmake.project.bin.directory.relative";
 
         // The cmake compiler is used as a shorthand/hint for the cmake generator in combination with the cmake.arch
         // property. It is also used to form the package classifier.

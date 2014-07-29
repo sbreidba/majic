@@ -1,6 +1,5 @@
 import com.sri.vt.majic.util.StringCombinations;
 import org.testng.Assert;
-import org.testng.Reporter;
 import org.testng.annotations.Test;
 
 import java.util.LinkedHashSet;

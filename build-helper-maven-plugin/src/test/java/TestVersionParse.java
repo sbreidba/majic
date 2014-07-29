@@ -1,5 +1,4 @@
 import com.sri.vt.majic.util.Version;
-
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
