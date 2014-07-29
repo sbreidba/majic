@@ -71,7 +71,7 @@
         example,
            c:\project\source\..\source-build
         -->
-        <directory>${cmake.build.root.relative}</directory>
+        <directory>${cmake.project.bin.directory.relative}</directory>
         
         <pluginManagement>
             <plugins>
