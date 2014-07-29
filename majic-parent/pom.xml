@@ -2,7 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <!-- do not specify a parent here - that causes problems with the site plugin -->
 
     <!-- majic-documentation:gavc -->
@@ -11,8 +10,8 @@
     <version>0.2.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <!-- majic-documentation:gavc -->
-
     <name>Majic Parent POM</name>
+    
     <description>
         This pom file contains properties and settings common to all Majic projects.
     </description>
@@ -62,6 +61,37 @@
         <exportArtifacts.outputDirectory>${cmake.project.bin.directory}</exportArtifacts.outputDirectory>
     </properties>
 
+    <build>
+        <!-- 
+        We use the relative version here. This is because Maven will treat
+        the macro as a relative path (since it is not yet expanded), then 
+        append the expanded value to the basedir, leading to paths like
+           c:\project\source\c:\project\source-build
+        If we use a relative path, the dir is uglier, but correct, for
+        example,
+           c:\project\source\..\source-build
+        -->
+        <directory>${cmake.build.root.relative}</directory>
+        
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.sri.vt.majic</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <extensions>true</extensions>
+                    <version>0.2.0-SNAPSHOT</version>
+                </plugin>
+
+                <!-- needed for the majic build-helper -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>1.2.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
     <!--
     Note: compiler and detection must be done here, and not in the plugin.
     This is because all variables that affect dependency resolution must be
@@ -75,7 +105,6 @@
     please check the BuildEnvironment class to see if modifications need to be made
     in the Java code as well.
     -->
-
     <profiles>
         <profile>
             <id>detected-os-win7</id>
@@ -271,36 +300,4 @@
             </build>
         </profile>
     </profiles>
-
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>com.sri.vt.majic</groupId>
-                    <artifactId>build-helper-maven-plugin</artifactId>
-                    <extensions>true</extensions>
-                    <version>0.2.0-SNAPSHOT</version>
-                </plugin>
-
-                <!-- needed for the majic build-helper -->
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>exec-maven-plugin</artifactId>
-                    <version>1.2.1</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.0</version>
-                <configuration>
-                    <skip>true</skip>
-                    <skipDeploy>true</skipDeploy>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

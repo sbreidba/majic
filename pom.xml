@@ -111,7 +111,6 @@
   </scm>
 
   <modules>
-    <module>majic-parent</module>
     <module>majic-documentation</module>
     <module>build-helper-maven-plugin</module>
   </modules>
