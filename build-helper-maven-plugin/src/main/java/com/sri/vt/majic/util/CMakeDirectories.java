@@ -9,14 +9,8 @@ import java.io.IOException;
 
 public class CMakeDirectories
 {
-    public static final String CMAKE_BUILD_ROOT_DEFAULT = "${" + BuildEnvironment.Properties.CMAKE_BUILD_ROOT + "}";
-
-    public static final String CMAKE_PACKAGE_ROOT_DEFAULT = "${" + BuildEnvironment.Properties.CMAKE_BUILD_ROOT + "}/pkg";
-    public static final String CMAKE_EXPORT_ROOT_DEFAULT = "${" + BuildEnvironment.Properties.CMAKE_BUILD_ROOT + "}/imports";
-
-    public static final String CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT = "${" + BuildEnvironment.Properties.CMAKE_BUILD_ROOT + "}/${project.artifactId}";
+    public static final String CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT = "${project.build.directory}";
     public static final String CMAKE_PROJECT_EXPORT_DIR_DEFAULT = CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT + "/exports";
-
     public static final String CMAKE_PROJECT_PACKAGE_DIR_DEFAULT = CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT + "/pkg";
     public static final String CMAKE_PROJECT_INSTALL_DIR_DEFAULT = CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT + "/exports/${project.artifactId}-${project.version}";
 
