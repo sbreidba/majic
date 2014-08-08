@@ -58,10 +58,10 @@ public class ExportArtifactsMojo extends AbstractMojo
         Writer writer;
         try
         {
-            getLog().debug("Canonicalizing " + outputDirectory + " and " + outputFileName);
+            outputDirectory.mkdirs();
+
             File outputFile = new File(outputDirectory, outputFileName);
             outputFile = outputFile.getCanonicalFile();
-            getLog().debug("Resulted in " + outputFile);
             writer = new PrintWriter(outputFile, "UTF-8");
         }
         catch (FileNotFoundException e)
