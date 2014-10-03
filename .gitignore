@@ -8,3 +8,4 @@ clavin-documentation/_build
 *.prefs
 .project
 .classpath
+*.versionsBackup
