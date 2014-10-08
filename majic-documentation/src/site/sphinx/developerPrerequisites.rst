@@ -21,7 +21,7 @@ windows
 CentOs
    Download and install the file
    :file:`jdk-{7u45}-linux-x64.rpm`. Then install using::
-   
+
       sudo rpm -Uvh $HOME/Downloads/jdk-7u40-linux-x64.rpm
 
    I found the above rpm command `here
@@ -45,7 +45,7 @@ Maven Installation Instructions
 
 .. index:: maven; installation
 
-The content in this subsection was copied from maven 
+The content in this subsection was copied from maven
 `Installation Instructions <http://maven.apache.org/download.cgi>`__.
 
 Windows
@@ -79,7 +79,7 @@ Windows
       of your JDK, e.g. :file:`C:\\Program Files\\Java\\jdk{1.5.0_02}` and that
       %JAVA_HOME%\\bin is in your :envvar:`PATH` environment variable.
 
-   #. Open a new command prompt (Winkey + R then type cmd) and run 
+   #. Open a new command prompt (Winkey + R then type cmd) and run
       ``mvn --version``  to verify that it is correctly installed.
 
 Unix-based Operating Systems (Linux, Solaris and Mac OS X)
@@ -98,7 +98,7 @@ Unix-based Operating Systems (Linux, Solaris and Mac OS X)
       properties, e.g. export MAVEN_OPTS="-Xms256m -Xmx512m". This
       environment variable can be used to supply extra options to Maven.
 
-   #. Add M2 environment variable to your path, e.g. 
+   #. Add M2 environment variable to your path, e.g.
       ``export PATH=$M2:$PATH``.
 
    #. Make sure that :envvar:`JAVA_HOME` is set to the location of your JDK,
@@ -115,10 +115,10 @@ settings.xml
 
 You need to tell maven where our packages are installed by creating
 ``$HOME/.m2/settings.xml`` (where ``$HOME`` is your home directory)
-with the following contents
+with the following contents::
 
       <?xml version="1.0" encoding="UTF-8"?>
-      <settings 
+      <settings
 	  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0
 			      http://maven.apache.org/xsd/settings-1.1.0.xsd"
 	  xmlns="http://maven.apache.org/SETTINGS/1.1.0"
@@ -160,7 +160,7 @@ cmake Installation
 Linux
    Use the source distribution in our local cmake repository on
    git-open. The commands below will install :command:`cmake` to
-   :file:`/usr/local`:: 
+   :file:`/usr/local`::
 
       git clone ssh://git-open/scm/3rdparty/cmake.git -b v2.8.12
       mkdir cmake-build
@@ -171,4 +171,4 @@ Linux
 
 Windows
    Use the latest installer from `cmake.org
-   <http://www.cmake.org/cmake/resources/software.html>`__. 
+   <http://www.cmake.org/cmake/resources/software.html>`__.
