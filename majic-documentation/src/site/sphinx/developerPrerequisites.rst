@@ -51,19 +51,19 @@ The content in this subsection was copied from maven
 Windows
    #. Unzip the distribution archive, i.e. apache-maven-3.1.1-bin.zip to
       the directory you wish to install Maven 3.1.1. These instructions
-      assume you chose C:\Program Files\Apache Software Foundation. The
+      assume you chose C:\\Program Files\\Apache Software Foundation. The
       subdirectory apache-maven-3.1.1 will be created from the archive.
 
    #. Add the :envvar:`M2_HOME` environment variable by opening up the system
       properties (WinKey + Pause), selecting the "Advanced" tab, and the
       "Environment Variables" button, then adding the M2_HOME variable in
-      the user variables with the value C:\Program Files\Apache Software
-      Foundation\apache-maven-3.1.1. Be sure to omit any quotation marks
+      the user variables with the value C:\\Program Files\\Apache Software
+      Foundation\\apache-maven-3.1.1. Be sure to omit any quotation marks
       around the path even if it contains spaces. Note: For Maven 2.0.9,
-      also be sure that the M2_HOME doesn't have a '\' as last character.
+      also be sure that the M2_HOME doesn't have a '\\' as last character.
 
    #. In the same dialog, add the :envvar:`M2` environment variable in the user
-      variables with the value %M2_HOME%\bin.
+      variables with the value %M2_HOME%\\bin.
 
    #. Optional: In the same dialog, add the MAVEN_OPTS environment
       variable in the user variables to specify JVM properties, e.g. the
@@ -76,8 +76,8 @@ Windows
 
    #. In the same dialog, make sure that :envvar:`JAVA_HOME` exists in your user
       variables or in the system variables and it is set to the location
-      of your JDK, e.g. :file:`C:\Program Files\Java\jdk{1.5.0_02}` and that
-      %JAVA_HOME%\bin is in your :envvar:`PATH` environment variable.
+      of your JDK, e.g. :file:`C:\\Program Files\\Java\\jdk{1.5.0_02}` and that
+      %JAVA_HOME%\\bin is in your :envvar:`PATH` environment variable.
 
    #. Open a new command prompt (Winkey + R then type cmd) and run 
       ``mvn --version``  to verify that it is correctly installed.
@@ -107,6 +107,52 @@ Unix-based Operating Systems (Linux, Solaris and Mac OS X)
 
    #. Run ``mvn --version`` to verify that it is correctly installed.
 
+
+settings.xml
+------------
+
+.. index:: settings.xml; installation
+
+You need to tell maven where our packages are installed by creating
+``$HOME/.m2/settings.xml`` (where ``$HOME`` is your home directory)
+with the following contents
+
+      <?xml version="1.0" encoding="UTF-8"?>
+      <settings 
+	  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0
+			      http://maven.apache.org/xsd/settings-1.1.0.xsd"
+	  xmlns="http://maven.apache.org/SETTINGS/1.1.0"
+	  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<profiles>
+	  <profile>
+	    <id>user-settings</id>
+
+	    <pluginRepositories>
+	      <pluginRepository>
+		<id>artifactory-vt</id>
+		<name>SRI VT Repository</name>
+		<url>https://artifactory-vt.sarnoff.internal/artifactory/repo</url>
+	      </pluginRepository>
+	    </pluginRepositories>
+
+	    <repositories>
+	      <repository>
+		<id>artifactory-vt</id>
+		<name>SRI VT Repository</name>
+		<url>https://artifactory-vt.sarnoff.internal/artifactory/repo</url>
+	      </repository>
+	    </repositories>
+
+	    <properties>
+	    </properties>
+	  </profile>
+	</profiles>
+
+	<activeProfiles>
+	  <activeProfile>user-settings</activeProfile>
+	</activeProfiles>
+      </settings>
 
 cmake Installation
 ==================
