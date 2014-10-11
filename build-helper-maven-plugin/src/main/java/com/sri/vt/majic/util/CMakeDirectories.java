@@ -1,8 +1,6 @@
 package com.sri.vt.majic.util;
 
-import org.apache.commons.io.FileSystemUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.maven.model.Build;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,11 +21,7 @@ public class CMakeDirectories
         File topLevel = updateTopLevel(updatedProperties);
         if (topLevel != null)
         {
-            File buildRoot = updateBuildRoot(topLevel, updatedProperties);
-            if (buildRoot != null)
-            {
-                updateProjectBindir(buildRoot, updatedProperties);
-            }
+            updateProjectBinDirectory(topLevel, updatedProperties);
         }
     }
 
@@ -64,21 +58,19 @@ public class CMakeDirectories
         return null;
     }
 
-    public File updateBuildRoot(File topLevel, PropertyCache propertyCache) throws IOException
+    public File updateProjectBinDirectory(File topLevel, PropertyCache propertyCache) throws IOException
     {
-        File updatedBuildRoot = null;
-        String userBuildRootString = propertyCache.getProject().getProperties().getProperty(BuildEnvironment.Properties.CMAKE_BUILD_ROOT, "");
-        if (userBuildRootString.length() != 0)
+        File binDir = null;
+        String userBinDirString = propertyCache.getProject().getProperties().getProperty(BuildEnvironment.Properties.CMAKE_PROJECT_BIN_DIRECTORY, "");
+        if (userBinDirString.length() != 0)
         {
-            File userBuildRoot = new File(propertyCache.getProject().getProperties().getProperty(BuildEnvironment.Properties.CMAKE_BUILD_ROOT));
-            if (userBuildRoot.isAbsolute())
+            binDir = new File(propertyCache.getProject().getProperties().getProperty(BuildEnvironment.Properties.CMAKE_PROJECT_BIN_DIRECTORY));
+            if (!binDir.isAbsolute())
             {
-                // nothing to set - already there
-                return userBuildRoot;
+                // non-empty user build root, but it's relative. We'll assume the intent was to make it relative
+                // to the discovered toplevel directory
+                binDir = new File(topLevel, userBinDirString);
             }
-
-            // non-empty user build root, but it's relative. Make it relative to topLevel and update
-            updatedBuildRoot = new File(topLevel, userBuildRootString);
         }
         else
         {
@@ -86,39 +78,18 @@ public class CMakeDirectories
             String path = topLevel.getAbsolutePath() + "-build";
 
             BuildEnvironment buildEnvironment = new BuildEnvironment(propertyCache.getProject());
-            updatedBuildRoot = new File(path, buildEnvironment.getPackageClassifier());
+            File intermediate = new File(path, buildEnvironment.getPackageClassifier());
+            binDir = new File(intermediate, propertyCache.getProject().getArtifactId());
         }
 
-        propertyCache.setProperty(
-                BuildEnvironment.Properties.CMAKE_BUILD_ROOT,
-                FilenameUtils.separatorsToUnix(updatedBuildRoot.getAbsolutePath()));
-
-        String relPath = PathUtils.getRelativePath(
-                updatedBuildRoot.getPath(),
+        String relBinPath = PathUtils.getRelativePath(
+                binDir.getPath(),
                 propertyCache.getProject().getBasedir().getAbsolutePath(),
                 File.separator);
-        propertyCache.setProperty(
-                BuildEnvironment.Properties.CMAKE_BUILD_ROOT_RELATIVE,
-                FilenameUtils.separatorsToUnix(relPath));
-
-        return updatedBuildRoot.getAbsoluteFile();
-    }
-
-    public File updateProjectBindir(File buildRoot, PropertyCache propertyCache) throws IOException
-    {
-        File projectBin = new File(buildRoot, propertyCache.getProject().getArtifactId());
         propertyCache.setProperty(
                 BuildEnvironment.Properties.CMAKE_PROJECT_BIN_DIRECTORY,
-                FilenameUtils.separatorsToUnix(projectBin.getAbsolutePath()));
+                FilenameUtils.separatorsToUnix(relBinPath));
 
-        String relPath = PathUtils.getRelativePath(
-                projectBin.getPath(),
-                propertyCache.getProject().getBasedir().getAbsolutePath(),
-                File.separator);
-        propertyCache.setProperty(
-                BuildEnvironment.Properties.CMAKE_PROJECT_BIN_DIRECTORY_RELATIVE,
-                FilenameUtils.separatorsToUnix(relPath));
-
-        return projectBin.getAbsoluteFile();
+        return binDir.getAbsoluteFile();
     }
 }

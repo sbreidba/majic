@@ -37,8 +37,24 @@ public class ImportArtifactsMojo extends AbstractMojo
     @Component()
     private MavenProjectHelper projectHelper;
 
+    /**
+     * If not set, this is derived from Maven's global debug flag (i.e. -X).
+     */
+    @Parameter(defaultValue = "false", property = "majic.artifact.import.verbose")
+    private Boolean verbose;
+
+    protected boolean isVerbose()
+    {
+        return (verbose || getLog().isDebugEnabled());
+    }
+
     public void execute() throws MojoExecutionException, MojoFailureException
     {
+        if (isVerbose())
+        {
+            getLog().info("Importing from " + inputDirectory);
+        }
+
         if (!recurse)
         {
             importArtifacts(inputDirectory);
@@ -51,15 +67,20 @@ public class ImportArtifactsMojo extends AbstractMojo
 
     public void recursiveImport(File directory) throws MojoExecutionException
     {
+        if (!directory.isDirectory())
+        {
+            getLog().error(directory + " is not a directory.");
+            return;
+        }
+
+        File artifactFile = new File(directory, inputFileName);
+        if (artifactFile.exists())
+        {
+            importArtifacts(directory);
+        }
+
         for (File subFile : directory.listFiles())
         {
-            File artifactFile = new File(subFile, inputFileName);
-            if (artifactFile.exists())
-            {
-                getLog().info("importing from " + artifactFile);
-                importArtifacts(subFile);
-            }
-            
             if (subFile.isDirectory())
             {
                 recursiveImport(subFile);
@@ -73,6 +94,10 @@ public class ImportArtifactsMojo extends AbstractMojo
         try
         {
             File inputFile = new File(directory, inputFileName);
+            if (isVerbose())
+            {
+                getLog().info("Opening " + inputFile);
+            }
             FileInputStream inputStream = new FileInputStream(inputFile);
             reader = new InputStreamReader(inputStream, "UTF-8");
         }
@@ -99,6 +124,11 @@ public class ImportArtifactsMojo extends AbstractMojo
             throw new MojoExecutionException("Error reading file: ", e);
         }
 
+        if (isVerbose() && (dom.getChildCount() == 0))
+        {
+            getLog().warn("No artifacts found.");
+        }
+
         for (Xpp3Dom artifact : dom.getChildren())
         {
             String type = artifact.getChild("type").getValue();
@@ -110,6 +140,8 @@ public class ImportArtifactsMojo extends AbstractMojo
             {
                 getLog().error("Could not find " + artifactFile.getAbsolutePath() + " - skipping attachment");
             }
+
+            getLog().info("Attaching " + artifactFile);
             projectHelper.attachArtifact(project, type, classifier, artifactFile);
         }
 

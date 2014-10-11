@@ -257,12 +257,15 @@ public class UntarDependenciesMojo extends UntarMojo
             }
         }
 
-        getLog().info("Dependency Summary:");
-        getLog().info("");
-        getLog().info("Local repository/artifact cache:");
-        logArtifacts(artifacts, reactorArtifacts);
-        getLog().info("Reactor artifacts:");
-        logArtifacts(reactorArtifacts, null);
+        if (isVerbose())
+        {
+            getLog().info("Dependency Summary:");
+            getLog().info("");
+            getLog().info("Local repository/artifact cache:");
+            logArtifacts(artifacts, reactorArtifacts);
+            getLog().info("Reactor artifacts:");
+            logArtifacts(reactorArtifacts, null);
+        }
     }
 
     private void logArtifacts(Set artifacts, Set excludeArtifacts)

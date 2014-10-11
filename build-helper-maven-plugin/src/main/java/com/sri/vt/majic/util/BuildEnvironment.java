@@ -26,28 +26,27 @@ public class BuildEnvironment
         // This is computed by walking the directory tree up from any given module until no more pom files are found.
         public static final String CMAKE_TOPLEVEL_PROJECT_DIRECTORY = "majic.toplevel.project.directory";
 
-        // The CMake build root is set by default by to:
-        //      ${toplevel.project.directory}-build/${package.classifier}
+        // The CMake project build root (CMAKE_BINARY_DIR) is set by default by to:
+        //      ${toplevel.project.directory}-build/${majic.package.classifier}/${project.artifactId}
         //
         // So if your source code is in ~/Devel/foo, you'll get a build directory like:
-        //      ~/Devel/foo-build/win7-vc2010-64
+        //      ~/Devel/foo-build/win7-vc2010-64/<projects>
         //
         // If you are Phil Miller and don't like that, override this value.
-        // - if you specify a relative path, it will always be relative to ${toplevel.project.directory}.
-        // - if you specify an absolute path, then you are the master of your own destiny.
-        //   ... but be careful with mvn clean!
-        //   (Note that ${project.build.directory} is absolute, so you can revert to a maven-style per-project "target"
-        //   build by using that variable as-is or with a suffix.)
-        // The relative version is relative to the project basedir.
-        public static final String CMAKE_BUILD_ROOT = "cmake.build.root";
-        public static final String CMAKE_BUILD_ROOT_RELATIVE = "cmake.build.root.relative";
+        // - if you specify a relative path, it will always be relative to ${majic.toplevel.project.directory}.
+        // - if you specify an absolute path, then you are the master of your own destiny. Be careful with mvn clean!
+        //   You can use macros in your path, for example, something like this should work well:
+        //     C:/majic-builds/${project.groupId}/${majic.package.classifier}/${project.artifactId}
+        //   This is quite similar to the default, with two changes:
+        //     - An absolute path, with volume, is specified.
+        //     - The groupId is included. While optional, this serves to prevent build collisions.
+        //       That's not necessary in the default case, since the output path is based on directory names (which
+        //       can't collide by definition, or you'd have two projects in one directory), not artifactId.
 
         // The project bin directory maps to the CMake variable CMAKE_BINARY_DIR. It's effectively a per-project
         // sandbox. By default it is set to ${cmake.build.root}/${project.artifactId}
         // While this is a computable property, it is set in the Maven project since it's used fairly often.
-        // The relative version is relative to the project basedir.
         public static final String CMAKE_PROJECT_BIN_DIRECTORY = "cmake.project.bin.directory";
-        public static final String CMAKE_PROJECT_BIN_DIRECTORY_RELATIVE = "cmake.project.bin.directory.relative";
 
         // The cmake compiler is used as a shorthand/hint for the cmake generator in combination with the cmake.arch
         // property. It is also used to form the package classifier.

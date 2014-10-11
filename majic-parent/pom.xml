@@ -58,15 +58,15 @@
 
     <build>
         <!-- 
-        We use the relative version here. This is because Maven will treat
-        the macro as a relative path (since it is not yet expanded), then 
-        append the expanded value to the basedir, leading to paths like
+        The project bin directory, when computed, is relative. This is because Maven will treat
+        the macro as a relative path (since it is not yet expanded/in existence), then append the
+        expanded value to the basedir, leading to paths like
            c:\project\source\c:\project\source-build
         If we use a relative path, the dir is uglier, but correct, for
         example,
            c:\project\source\..\source-build
         -->
-        <directory>${cmake.project.bin.directory.relative}</directory>
+        <directory>${cmake.project.bin.directory}</directory>
         
         <pluginManagement>
             <plugins>
