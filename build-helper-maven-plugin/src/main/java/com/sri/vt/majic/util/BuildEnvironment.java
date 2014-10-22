@@ -107,7 +107,8 @@ public class BuildEnvironment
         vc2008("vc2008"),
         vc2009("vc2009"),
         vc2010("vc2010"),
-        vc2012("vc2012");
+        vc2012("vc2012"),
+        vc2013("vc2013");
 
         Compiler(String value) { this.value = value; }
 
@@ -228,6 +229,9 @@ public class BuildEnvironment
             case vc2012:
                 return env.get("VS110COMNTOOLS");
 
+            case vc2013:
+                return env.get("VS120COMNTOOLS");
+
             default:
                 throw new MojoExecutionException("Could not get visual studio common tools dir - unknown compiler type");
         }
@@ -294,6 +298,11 @@ public class BuildEnvironment
             case vc2012:
                 propertyCache.setProperty(Properties.NMAKE_MSVCVER, "1700");
                 propertyCache.setProperty(Properties.BJAM_TOOLSET, "msvc-11.0");
+                break;
+
+            case vc2013:
+                propertyCache.setProperty(Properties.NMAKE_MSVCVER, "1800");
+                propertyCache.setProperty(Properties.BJAM_TOOLSET, "msvc-12.0");
                 break;
 
             default:
