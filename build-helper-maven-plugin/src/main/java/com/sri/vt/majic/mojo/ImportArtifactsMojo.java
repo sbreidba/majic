@@ -124,9 +124,9 @@ public class ImportArtifactsMojo extends AbstractMojo
             throw new MojoExecutionException("Error reading file: ", e);
         }
 
-        if (isVerbose() && (dom.getChildCount() == 0))
+        if (dom.getChildCount() == 0)
         {
-            getLog().warn("No artifacts found.");
+            throw new MojoExecutionException("No artifacts found.");
         }
 
         for (Xpp3Dom artifact : dom.getChildren())
@@ -138,7 +138,7 @@ public class ImportArtifactsMojo extends AbstractMojo
             File artifactFile = new File(directory, file);
             if (!artifactFile.exists())
             {
-                getLog().error("Could not find " + artifactFile.getAbsolutePath() + " - skipping attachment");
+                throw new MojoExecutionException("Could not find artifact file " + artifactFile.getAbsolutePath());
             }
 
             getLog().info("Attaching " + artifactFile);
