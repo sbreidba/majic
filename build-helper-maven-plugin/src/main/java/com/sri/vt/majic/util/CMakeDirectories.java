@@ -90,6 +90,11 @@ public class CMakeDirectories
                 BuildEnvironment.Properties.CMAKE_PROJECT_BIN_DIRECTORY,
                 FilenameUtils.separatorsToUnix(relBinPath));
 
+        File relBinPathFile = new File(relBinPath);
+        propertyCache.setProperty(
+                BuildEnvironment.Properties.CMAKE_PROJECT_BIN_DIRECTORY_ABSOLUTE,
+                FilenameUtils.separatorsToUnix(relBinPathFile.getCanonicalPath()));
+
         return binDir.getAbsoluteFile();
     }
 }

@@ -48,6 +48,12 @@ public class BuildEnvironment
         // While this is a computable property, it is set in the Maven project since it's used fairly often.
         public static final String CMAKE_PROJECT_BIN_DIRECTORY = "cmake.project.bin.directory";
 
+        // This is the same path as CMAKE_PROJECT_BIN_DIRECTORY except that it is guaranteed to be an absolute
+        // directory. It can't be used everywhere - in particular the non-absolute version must be used for
+        // specifying the project build directory since Maven will see a macro there, and prepend the current
+        // directory. But it is useful for cases in which you are not working in the project build directory.
+        public static final String CMAKE_PROJECT_BIN_DIRECTORY_ABSOLUTE = "cmake.project.bin.directory.absolute";
+
         // The cmake compiler is used as a shorthand/hint for the cmake generator in combination with the cmake.arch
         // property. It is also used to form the package classifier.
         // The Compiler enum lists the possible values.
