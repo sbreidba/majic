@@ -19,7 +19,7 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.Element;
  * An extension of the maven exec plugin with extended logging capabilities.
  */
 @Mojo(name="exec", requiresProject=true)
-public abstract class ExecMojo extends AbstractExecutorMojo
+public class ExecMojo extends AbstractExecutorMojo
 {
     /**
      * See the maven exec plugin for details on this parameter.
@@ -50,6 +50,12 @@ public abstract class ExecMojo extends AbstractExecutorMojo
      */
     @Parameter(defaultValue = "false")
     private boolean skip;
+
+    /**
+     * If not set, this is derived from Maven's global debug flag (i.e. -X).
+     */
+    @Parameter(defaultValue = "false", property = "majic.exec.verbose")
+    private Boolean verbose;
 
     /**
      * See the maven exec plugin for details on this parameter.
@@ -341,6 +347,11 @@ public abstract class ExecMojo extends AbstractExecutorMojo
         Element[] elementArray = new Element[elements.size()];
         elements.toArray(elementArray);
         return elementArray;
+    }
+
+    protected boolean isVerbose()
+    {
+        return (verbose || getLog().isDebugEnabled());
     }
 
     public void execute() throws MojoExecutionException, MojoFailureException
