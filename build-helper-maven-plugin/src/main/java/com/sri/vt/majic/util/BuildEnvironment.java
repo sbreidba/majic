@@ -58,6 +58,10 @@ public class BuildEnvironment
         // The Arch enum lists the possible values.
         public static final String CMAKE_ARCH = "cmake.arch";
 
+        // The cmake operating system is used to form the package classifier.
+        // This is an arbitrary string value.
+        public static final String CMAKE_OS = "cmake.os";
+
         // The CMAKE_SIZEOF_VOID_P value: 8 when building 64-bit, 4 when building 32-bit.
         // Useful when cross-compiling.
         public static final String CMAKE_SIZEOF_VOID_P = "cmake.sizeof.void.p";

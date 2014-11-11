@@ -45,6 +45,7 @@ public class PropertyCache
         copySystemProperty(session, BuildEnvironment.Properties.CMAKE_PROJECT_BIN_DIRECTORY);
         copySystemProperty(session, BuildEnvironment.Properties.CMAKE_COMPILER);
         copySystemProperty(session, BuildEnvironment.Properties.CMAKE_ARCH);
+        copySystemProperty(session, BuildEnvironment.Properties.CMAKE_OS);
     }
 
     private void copySystemProperty(MavenSession session, String property)
