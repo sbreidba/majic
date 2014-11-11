@@ -211,7 +211,7 @@
             <id>detected-compiler-vc14</id>
             <activation>
                 <property>
-                    <name>env.VS120COMNTOOLS</name>
+                    <name>env.VS140COMNTOOLS</name>
                 </property>
             </activation>
             <properties>
