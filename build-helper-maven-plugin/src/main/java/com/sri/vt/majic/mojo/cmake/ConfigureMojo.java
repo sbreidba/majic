@@ -121,6 +121,7 @@ public class ConfigureMojo extends CMakeMojo
             .put(BuildEnvironment.Compiler.vc2010, "Visual Studio 10")
             .put(BuildEnvironment.Compiler.vc2012, "Visual Studio 11")
             .put(BuildEnvironment.Compiler.vc2013, "Visual Studio 12")
+            .put(BuildEnvironment.Compiler.vc14,   "Visual Studio 14")
             .build();
 
     @Override

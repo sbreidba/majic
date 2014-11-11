@@ -207,6 +207,18 @@
             </properties>
         </profile>
 
+        <profile>
+            <id>detected-compiler-vc14</id>
+            <activation>
+                <property>
+                    <name>env.VS120COMNTOOLS</name>
+                </property>
+            </activation>
+            <properties>
+                <detected.cmake.compiler>vc14</detected.cmake.compiler>
+            </properties>
+        </profile>
+
         <!-- cmake.compiler: if no command-line property was set, use the auto-detected value -->
         <profile>
             <id>auto-detect-compiler</id>
