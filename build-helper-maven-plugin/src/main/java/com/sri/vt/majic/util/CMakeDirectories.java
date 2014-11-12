@@ -90,7 +90,11 @@ public class CMakeDirectories
                 BuildEnvironment.Properties.CMAKE_PROJECT_BIN_DIRECTORY,
                 FilenameUtils.separatorsToUnix(relBinPath));
 
-        File absoluteFile = new File(propertyCache.getProject().getBasedir(), relBinPath);
+        File absoluteFile = new File(relBinPath);
+        if (!absoluteFile.isAbsolute()) {
+            absoluteFile = new File(propertyCache.getProject().getBasedir(), relBinPath);
+        }
+        
         propertyCache.setProperty(
                 BuildEnvironment.Properties.CMAKE_PROJECT_BIN_DIRECTORY_ABSOLUTE,
                 FilenameUtils.separatorsToUnix(absoluteFile.getCanonicalPath()));
