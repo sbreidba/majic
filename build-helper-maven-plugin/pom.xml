@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.sri.vt.majic</groupId>
     <artifactId>majic</artifactId>
-    <version>0.2.2</version>
+    <version>0.2.3-SNAPSHOT</version>
   </parent>
 
   <artifactId>build-helper-maven-plugin</artifactId>
