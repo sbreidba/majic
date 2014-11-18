@@ -34,15 +34,8 @@ public class TarMojo extends CMakeCommandMojo
     @Parameter(defaultValue = "${project.artifactId}-${project.version}.tar.bz2")
     private String outputName;
 
-    /**
-     * If set, include all subdirectories of the exports directory in tar file.
-     */
-    @Parameter(defaultValue = "false", property = "majic.cmake.tar.alldirs")
-    private boolean allDirs;
-
-    // If !allDirs, then just do projectName
-    @Parameter(defaultValue = "${project.artifactId}-${project.version}")
-    private String projectName;
+    @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_INSTALL_NAME_DEFAULT)
+    private String installPrefixName;
 
     @Parameter(defaultValue = CMakeDirectories.CMAKE_PROJECT_EXPORT_DIR_DEFAULT)
     private File outputDirectory;
@@ -89,23 +82,8 @@ public class TarMojo extends CMakeCommandMojo
         builder.append(super.getCommandlineArgs());
         builder.append(" ");
         builder.append(getTarFile().getAbsolutePath());
-
-        if (allDirs) {
-            for (File file : getWorkingDirectory().listFiles())
-                {
-                    if (file.isDirectory())
-                        {
-                            String relativePath = PathUtils.toRelative(getWorkingDirectory(), file.getAbsolutePath());
-
-                            builder.append(" ");
-                            builder.append(relativePath);
-
-                        }
-                }
-        } else {
-            builder.append(" ");
-            builder.append(projectName);
-        }
+        builder.append(" ");
+        builder.append(installPrefixName);
 
         return builder.toString();
     }

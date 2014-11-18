@@ -10,7 +10,8 @@ public class CMakeDirectories
     public static final String CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT = "${project.build.directory}";
     public static final String CMAKE_PROJECT_EXPORT_DIR_DEFAULT = CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT + "/exports";
     public static final String CMAKE_PROJECT_PACKAGE_DIR_DEFAULT = CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT + "/pkg";
-    public static final String CMAKE_PROJECT_INSTALL_DIR_DEFAULT = CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT + "/exports/${project.artifactId}-${project.version}";
+    public static final String CMAKE_PROJECT_INSTALL_NAME_DEFAULT = "${project.artifactId}-${project.version}";
+    public static final String CMAKE_PROJECT_INSTALL_DIR_DEFAULT = CMAKE_PROJECT_BIN_DIRECTORY_DEFAULT + "/exports/" + CMAKE_PROJECT_INSTALL_NAME_DEFAULT;
 
     public CMakeDirectories()
     {
