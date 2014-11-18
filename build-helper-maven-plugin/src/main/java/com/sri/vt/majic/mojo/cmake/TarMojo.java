@@ -34,7 +34,9 @@ public class TarMojo extends CMakeCommandMojo
     @Parameter(defaultValue = "${project.artifactId}-${project.version}.tar.bz2")
     private String outputName;
 
-    // include all directories in exports directory?
+    /**
+     * If set, include all subdirectories of the exports directory in tar file.
+     */
     @Parameter(defaultValue = "false", property = "majic.cmake.tar.alldirs")
     private boolean allDirs;
 
